@@ -127,3 +127,10 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# anki
+anki_root
+anki_testing
+
+# PyCharm
+.idea
