@@ -1,18 +1,25 @@
+from sqlalchemy.engine import Engine
+from sqlalchemy.orm import sessionmaker
+
 from domain.document.Document import Document
-from domain.document.Word import Word
-from infrastructure.session import session
 
 
-def get_next_unknown_word(self, document_id) -> Word:
-    pass
+class Facade:
+    def __init__(self, sql_engine: Engine):
+        maker = sessionmaker(bind=sql_engine)
+        self.session = maker()
+        self.__init_database(sql_engine)
 
+    def create_new_document(self, document_name: str) -> Document:
+        document = Document(name=document_name)
+        self.session.add(document)
+        self.session.commit()
+        return document
 
-def create_new_document(document_name: str) -> Document:
-    document = Document(name=document_name)
-    session.add(document)
-    session.commit()
-    return document
+    def get_document_list(self) -> [Document]:
+        return self.session.query(Document).all()
 
-
-def get_document_list() -> [Document]:
-    return session.query(Document).all()
+    @staticmethod
+    def __init_database(engine: Engine):
+        if not engine.has_table("documents"):
+            Document.metadata.create_all(engine)

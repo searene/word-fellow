@@ -1,9 +1,14 @@
 import unittest
 
-from facade.Facade import create_new_document, get_document_list
+from sqlalchemy import create_engine
+
+from facade.Facade import Facade
 
 
 class FacadeTestCase(unittest.TestCase):
+
+    engine = create_engine('sqlite:///:memory:', echo=True)
+
     # def test_get_next_word(self):
     #     document_facade = DocumentFacade()
     #     document_id = 1
@@ -17,8 +22,9 @@ class FacadeTestCase(unittest.TestCase):
     #     self.assertEqual(document_word.contexts[0], context)
 
     def test_should_get_created_documents(self):
-        document = create_new_document("test document")
-        documents = get_document_list()
+        facade = Facade(sql_engine=FacadeTestCase.engine)
+        document = facade.create_new_document("test document")
+        documents = facade.get_document_list()
         self.assertEqual(len(documents), 1)
         self.assertEqual(documents[0], document)
 
