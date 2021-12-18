@@ -1,0 +1,6 @@
+anki==2.1.49
+aqt==2.1.49
+mypy==0.920
+pytest==6.2.5
+PyQt5~=5.15.6
+SQLAlchemy~=1.4.28
