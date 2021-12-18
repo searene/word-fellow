@@ -1,8 +1,8 @@
 import sqlalchemy
 from sqlalchemy import Column, Integer, String
 
-from domain.document import Base
-from infrastructure.session import engine
+from vocab_builder.domain.document import Base
+from vocab_builder.infrastructure.session import engine
 
 
 class Document(Base):

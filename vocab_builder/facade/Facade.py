@@ -1,7 +1,7 @@
 from sqlalchemy.engine import Engine
 from sqlalchemy.orm import sessionmaker
 
-from domain.document.Document import Document
+from vocab_builder.domain.document.Document import Document
 
 
 class Facade:

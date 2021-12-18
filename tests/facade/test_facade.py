@@ -2,7 +2,7 @@ import unittest
 
 from sqlalchemy import create_engine
 
-from facade.Facade import Facade
+from vocab_builder.facade.Facade import Facade
 
 
 class FacadeTestCase(unittest.TestCase):
