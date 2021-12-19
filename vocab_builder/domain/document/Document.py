@@ -1,8 +1,8 @@
-import sqlalchemy
 from sqlalchemy import Column, Integer, String
+from sqlalchemy.orm import Session
 
 from vocab_builder.domain.document import Base
-from vocab_builder.infrastructure.session import engine
+from vocab_builder.domain.word.Word import WordStatus
 
 
 class Document(Base):
@@ -10,7 +10,13 @@ class Document(Base):
 
     id = Column(Integer, primary_key=True)
     name = Column(String)
+    contents = Column(String)
 
+    def get_next_word(self, word_status: WordStatus):
+        pass
 
-if not sqlalchemy.inspect(engine).has_table("documents"):
-    Document.metadata.create_all(engine)
+    @staticmethod
+    def init_database(session: Session):
+        engine = session.get_bind()
+        if not engine.has_table(Document.__tablename__):
+            Document.metadata.create_all(engine)
