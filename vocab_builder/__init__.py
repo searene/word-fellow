@@ -2,14 +2,24 @@ from aqt import mw
 from aqt.qt import *
 
 from vocab_builder.domain.document.Document import Document
+from vocab_builder.domain.document.DocumentFactory import DocumentFactory
 from vocab_builder.domain.word.Word import Word
 from vocab_builder.ui.DatabaseUtils import prod_session
 from vocab_builder.ui.MainDialog import MainDialog
 
 
+def __insert_test_data():
+    document_factory = DocumentFactory(prod_session)
+    document_factory.create_new_document("test name1", "test_contents1")
+    document_factory.create_new_document("test name2", "test_contents2")
+
+
 def __init_database():
     Document.init_database(prod_session)
     Word.init_database(prod_session)
+
+    # FIXME remove test data
+    __insert_test_data()
 
 
 def show_main_dialog() -> None:

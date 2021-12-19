@@ -1,9 +1,9 @@
-from PyQt5.QtWidgets import (QWidget, QPushButton, QLineEdit,
-                             QInputDialog, QApplication, QHBoxLayout, QVBoxLayout, QLabel, QDialog)
 import sys
 
-from vocab_builder import prod_session, Document
-from vocab_builder.domain.document.DocumentFactory import DocumentFactory
+from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import (QPushButton, QApplication, QHBoxLayout, QVBoxLayout, QLabel, QDialog)
+
+from vocab_builder import prod_session
 from vocab_builder.domain.document.DocumentService import DocumentService
 from vocab_builder.ui.PyQtUtils import get_horizontal_line
 
@@ -16,8 +16,8 @@ class MainDialog(QDialog):
 
     def __get_top_bar(self) -> QHBoxLayout:
         hbox = QHBoxLayout()
-        hbox.addWidget(QLabel("Imported Documents"))
-        hbox.addWidget(QPushButton("Import"))
+        hbox.addWidget(QLabel("Documents"))
+        hbox.addWidget(QPushButton("Import New Document"))
         return hbox
 
     def __get_document_list(self) -> QVBoxLayout:
@@ -27,9 +27,8 @@ class MainDialog(QDialog):
         documents = document_service.get_document_list()
         for doc in documents:
             hbox = QHBoxLayout()
-            hbox.addStretch(1)
-            hbox.addWidget(QLabel(doc.name))
-            vbox.addWidget(hbox)
+            hbox.addWidget(QLabel(doc.name), 0, Qt.AlignLeft)
+            vbox.addLayout(hbox)
         return vbox
 
     def __init_ui(self):
