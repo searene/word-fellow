@@ -21,3 +21,6 @@ class DocumentFactory:
         words = document_analyzer.get_words(doc)
         save_words(words)
         return doc
+
+    def get_document_list(self) -> [Document]:
+        return self.session.query(Document).all()
