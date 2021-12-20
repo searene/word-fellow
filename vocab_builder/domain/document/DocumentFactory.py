@@ -1,5 +1,4 @@
-from sqlalchemy.engine import Engine
-from sqlalchemy.orm import sessionmaker, Session
+from sqlalchemy.orm import Session
 
 from vocab_builder.domain.document.Document import Document
 from vocab_builder.domain.document.analyzer import IDocumentAnalyzer

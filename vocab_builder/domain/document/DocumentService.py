@@ -1,4 +1,3 @@
-from sqlalchemy.engine import Engine
 from sqlalchemy.orm import Session
 
 from vocab_builder.domain.document.Document import Document

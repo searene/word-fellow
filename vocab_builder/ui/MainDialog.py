@@ -3,8 +3,8 @@ import sys
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import (QPushButton, QApplication, QHBoxLayout, QVBoxLayout, QLabel, QDialog)
 
-from vocab_builder import prod_session
 from vocab_builder.domain.document.DocumentService import DocumentService
+from vocab_builder.ui import prod_session
 from vocab_builder.ui.PyQtUtils import get_horizontal_line
 
 
