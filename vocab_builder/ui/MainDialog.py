@@ -3,7 +3,7 @@ import sys
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import (QPushButton, QApplication, QHBoxLayout, QVBoxLayout, QLabel, QDialog)
 
-from vocab_builder.domain.document.DocumentService import DocumentService
+from vocab_builder.domain.document.DocumentFactory import DocumentFactory
 from vocab_builder.ui import prod_session
 from vocab_builder.ui.PyQtUtils import get_horizontal_line
 
@@ -23,8 +23,8 @@ class MainDialog(QDialog):
     def __get_document_list(self) -> QVBoxLayout:
         vbox = QVBoxLayout()
 
-        document_service = DocumentService(prod_session)
-        documents = document_service.get_document_list()
+        document_factory = DocumentFactory(prod_session)
+        documents = document_factory.get_document_list()
         for doc in documents:
             hbox = QHBoxLayout()
             hbox.addWidget(QLabel(doc.name), 0, Qt.AlignLeft)
