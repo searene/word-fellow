@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 
 from vocab_builder.domain.document import Base
 from vocab_builder.domain.word.Word import WordStatus
+from vocab_builder.infrastructure.VocabBuilderDB import VocabBuilderDB
 
 
 class Document(Base):
@@ -16,7 +17,11 @@ class Document(Base):
         pass
 
     @staticmethod
-    def init_database(session: Session):
-        engine = session.get_bind()
-        if not engine.has_table(Document.__tablename__):
-            Document.metadata.create_all(engine)
+    def init_database(db: VocabBuilderDB):
+        db.execute("""
+        CREATE TABLE IF NOT EXISTS documents (
+            id INTEGER PRIMARY KEY,
+            name TEXT,
+            contents TEXT
+        )
+        """)
