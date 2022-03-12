@@ -1,20 +1,21 @@
-from sqlalchemy import Column, Integer, String
-from sqlalchemy.orm import Session
-
-from vocab_builder.domain.document import Base
 from vocab_builder.domain.word.Word import WordStatus
 from vocab_builder.infrastructure.VocabBuilderDB import VocabBuilderDB
 
 
-class Document(Base):
-    __tablename__ = 'documents'
+class Document:
 
-    id = Column(Integer, primary_key=True)
-    name = Column(String)
-    contents = Column(String)
+    def __init__(self, id: int, name: str, contents: str):
+        self.id = id
+        self.name = name
+        self.contents = contents
 
     def get_next_word(self, word_status: WordStatus):
         pass
+
+    def __eq__(self, other):
+        if not isinstance(other, Document):
+            return False
+        return self.id == other.id and self.name == other.name and self.contents == other.contents
 
     @staticmethod
     def init_database(db: VocabBuilderDB):

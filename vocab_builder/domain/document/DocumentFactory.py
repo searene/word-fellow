@@ -1,19 +1,22 @@
 from sqlalchemy.orm import Session
 
 from vocab_builder.domain.document.Document import Document
+from vocab_builder.domain.document.DocumentConverter import convert_sql_res_to_document_object
 from vocab_builder.domain.document.analyzer import IDocumentAnalyzer
 from vocab_builder.domain.word.WordService import save_words
+from vocab_builder.infrastructure.VocabBuilderDB import VocabBuilderDB
 
 
 class DocumentFactory:
 
-    def __init__(self, session: Session):
-        self.session = session
+    def __init__(self, db: VocabBuilderDB):
+        self.db = db
 
     def create_new_document(self, name: str, contents: str) -> Document:
-        document = Document(name=name, contents=contents)
-        self.session.add(document)
-        self.session.commit()
+        document_id = self.db.insert("""
+            insert into documents (name, contents) values (?, ?)
+        """, (name, contents))
+        document = Document(document_id, name=name, contents=contents)
         return document
 
     def import_document(self, name, contents, document_analyzer: IDocumentAnalyzer) -> Document:
@@ -23,4 +26,8 @@ class DocumentFactory:
         return doc
 
     def get_document_list(self) -> [Document]:
-        return self.session.query(Document).all()
+        query_res = self.db.all("""
+            select id, name, contents
+            from documents
+        """)
+        return convert_sql_res_to_document_object(query_res)
