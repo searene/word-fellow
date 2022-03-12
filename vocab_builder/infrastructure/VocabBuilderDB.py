@@ -2,8 +2,6 @@ from sqlite3 import Cursor
 from typing import Any, List, Tuple
 from sqlite3 import dbapi2 as sqlite
 
-from anki.db import DB
-
 
 # TODO should I call close manually?
 # TODO should I call commit manually?

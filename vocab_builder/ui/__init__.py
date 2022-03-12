@@ -4,6 +4,7 @@ from aqt.qt import *
 from vocab_builder.domain import utils
 from vocab_builder.domain.document.DocumentFactory import DocumentFactory
 from vocab_builder.ui.DatabaseUtils import prod_session
+from vocab_builder.ui.DatabaseUtils import prod_vocab_builder_db
 from vocab_builder.ui.MainDialog import MainDialog
 
 
