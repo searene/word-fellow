@@ -2,7 +2,9 @@ import sys
 
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import (QPushButton, QApplication, QHBoxLayout, QVBoxLayout, QLabel, QDialog, QFileDialog)
+from aqt.utils import showInfo
 
+from vocab_builder.domain.document.Document import Document
 from vocab_builder.domain.document.DocumentFactory import DocumentFactory
 from vocab_builder.domain.document.analyzer.DefaultDocumentAnalyzer import DefaultDocumentAnalyzer
 from vocab_builder.ui import prod_vocab_builder_db
@@ -15,6 +17,7 @@ class MainDialog(QDialog):
 
     def __init__(self):
         super().__init__()
+        self.__doc_list_vbox = MainDialog.__get_document_list()
         self.__init_ui()
 
     def show_dialog(self):
@@ -26,7 +29,7 @@ class MainDialog(QDialog):
         vbox.addStretch(1)
         vbox.addLayout(self.__get_top_bar())
         vbox.addWidget(get_horizontal_line())
-        vbox.addLayout(self.__get_document_list())
+        vbox.addLayout(self.__doc_list_vbox)
 
         self.setLayout(vbox)
         self.setWindowTitle("Vocab Builder")
@@ -44,15 +47,17 @@ class MainDialog(QDialog):
 
     def __open_import_new_document_dialog(self):
         document_file_path, file_filters = QFileDialog.getOpenFileName(self, 'Select document', '', '')
+        if len(document_file_path) == 0:
+            # The user didn't select any file
+            return
         doc_name = get_base_name_without_ext(document_file_path)
         doc_contents = Path(document_file_path).read_text()
 
         document_factory = DocumentFactory(prod_vocab_builder_db)
         default_document_analyzer = DefaultDocumentAnalyzer(prod_vocab_builder_db)
-        document_factory.import_document(doc_name, doc_contents, default_document_analyzer)
-        # TODO Tell the user it's done
-        # TODO refresh the document list
-        print("done")
+        doc = document_factory.import_document(doc_name, doc_contents, default_document_analyzer)
+        self.__doc_list_vbox.addLayout(MainDialog.__convert_doc_to_hbox(doc))
+        showInfo("Importing is done.")
 
     @staticmethod
     def __get_document_list() -> QVBoxLayout:
@@ -61,10 +66,14 @@ class MainDialog(QDialog):
         document_factory = DocumentFactory(prod_vocab_builder_db)
         documents = document_factory.get_document_list()
         for doc in documents:
-            hbox = QHBoxLayout()
-            hbox.addWidget(QLabel(doc.name), 0, Qt.AlignLeft)
-            vbox.addLayout(hbox)
+            vbox.addLayout(MainDialog.__convert_doc_to_hbox(doc))
         return vbox
+
+    @staticmethod
+    def __convert_doc_to_hbox(doc: Document) -> QHBoxLayout:
+        hbox = QHBoxLayout()
+        hbox.addWidget(QLabel(doc.name), 0, Qt.AlignLeft)
+        return hbox
 
 
 if __name__ == '__main__':
