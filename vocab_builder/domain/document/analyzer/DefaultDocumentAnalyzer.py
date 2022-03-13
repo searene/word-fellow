@@ -20,7 +20,7 @@ class DefaultDocumentAnalyzer(implements(IDocumentAnalyzer)):
 
     @staticmethod
     def __split_document_contents_into_words(doc: Document) -> [WordValueObject]:
-        delimiters = (",", " ", "\t", "\"", "'", "`", ".", "!", "(", ")", "@", "#", "?")
+        delimiters = (",", " ", "\t", "\"", "'", "`", ".", "!", "(", ")", "@", "#", "?", "\n")
         word_with_start_pos_list = split_with_positions(delimiters, doc.contents)
         word_to_value_object_dict = {}
         for word_with_start_pos in word_with_start_pos_list:

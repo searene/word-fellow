@@ -1,11 +1,14 @@
 import sys
 
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import (QPushButton, QApplication, QHBoxLayout, QVBoxLayout, QLabel, QDialog)
+from PyQt5.QtWidgets import (QPushButton, QApplication, QHBoxLayout, QVBoxLayout, QLabel, QDialog, QFileDialog)
 
 from vocab_builder.domain.document.DocumentFactory import DocumentFactory
+from vocab_builder.domain.document.analyzer.DefaultDocumentAnalyzer import DefaultDocumentAnalyzer
 from vocab_builder.ui import prod_vocab_builder_db
+from vocab_builder.ui.FileUtils import get_base_name_without_ext
 from vocab_builder.ui.PyQtUtils import get_horizontal_line
+from pathlib import Path
 
 
 class MainDialog(QDialog):
@@ -14,22 +17,9 @@ class MainDialog(QDialog):
         super().__init__()
         self.__init_ui()
 
-    def __get_top_bar(self) -> QHBoxLayout:
-        hbox = QHBoxLayout()
-        hbox.addWidget(QLabel("Documents"))
-        hbox.addWidget(QPushButton("Import New Document"))
-        return hbox
-
-    def __get_document_list(self) -> QVBoxLayout:
-        vbox = QVBoxLayout()
-
-        document_factory = DocumentFactory(prod_vocab_builder_db)
-        documents = document_factory.get_document_list()
-        for doc in documents:
-            hbox = QHBoxLayout()
-            hbox.addWidget(QLabel(doc.name), 0, Qt.AlignLeft)
-            vbox.addLayout(hbox)
-        return vbox
+    def show_dialog(self):
+        self.show()
+        self.exec_()
 
     def __init_ui(self):
         vbox = QVBoxLayout()
@@ -41,9 +31,40 @@ class MainDialog(QDialog):
         self.setLayout(vbox)
         self.setWindowTitle("Vocab Builder")
 
-    def show_dialog(self):
-        self.show()
-        self.exec_()
+    def __get_top_bar(self) -> QHBoxLayout:
+        hbox = QHBoxLayout()
+        hbox.addWidget(QLabel("Documents"))
+        hbox.addWidget(self.__get_import_new_document_button())
+        return hbox
+
+    def __get_import_new_document_button(self) -> QPushButton:
+        btn = QPushButton("Import New Document")
+        btn.clicked.connect(self.__open_import_new_document_dialog)
+        return btn
+
+    def __open_import_new_document_dialog(self):
+        document_file_path, file_filters = QFileDialog.getOpenFileName(self, 'Select document', '', '')
+        doc_name = get_base_name_without_ext(document_file_path)
+        doc_contents = Path(document_file_path).read_text()
+
+        document_factory = DocumentFactory(prod_vocab_builder_db)
+        default_document_analyzer = DefaultDocumentAnalyzer(prod_vocab_builder_db)
+        document_factory.import_document(doc_name, doc_contents, default_document_analyzer)
+        # TODO Tell the user it's done
+        # TODO refresh the document list
+        print("done")
+
+    @staticmethod
+    def __get_document_list() -> QVBoxLayout:
+        vbox = QVBoxLayout()
+
+        document_factory = DocumentFactory(prod_vocab_builder_db)
+        documents = document_factory.get_document_list()
+        for doc in documents:
+            hbox = QHBoxLayout()
+            hbox.addWidget(QLabel(doc.name), 0, Qt.AlignLeft)
+            vbox.addLayout(hbox)
+        return vbox
 
 
 if __name__ == '__main__':
