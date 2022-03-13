@@ -1,3 +1,4 @@
+from vocab_builder.domain.word.Word import Word, get_words_by_document_id
 from vocab_builder.domain.word.WordStatus import WordStatus
 from vocab_builder.infrastructure.VocabBuilderDB import VocabBuilderDB
 
@@ -11,6 +12,9 @@ class Document:
 
     def get_next_word(self, word_status: WordStatus):
         pass
+
+    def get_words(self, db: VocabBuilderDB) -> [Word]:
+        return get_words_by_document_id(self.document_id, db)
 
     def __eq__(self, other):
         if not isinstance(other, Document):

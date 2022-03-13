@@ -28,7 +28,7 @@ class VocabBuilderDB:
     def commit(self) -> None:
         return self.db.commit()
 
-    def all(self, sql: str) -> List:
-        c = self.execute(sql)
+    def all(self, sql: str, *params: Tuple) -> List:
+        c = self.execute(sql, params)
         res = c.fetchall()
         return res

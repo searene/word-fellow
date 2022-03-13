@@ -1,5 +1,5 @@
 from vocab_builder.domain.document.Document import Document
-from vocab_builder.domain.word.Word import Word
+from vocab_builder.domain.word import Word
 from vocab_builder.infrastructure import VocabBuilderDB
 
 
