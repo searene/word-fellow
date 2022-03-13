@@ -3,7 +3,7 @@ import unittest
 from tests.utils import get_test_vocab_builder_db
 from vocab_builder.domain.document.Document import Document
 from vocab_builder.domain.document.DocumentFactory import DocumentFactory
-from vocab_builder.domain.document.analyzer.en.TraceOriginDocumentAnalyzer import TraceOriginDocumentAnalyzer
+from vocab_builder.domain.document.analyzer.DefaultDocumentAnalyzer import DefaultDocumentAnalyzer
 
 
 class DocumentFactoryTestCase(unittest.TestCase):
@@ -15,7 +15,7 @@ class DocumentFactoryTestCase(unittest.TestCase):
 
         document_name = "test document"
         document_contents = "test contents"
-        document_factory.import_document(document_name, document_contents, TraceOriginDocumentAnalyzer())
+        document_factory.import_document(document_name, document_contents, DefaultDocumentAnalyzer())
 
         documents = document_factory.get_document_list()
         self.assertEqual(len(documents), 1)

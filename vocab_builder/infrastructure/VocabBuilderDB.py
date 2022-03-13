@@ -12,6 +12,9 @@ class VocabBuilderDB:
     def execute(self, sql: str, *params: Tuple) -> Cursor:
         return self.db.execute(sql, *params)
 
+    def execute_script(self, script: str) -> Cursor:
+        return self.db.executescript(script)
+
     def insert(self, sql: str, *params: Tuple) -> int:
         """Insert a record, return its id"""
         cursor = self.db.execute(sql, *params)

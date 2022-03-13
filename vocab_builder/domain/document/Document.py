@@ -1,11 +1,11 @@
-from vocab_builder.domain.word.Word import WordStatus
+from vocab_builder.domain.word.WordStatus import WordStatus
 from vocab_builder.infrastructure.VocabBuilderDB import VocabBuilderDB
 
 
 class Document:
 
-    def __init__(self, id: int, name: str, contents: str):
-        self.id = id
+    def __init__(self, document_id: int, name: str, contents: str):
+        self.document_id = document_id
         self.name = name
         self.contents = contents
 
@@ -15,7 +15,7 @@ class Document:
     def __eq__(self, other):
         if not isinstance(other, Document):
             return False
-        return self.id == other.id and self.name == other.name and self.contents == other.contents
+        return self.document_id == other.document_id and self.name == other.name and self.contents == other.contents
 
     @staticmethod
     def init_database(db: VocabBuilderDB):
