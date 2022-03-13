@@ -1,7 +1,14 @@
-ANKI_ADDON_FOLDER=$HOME/.local/share/Anki2/addons21
-TARGET_DIR=$HOME/.local/share/Anki2/addons21
-VOCAB_BUILDER_FOLDER_NAME=vocab_builder
+if [[ "$OSTYPE" =~ ^darwin ]]; then
+  ANKI_ADDON_FOLDER=$HOME/Library/Application\ Support/Anki2/addons21
+  TARGET_DIR=$HOME/Library/Application\ Support/Anki2/addons21
+fi
 
+if [[ "$OSTYPE" =~ ^linux ]]; then
+  ANKI_ADDON_FOLDER=$HOME/.local/share/Anki2/addons21
+  TARGET_DIR=$HOME/.local/share/Anki2/addons21
+fi
+
+VOCAB_BUILDER_FOLDER_NAME=vocab_builder
 function kill_anki_if_it_exists() {
   anki_pid=$(pgrep -l 'anki' | awk '{print $1}')
   if [ -n "$anki_pid" ]; then
@@ -15,7 +22,7 @@ function modify_init_py() {
 }
 
 rm -rf "${ANKI_ADDON_FOLDER:?}/$VOCAB_BUILDER_FOLDER_NAME"
-cp vocab_builder $TARGET_DIR/ -r
+cp -r vocab_builder "$TARGET_DIR"/
 modify_init_py
 
 kill_anki_if_it_exists
