@@ -3,18 +3,17 @@ from aqt.qt import *
 
 from vocab_builder.domain import utils
 from vocab_builder.domain.document.DocumentFactory import DocumentFactory
-from vocab_builder.ui.DatabaseUtils import prod_session
 from vocab_builder.ui.DatabaseUtils import prod_vocab_builder_db
 from vocab_builder.ui.MainDialog import MainDialog
 
 
 def __init_database():
-    utils.init_database(prod_session)
+    utils.init_database(prod_vocab_builder_db)
     insert_test_data()
 
 
 def insert_test_data():
-    document_factory = DocumentFactory(prod_session)
+    document_factory = DocumentFactory(prod_vocab_builder_db)
     document_factory.create_new_document("test name1", "test_contents1")
     document_factory.create_new_document("test name2", "test_contents2")
 

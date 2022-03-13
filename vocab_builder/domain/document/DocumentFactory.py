@@ -1,5 +1,3 @@
-from sqlalchemy.orm import Session
-
 from vocab_builder.domain.document.Document import Document
 from vocab_builder.domain.document.DocumentConverter import convert_sql_res_to_document_object
 from vocab_builder.domain.document.analyzer import IDocumentAnalyzer

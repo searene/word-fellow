@@ -1,7 +1,3 @@
-from sqlalchemy import create_engine
-from sqlalchemy.orm import Session, sessionmaker
-
-from vocab_builder.domain import utils
 from vocab_builder.infrastructure.VocabBuilderDB import VocabBuilderDB
 
 
