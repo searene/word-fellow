@@ -7,11 +7,6 @@ from vocab_builder.infrastructure import VocabBuilderDB
 from vocab_builder.infrastructure.utils import DBUtils
 
 
-# TODO remove it
-def save_words(words: [Word]):
-    pass
-
-
 def batch_insert(words: List[WordValueObject], db: VocabBuilderDB, max_insert_allowed_in_one_batch=500) -> None:
     pos = 0
 

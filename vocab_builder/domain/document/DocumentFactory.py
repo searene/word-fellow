@@ -1,7 +1,6 @@
 from vocab_builder.domain.document.Document import Document
 from vocab_builder.domain.document.DocumentConverter import convert_sql_res_to_document_object
 from vocab_builder.domain.document.analyzer import IDocumentAnalyzer
-from vocab_builder.domain.word.WordService import save_words
 from vocab_builder.infrastructure.VocabBuilderDB import VocabBuilderDB
 
 
@@ -20,7 +19,6 @@ class DocumentFactory:
     def import_document(self, name, contents, document_analyzer: IDocumentAnalyzer) -> Document:
         doc = self.create_new_document(name, contents)
         words = document_analyzer.get_words(doc)
-        save_words(words)
         return doc
 
     def get_document_list(self) -> [Document]:
