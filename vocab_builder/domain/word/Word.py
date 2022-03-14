@@ -1,5 +1,5 @@
 import json
-from typing import List, Tuple
+from typing import List, Tuple, Dict
 
 from vocab_builder.domain.word.WordValueObject import WordValueObject
 from vocab_builder.infrastructure import VocabBuilderDB
@@ -7,7 +7,7 @@ from vocab_builder.infrastructure import VocabBuilderDB
 
 class Word(WordValueObject):
 
-    def __init__(self, word_id: int, text: str, document_id: int, word_to_start_pos_dict: dict[str, [int]],
+    def __init__(self, word_id: int, text: str, document_id: int, word_to_start_pos_dict: Dict[str, List[int]],
                  skipped: bool):
         """
         Args:

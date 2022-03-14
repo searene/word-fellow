@@ -1,5 +1,3 @@
-from interface import implements
-
 from vocab_builder.domain.document.Document import Document
 from vocab_builder.domain.utils.StringUtils import split, split_with_positions
 from vocab_builder.domain.word.Word import Word
@@ -9,7 +7,7 @@ from vocab_builder.domain.word.WordValueObject import WordValueObject
 from vocab_builder.infrastructure import VocabBuilderDB
 
 
-class DefaultDocumentAnalyzer(implements(IDocumentAnalyzer)):
+class DefaultDocumentAnalyzer(IDocumentAnalyzer):
     def __init__(self, db: VocabBuilderDB):
         self.db = db
 

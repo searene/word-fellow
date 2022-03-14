@@ -1,6 +1,9 @@
+from typing import Dict, List
+
+
 class WordValueObject:
 
-    def __init__(self, text: str, document_id: int, word_to_start_pos_dict: dict[str, [int]], skipped: bool):
+    def __init__(self, text: str, document_id: int, word_to_start_pos_dict: Dict[str, List[int]], skipped: bool):
         """
         Args:
             text: The word text, e.g. "beautiful", "python", etc.

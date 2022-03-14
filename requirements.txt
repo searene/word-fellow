@@ -1,6 +1,4 @@
 anki==2.1.49
 aqt==2.1.49
-mypy==0.940
 pytest==7.0.1
 PyQt5==5.15.6
-python-interface==1.6.1
