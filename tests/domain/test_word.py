@@ -22,12 +22,12 @@ INSERT INTO words (text, document_id, positions, skipped) VALUES
               ('word1',
                1,
                '{"word1": [0]}',
-               'N');
+               0);
 INSERT INTO words (text, document_id, positions, skipped) VALUES
               ('word2',
                1,
                '{"word2": [6, 15]}',
-               'N');
+               0);
 COMMIT;""")
 
     def test_batch_insert_with_two_batches(self):
@@ -48,21 +48,21 @@ INSERT INTO words (text, document_id, positions, skipped) VALUES
               ('word1',
                1,
                '{"word1": [0]}',
-               'N');
+               0);
 COMMIT;""", ))
         self.assertEqual(args2, ("""BEGIN TRANSACTION;
 INSERT INTO words (text, document_id, positions, skipped) VALUES
               ('word2',
                1,
                '{"word2": [6, 15]}',
-               'N');
+               0);
 COMMIT;""", ))
 
     def test_get_words_by_document_id(self):
         db = get_test_vocab_builder_db()
         db.insert("""INSERT INTO words (id, text, document_id, positions, skipped) VALUES
-                  (1, 'word1', 1, '{"word1": [0]}', 'N'),
-                  (2, 'word2', 1, '{"word2": [6, 15]}', 'Y')""")
+                  (1, 'word1', 1, '{"word1": [0]}', 0),
+                  (2, 'word2', 1, '{"word2": [6, 15]}', 1)""")
 
         words = get_words_by_document_id(1, db)
 

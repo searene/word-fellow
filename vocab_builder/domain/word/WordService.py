@@ -31,7 +31,7 @@ def __get_insert_sql(word: WordValueObject) -> str:
               ('{DBUtils.escape_for_sql_statement(word.text)}',
                {word.document_id},
                '{DBUtils.escape_for_sql_statement(json.dumps(word.word_to_start_pos_dict))}',
-               '{'Y' if word.skipped else 'N'}');"""
+               {1 if word.skipped else 0});"""
 
 
 def __get_insert_script(words: [WordValueObject], start: int, end: int) -> str:

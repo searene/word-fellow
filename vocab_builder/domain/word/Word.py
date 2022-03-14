@@ -39,15 +39,13 @@ def get_words_by_document_id(document_id, db: VocabBuilderDB) -> [Word]:
 
 
 def init_database(db: VocabBuilderDB):
-    # TODO Use json as the type of positions?
-    # TODO Use bool as the type of skipped?
     db.execute("""
     CREATE TABLE IF NOT EXISTS words (
         id INTEGER PRIMARY KEY,
-        text TEXT,
-        document_id INTEGER,
-        positions TEXT,
-        skipped TEXT
+        text TEXT NOT NULL,
+        document_id INTEGER NOT NULL,
+        positions TEXT NOT NULL,
+        skipped BOOLEAN NOT NULL CHECK (skipped IN (0, 1))
     )
     """)
 
@@ -59,6 +57,6 @@ def __convert_word_data_objects_to_words(word_data_objects: List[Tuple]) -> List
         text = word_data_object[1]
         document_id = word_data_object[2]
         word_to_start_pos_dict = json.loads(word_data_object[3])
-        skipped = True if word_data_object[4] == 'Y' else False
+        skipped = True if word_data_object[4] == 1 else False
         res.append(Word(word_id, text, document_id, word_to_start_pos_dict, skipped))
     return res

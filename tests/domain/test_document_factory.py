@@ -15,7 +15,7 @@ class DocumentFactoryTestCase(unittest.TestCase):
 
         document_name = "test document"
         document_contents = "test contents"
-        document_factory.import_document(document_name, document_contents, DefaultDocumentAnalyzer())
+        document_factory.import_document(document_name, document_contents, DefaultDocumentAnalyzer(db))
 
         documents = document_factory.get_document_list()
         self.assertEqual(len(documents), 1)
