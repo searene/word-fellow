@@ -14,7 +14,7 @@ class DefaultDocumentAnalyzerTest(unittest.TestCase):
         test_doc = document_factory.create_new_document("test_name", "test contents")
 
         analyzer = DefaultDocumentAnalyzer(db)
-        words = analyzer.get_words(test_doc)
+        words = analyzer.import_words(test_doc)
 
         self.assertEqual(len(words), 2)
 
@@ -39,7 +39,7 @@ class DefaultDocumentAnalyzerTest(unittest.TestCase):
         test_doc = document_factory.create_new_document("test_name", "test contents test")
 
         analyzer = DefaultDocumentAnalyzer(db)
-        words = analyzer.get_words(test_doc)
+        words = analyzer.import_words(test_doc)
 
         self.assertEqual(len(words), 2)
 

@@ -1,8 +1,8 @@
 from vocab_builder.domain.document.Document import Document
-from vocab_builder.domain.utils.StringUtils import split, split_with_positions
+from vocab_builder.domain.document.analyzer import IDocumentAnalyzer
+from vocab_builder.domain.utils.StringUtils import split_with_positions
 from vocab_builder.domain.word.Word import Word
 from vocab_builder.domain.word.WordService import batch_insert
-from vocab_builder.domain.document.analyzer import IDocumentAnalyzer
 from vocab_builder.domain.word.WordValueObject import WordValueObject
 from vocab_builder.infrastructure import VocabBuilderDB
 
@@ -11,7 +11,7 @@ class DefaultDocumentAnalyzer(IDocumentAnalyzer):
     def __init__(self, db: VocabBuilderDB):
         self.db = db
 
-    def get_words(self, document: Document) -> [Word]:
+    def import_words(self, document: Document) -> [Word]:
         word_value_objects = self.__split_document_contents_into_words(document)
         batch_insert(word_value_objects, self.db)
         return document.get_words(self.db)

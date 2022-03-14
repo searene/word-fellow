@@ -18,7 +18,7 @@ class DocumentFactory:
 
     def import_document(self, name, contents, document_analyzer: IDocumentAnalyzer) -> Document:
         doc = self.create_new_document(name, contents)
-        words = document_analyzer.get_words(doc)
+        document_analyzer.import_words(doc)
         return doc
 
     def get_document_list(self) -> [Document]:

@@ -7,5 +7,5 @@ from vocab_builder.domain.word.Word import Word
 class IDocumentAnalyzer(Protocol):
 
     @abstractmethod
-    def get_words(self, document: Document) -> [Word]:
+    def import_words(self, document: Document) -> [Word]:
         pass
