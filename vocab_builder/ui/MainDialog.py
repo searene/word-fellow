@@ -8,6 +8,7 @@ from vocab_builder.domain.document.Document import Document
 from vocab_builder.domain.document.DocumentFactory import DocumentFactory
 from vocab_builder.domain.document.analyzer.DefaultDocumentAnalyzer import DefaultDocumentAnalyzer
 from vocab_builder.ui import prod_vocab_builder_db
+from vocab_builder.ui.DocumentDialog import DocumentDialog
 from vocab_builder.ui.FileUtils import get_base_name_without_ext
 from vocab_builder.ui.PyQtUtils import get_horizontal_line
 from pathlib import Path
@@ -17,7 +18,7 @@ class MainDialog(QDialog):
 
     def __init__(self):
         super().__init__()
-        self.__doc_list_vbox = MainDialog.__get_document_list()
+        self.__doc_list_vbox = self.__get_document_list()
         self.__init_ui()
 
     def show_dialog(self):
@@ -59,20 +60,25 @@ class MainDialog(QDialog):
         self.__doc_list_vbox.addLayout(MainDialog.__convert_doc_to_hbox(doc))
         showInfo("Importing is done.")
 
-    @staticmethod
-    def __get_document_list() -> QVBoxLayout:
+    def __get_document_list(self) -> QVBoxLayout:
         vbox = QVBoxLayout()
 
         document_factory = DocumentFactory(prod_vocab_builder_db)
         documents = document_factory.get_document_list()
         for doc in documents:
-            vbox.addLayout(MainDialog.__convert_doc_to_hbox(doc))
+            vbox.addLayout(self.__convert_doc_to_hbox(doc))
         return vbox
 
-    @staticmethod
-    def __convert_doc_to_hbox(doc: Document) -> QHBoxLayout:
+    def __open_document_dialog(self, document_id: int, document_name: str):
+        doc_dialog = DocumentDialog(document_id, document_name)
+        doc_dialog.show_dialog()
+        self.close()
+
+    def __convert_doc_to_hbox(self, doc: Document) -> QHBoxLayout:
         hbox = QHBoxLayout()
-        hbox.addWidget(QLabel(doc.name), 0, Qt.AlignLeft)
+        doc_btn = QPushButton(doc.name)
+        hbox.addWidget(doc_btn, 0, Qt.AlignLeft)
+        doc_btn.clicked.connect(lambda: self.__open_document_dialog(doc.document_id, doc.name))
         return hbox
 
 
