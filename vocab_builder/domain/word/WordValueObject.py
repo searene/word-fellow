@@ -11,6 +11,12 @@ class WordContext:
         self.context = context
         self.word_pos_in_context = word_pos_in_context
 
+    def get_prefix(self):
+        return self.context[:self.word_pos_in_context]
+
+    def get_suffix(self):
+        return self.context[self.word_pos_in_context + len(self.word):]
+
     def __eq__(self, other):
         if not isinstance(other, WordContext):
             return False

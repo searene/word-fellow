@@ -1,3 +1,4 @@
+from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QDialog, QVBoxLayout, QHBoxLayout, QComboBox, QLabel
 
 from vocab_builder.domain.document.Document import Document
@@ -51,12 +52,13 @@ class DocumentDialog(QDialog):
             return hbox
         vbox = QVBoxLayout()
         for word_context in self.__word.get_short_contexts(self.__doc):
-            label = QLabel(word_context.context)
-            # FIXME highlight word in the context
+            highlight_css = "font-weight: 800; text-decoration: underline"
+            html = f"{word_context.get_prefix()}<span style=\"{highlight_css}\">{word_context.word}</span>{word_context.get_suffix()}"
+            label = QLabel(html)
+            label.setTextFormat(Qt.RichText)
             vbox.addWidget(label)
             hbox.addLayout(vbox)
         return hbox
-
 
     def __get_bottom_bar(self) -> QHBoxLayout:
         # TODO
