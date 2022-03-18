@@ -52,10 +52,8 @@ class DocumentDialog(QDialog):
             return hbox
         vbox = QVBoxLayout()
         for word_context in self.__word.get_short_contexts(self.__doc):
-            highlight_css = "font-weight: 800; text-decoration: underline"
-            html = f"{word_context.get_prefix()}<span style=\"{highlight_css}\">{word_context.word}</span>{word_context.get_suffix()}"
+            html = f"{word_context.get_prefix()}<b><u>{word_context.word}</u></b>{word_context.get_suffix()}"
             label = QLabel(html)
-            label.setTextFormat(Qt.RichText)
             vbox.addWidget(label)
             hbox.addLayout(vbox)
         return hbox
