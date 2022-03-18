@@ -101,3 +101,18 @@ COMMIT;""", ))
 
         # check result
         self.assertTrue(unknown_word.has_same_values(word_value_object2))
+
+    def test_get_next_skipped_word(self):
+        # prepare test data
+        db = get_test_vocab_builder_db()
+        word_value_object1 = WordValueObject("test1", 1, {"test1": [0]}, True)
+        word_value_object2 = WordValueObject("test2", 1, {"test2": [0]}, False)
+        WordService.batch_insert([word_value_object1, word_value_object2], db)
+
+        # invoke the method
+        unknown_word = WordFactory.get_next_word(doc_id=1, offset=0, word_status=WordStatus.SKIPPED, db=db)
+
+        # check result
+        self.assertTrue(unknown_word.has_same_values(word_value_object1))
+
+
