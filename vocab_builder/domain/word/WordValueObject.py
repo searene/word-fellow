@@ -24,6 +24,18 @@ class WordContext:
                self.word_pos_in_context == other.word_pos_in_context
 
 
+class ShortAndLongContext:
+
+    def __init__(self, short_context: WordContext, long_context: WordContext):
+        self.short_context = short_context
+        self.long_context = long_context
+
+    def __eq__(self, other):
+        if not isinstance(other, ShortAndLongContext):
+            return False
+        return self.short_context == other.short_context and self.long_context == other.long_context
+
+
 class WordValueObject:
 
     def __init__(self, text: str, document_id: int, word_to_start_pos_dict: Dict[str, List[int]], skipped: bool):
@@ -45,11 +57,13 @@ class WordValueObject:
     def get_short_context(self, doc: 'Document', word: str, pos: int) -> WordContext:
         return self.__get_context(50, doc, word, pos)
 
-    def get_short_contexts(self, doc: 'Document', limit=5) -> [WordContext]:
+    def get_short_and_long_contexts(self, doc: 'Document', limit=5) -> [ShortAndLongContext]:
         word_contexts = []
         for word in self.word_to_start_pos_dict:
             for pos in self.word_to_start_pos_dict[word]:
-                word_contexts.append(self.get_short_context(doc, word, pos))
+                short_context = self.get_short_context(doc, word, pos)
+                long_context = self.get_long_context(doc, word, pos)
+                word_contexts.append(ShortAndLongContext(short_context, long_context))
                 if len(word_contexts) >= limit:
                     return word_contexts
         return word_contexts

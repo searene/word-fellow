@@ -51,9 +51,12 @@ class DocumentDialog(QDialog):
             hbox.addWidget(QLabel("No word is available"))
             return hbox
         vbox = QVBoxLayout()
-        for word_context in self.__word.get_short_contexts(self.__doc):
-            html = f"{word_context.get_prefix()}<b><u>{word_context.word}</u></b>{word_context.get_suffix()}"
+        for short_and_long_context in self.__word.get_short_and_long_contexts(self.__doc):
+            short_context = short_and_long_context.short_context
+            long_context = short_and_long_context.long_context
+            html = f"{short_context.get_prefix()}<b><u>{short_context.word}</u></b>{short_context.get_suffix()}"
             label = QLabel(html)
+            # FIXME click on QLabel to show the long context
             vbox.addWidget(label)
             hbox.addLayout(vbox)
         return hbox

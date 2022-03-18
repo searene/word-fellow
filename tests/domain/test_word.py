@@ -9,7 +9,7 @@ from vocab_builder.domain.word import WordService, WordFactory
 from vocab_builder.domain.word.Word import get_words_by_document_id, Word
 from vocab_builder.domain.word.WordService import batch_insert
 from vocab_builder.domain.word.WordStatus import WordStatus
-from vocab_builder.domain.word.WordValueObject import WordValueObject, WordContext
+from vocab_builder.domain.word.WordValueObject import WordValueObject, WordContext, ShortAndLongContext
 
 
 class WordTestCase(unittest.TestCase):
@@ -138,8 +138,10 @@ COMMIT;""", ))
         doc = Document(1, "test doc", "This test is a test.")
         word = Word(1, "test", 1, {"test": [5, 15]}, False)
 
-        contexts = word.get_short_contexts(doc)
+        short_and_long_contexts = word.get_short_and_long_contexts(doc)
 
         expected_context1 = WordContext("test", "This test is a test", 5)
         expected_context2 = WordContext("test", "This test is a test", 15)
-        self.assertEqual(contexts, [expected_context1, expected_context2])
+        expected_short_and_long_contexts1 = ShortAndLongContext(expected_context1, expected_context1)
+        expected_short_and_long_contexts2 = ShortAndLongContext(expected_context2, expected_context2)
+        self.assertEqual(short_and_long_contexts, [expected_short_and_long_contexts1, expected_short_and_long_contexts2])
