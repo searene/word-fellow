@@ -2,13 +2,14 @@ import unittest
 from unittest.mock import Mock
 
 from tests.utils import get_test_vocab_builder_db
+from vocab_builder.domain.document.Document import Document
 from vocab_builder.domain.status import GlobalWordStatus
 from vocab_builder.domain.status.GlobalWordStatus import Status
 from vocab_builder.domain.word import WordService, WordFactory
 from vocab_builder.domain.word.Word import get_words_by_document_id, Word
 from vocab_builder.domain.word.WordService import batch_insert
 from vocab_builder.domain.word.WordStatus import WordStatus
-from vocab_builder.domain.word.WordValueObject import WordValueObject
+from vocab_builder.domain.word.WordValueObject import WordValueObject, WordContext
 
 
 class WordTestCase(unittest.TestCase):
@@ -115,4 +116,20 @@ COMMIT;""", ))
         # check result
         self.assertTrue(unknown_word.has_same_values(word_value_object1))
 
+    def test_get_context_without_exceeding_boundaries(self):
+        doc = Document(1, "test doc", "This test is here.")
+        word = Word(1, "test", 1, {"test": [5]}, False)
 
+        context = word._WordValueObject__get_context(2, doc, "test", 5)
+
+        expected_context = WordContext("test", "s test i", 2)
+        self.assertEqual(context, expected_context)
+
+    def test_get_context_with_exceeded_boundaries(self):
+        doc = Document(1, "test doc", "This test is here.")
+        word = Word(1, "test", 1, {"test": [5]}, False)
+
+        context = word._WordValueObject__get_context(100, doc, "test", 5)
+
+        expected_context = WordContext("test", "This test is here", 5)
+        self.assertEqual(context, expected_context)

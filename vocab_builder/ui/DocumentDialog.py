@@ -1,12 +1,19 @@
-from PyQt5.QtWidgets import QDialog, QVBoxLayout, QHBoxLayout, QComboBox
+from PyQt5.QtWidgets import QDialog, QVBoxLayout, QHBoxLayout, QComboBox, QLabel
+
+from vocab_builder.domain.document.Document import Document
+from vocab_builder.domain.word.WordStatus import WordStatus
+from vocab_builder.infrastructure import VocabBuilderDB
 
 
 class DocumentDialog(QDialog):
 
-    def __init__(self, document_id: int, document_name: str):
+    def __init__(self, doc: Document, db: VocabBuilderDB):
         super(DocumentDialog, self).__init__()
-        self.document_id = document_id
-        self.document_name = document_name
+        self.__db = db
+        self.__doc = doc
+        self.__offset = 0
+        self.__status_combo_box = DocumentDialog.__get_status_combo_box()
+        self.__word = doc.get_next_word(0, self.__get_word_status(), db)
         self.__init_ui()
 
     def show_dialog(self):
@@ -24,20 +31,31 @@ class DocumentDialog(QDialog):
 
     def __get_top_bar(self) -> QHBoxLayout:
         hbox = QHBoxLayout()
-        hbox.addWidget(self.__get_status_combo_box())
+        hbox.addWidget(self.__status_combo_box)
         return hbox
 
-    def __get_status_combo_box(self) -> QComboBox:
+    @staticmethod
+    def __get_status_combo_box() -> QComboBox:
         status_combo_box = QComboBox()
-        # TODO Fetch the list dynamically
-        status_combo_box.addItem("Unknown")
-        status_combo_box.addItem("Known")
-        status_combo_box.addItem("Studying")
+        for status in WordStatus:
+            status_combo_box.addItem(status.name)
         return status_combo_box
 
+    def __get_word_status(self) -> WordStatus:
+        return WordStatus[self.__status_combo_box.currentText()]
+
     def __get_middle_area(self) -> QHBoxLayout:
-        # TODO
-        return QHBoxLayout()
+        hbox = QHBoxLayout()
+        if self.__word is None:
+            hbox.addWidget(QLabel("No word is available"))
+            return hbox
+        vbox = QVBoxLayout()
+        for word, pos_list in self.__word.word_to_start_pos_dict:
+            label = QLabel()
+            vbox.addWidget(QLabel())
+            # FIXME
+        return hbox
+
 
     def __get_bottom_bar(self) -> QHBoxLayout:
         # TODO
