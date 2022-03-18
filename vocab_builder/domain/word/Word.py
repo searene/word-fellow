@@ -34,7 +34,7 @@ class Word(WordValueObject):
 
 
 def get_words_by_document_id(document_id, db: VocabBuilderDB) -> [Word]:
-    words_data_objects = db.fetch_all("""SELECT * from words WHERE document_id = ?""", document_id)
+    words_data_objects = db.fetch_all("""SELECT * from words WHERE document_id = ?""", (document_id,))
     return convert_word_data_objects_to_words(words_data_objects)
 
 

@@ -20,8 +20,22 @@ def __get_next_unknown_word(doc_id: int, offset: int, db: VocabBuilderDB) -> Opt
     return vocab_builder.domain.word.Word.convert_word_data_object_to_word(word_query_res)
 
 
+def __get_next_known_or_studying_word(doc_id: int, offset: int, word_status: WordStatus, db: VocabBuilderDB):
+    word_query_res = db.fetch_one(f"""
+    select w.* from words w
+    join global_word_status g on w.text = g.word
+    where g.status = ?
+        and w.skipped = 0
+        and w.document_id = {doc_id}
+    limit {offset}, 1
+    """, (word_status.name, ))
+    if word_query_res is None:
+        return None
+    return vocab_builder.domain.word.Word.convert_word_data_object_to_word(word_query_res)
+
+
 def get_next_word(doc_id: int, offset: int, word_status: WordStatus, db: VocabBuilderDB) -> Optional[Word]:
     if word_status == WordStatus.UNKNOWN:
         return __get_next_unknown_word(doc_id, offset, db)
     else:
-        pass
+        return __get_next_known_or_studying_word(doc_id, offset, word_status, db)

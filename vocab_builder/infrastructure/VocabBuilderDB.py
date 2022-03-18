@@ -29,9 +29,9 @@ class VocabBuilderDB:
         return self.db.commit()
 
     def fetch_one(self, sql: str, *params: Tuple) -> Optional[Tuple]:
-        c = self.execute(sql, params)
+        c = self.execute(sql, *params)
         return c.fetchone()
 
     def fetch_all(self, sql: str, *params: Tuple) -> List[Tuple]:
-        c = self.execute(sql, params)
+        c = self.execute(sql, *params)
         return c.fetchall()

@@ -2,6 +2,8 @@ import unittest
 from unittest.mock import Mock
 
 from tests.utils import get_test_vocab_builder_db
+from vocab_builder.domain.status import GlobalWordStatus
+from vocab_builder.domain.status.GlobalWordStatus import Status
 from vocab_builder.domain.word import WordService, WordFactory
 from vocab_builder.domain.word.Word import get_words_by_document_id, Word
 from vocab_builder.domain.word.WordService import batch_insert
@@ -81,6 +83,21 @@ COMMIT;""", ))
 
         # invoke the method
         unknown_word = WordFactory.get_next_word(doc_id=1, offset=0, word_status=WordStatus.UNKNOWN, db=db)
+
+        # check result
+        self.assertTrue(unknown_word.has_same_values(word_value_object2))
+
+    def test_get_next_known_word(self):
+        # prepare test data
+        db = get_test_vocab_builder_db()
+        word_value_object1 = WordValueObject("test1", 1, {"test1": [0]}, True)
+        word_value_object2 = WordValueObject("test2", 1, {"test2": [0]}, False)
+        WordService.batch_insert([word_value_object1, word_value_object2], db)
+
+        GlobalWordStatus.insert_word_status("test2", Status.KNOWN, db)
+
+        # invoke the method
+        unknown_word = WordFactory.get_next_word(doc_id=1, offset=0, word_status=WordStatus.KNOWN, db=db)
 
         # check result
         self.assertTrue(unknown_word.has_same_values(word_value_object2))
