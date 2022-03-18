@@ -5,6 +5,8 @@ from vocab_builder.domain import utils
 from vocab_builder.domain.document.DocumentFactory import DocumentFactory
 from vocab_builder.ui.DatabaseUtils import prod_vocab_builder_db
 from vocab_builder.ui.MainDialog import MainDialog
+import vocab_builder.domain.word.WordService as WordService
+import vocab_builder.domain.word.WordValueObject as WordValueObject
 
 
 def __init_database():
@@ -14,12 +16,18 @@ def __init_database():
 
 def insert_test_data():
     document_factory = DocumentFactory(prod_vocab_builder_db)
-    document_factory.create_new_document("test name1", "test_contents1")
-    document_factory.create_new_document("test name2", "test_contents2")
+    doc1 = document_factory.create_new_document("test name1", "this is this this")
+    doc2 = document_factory.create_new_document("test name2", "test_contents2")
+
+    word_value_objects = [
+        WordValueObject.WordValueObject("this", doc1.document_id, {"this": [0, 8, 13]}, False),
+        WordValueObject.WordValueObject("is", doc1.document_id, {"is": [5]}, False)
+    ]
+    WordService.batch_insert(word_value_objects, prod_vocab_builder_db)
 
 
 def show_main_dialog() -> None:
-    dialog = MainDialog()
+    dialog = MainDialog(prod_vocab_builder_db)
     dialog.show_dialog()
 
 

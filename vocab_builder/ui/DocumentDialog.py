@@ -21,7 +21,7 @@ class DocumentDialog(QDialog):
         self.exec_()
 
     def __init_ui(self):
-        self.setWindowTitle(self.document_name)
+        self.setWindowTitle(self.__doc.name)
 
         vbox = QVBoxLayout()
         vbox.addLayout(self.__get_top_bar())
@@ -50,10 +50,11 @@ class DocumentDialog(QDialog):
             hbox.addWidget(QLabel("No word is available"))
             return hbox
         vbox = QVBoxLayout()
-        for word, pos_list in self.__word.word_to_start_pos_dict:
-            label = QLabel()
-            vbox.addWidget(QLabel())
-            # FIXME
+        for word_context in self.__word.get_short_contexts(self.__doc):
+            label = QLabel(word_context.context)
+            # FIXME highlight word in the context
+            vbox.addWidget(label)
+            hbox.addLayout(vbox)
         return hbox
 
 

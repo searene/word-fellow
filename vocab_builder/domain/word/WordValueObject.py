@@ -39,6 +39,15 @@ class WordValueObject:
     def get_short_context(self, doc: 'Document', word: str, pos: int) -> WordContext:
         return self.__get_context(50, doc, word, pos)
 
+    def get_short_contexts(self, doc: 'Document', limit=5) -> [WordContext]:
+        word_contexts = []
+        for word in self.word_to_start_pos_dict:
+            for pos in self.word_to_start_pos_dict[word]:
+                word_contexts.append(self.get_short_context(doc, word, pos))
+                if len(word_contexts) >= limit:
+                    return word_contexts
+        return word_contexts
+
     def __get_context(self, length_to_end: int, doc: 'Document', word: str, pos: int) -> WordContext:
         start_index = pos - length_to_end if pos - length_to_end >= 0 else 0
         end_index = pos + len(word) + length_to_end if pos + len(word) + length_to_end < len(doc.contents) else len(

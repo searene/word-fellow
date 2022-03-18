@@ -133,3 +133,13 @@ COMMIT;""", ))
 
         expected_context = WordContext("test", "This test is here", 5)
         self.assertEqual(context, expected_context)
+
+    def test_get_short_contexts(self):
+        doc = Document(1, "test doc", "This test is a test.")
+        word = Word(1, "test", 1, {"test": [5, 15]}, False)
+
+        contexts = word.get_short_contexts(doc)
+
+        expected_context1 = WordContext("test", "This test is a test", 5)
+        expected_context2 = WordContext("test", "This test is a test", 15)
+        self.assertEqual(contexts, [expected_context1, expected_context2])
