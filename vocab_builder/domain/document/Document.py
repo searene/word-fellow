@@ -1,3 +1,5 @@
+from typing import Optional
+
 from vocab_builder.domain.word.Word import Word, get_words_by_document_id
 from vocab_builder.domain.word.WordStatus import WordStatus
 from vocab_builder.infrastructure.VocabBuilderDB import VocabBuilderDB
@@ -10,7 +12,7 @@ class Document:
         self.name = name
         self.contents = contents
 
-    def get_next_word(self, word_status: WordStatus):
+    def get_next_word(self, offset: int, word_status: WordStatus, db: VocabBuilderDB) -> Optional[Word]:
         pass
 
     def get_words(self, db: VocabBuilderDB) -> [Word]:

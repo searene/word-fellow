@@ -20,7 +20,7 @@ class VocabBuilderDBTestCase(unittest.TestCase):
             COMMIT;
         """)
 
-        records = db.all("""
+        records = db.fetch_all("""
         SELECT * FROM test_table
         """)
         self.assertEqual(len(records), 2)

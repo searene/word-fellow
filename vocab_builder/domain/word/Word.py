@@ -1,5 +1,5 @@
 import json
-from typing import List, Tuple, Dict
+from typing import List, Dict, Tuple
 
 from vocab_builder.domain.word.WordValueObject import WordValueObject
 from vocab_builder.infrastructure import VocabBuilderDB
@@ -34,8 +34,8 @@ class Word(WordValueObject):
 
 
 def get_words_by_document_id(document_id, db: VocabBuilderDB) -> [Word]:
-    words_data_objects = db.all("""SELECT * from words WHERE document_id = ?""", document_id)
-    return __convert_word_data_objects_to_words(words_data_objects)
+    words_data_objects = db.fetch_all("""SELECT * from words WHERE document_id = ?""", document_id)
+    return convert_word_data_objects_to_words(words_data_objects)
 
 
 def init_database(db: VocabBuilderDB):
@@ -50,13 +50,15 @@ def init_database(db: VocabBuilderDB):
     """)
 
 
-def __convert_word_data_objects_to_words(word_data_objects: List[Tuple]) -> List[Word]:
-    res = []
-    for word_data_object in word_data_objects:
-        word_id = word_data_object[0]
-        text = word_data_object[1]
-        document_id = word_data_object[2]
-        word_to_start_pos_dict = json.loads(word_data_object[3])
-        skipped = True if word_data_object[4] == 1 else False
-        res.append(Word(word_id, text, document_id, word_to_start_pos_dict, skipped))
-    return res
+def convert_word_data_objects_to_words(word_data_objects: List[Tuple]) -> List[Word]:
+    return [convert_word_data_object_to_word(word_data_object)
+            for word_data_object in word_data_objects]
+
+
+def convert_word_data_object_to_word(word_data_object: Tuple) -> Word:
+    word_id = word_data_object[0]
+    text = word_data_object[1]
+    document_id = word_data_object[2]
+    word_to_start_pos_dict = json.loads(word_data_object[3])
+    skipped = True if word_data_object[4] == 1 else False
+    return Word(word_id, text, document_id, word_to_start_pos_dict, skipped)

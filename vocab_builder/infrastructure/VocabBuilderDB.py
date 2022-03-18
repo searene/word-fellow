@@ -1,5 +1,5 @@
 from sqlite3 import Cursor
-from typing import Any, List, Tuple
+from typing import Any, List, Tuple, Optional
 from sqlite3 import dbapi2 as sqlite
 
 
@@ -28,7 +28,10 @@ class VocabBuilderDB:
     def commit(self) -> None:
         return self.db.commit()
 
-    def all(self, sql: str, *params: Tuple) -> List:
+    def fetch_one(self, sql: str, *params: Tuple) -> Optional[Tuple]:
         c = self.execute(sql, params)
-        res = c.fetchall()
-        return res
+        return c.fetchone()
+
+    def fetch_all(self, sql: str, *params: Tuple) -> List[Tuple]:
+        c = self.execute(sql, params)
+        return c.fetchall()

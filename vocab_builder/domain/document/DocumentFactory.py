@@ -22,7 +22,7 @@ class DocumentFactory:
         return doc
 
     def get_document_list(self) -> [Document]:
-        query_res = self.db.all("""
+        query_res = self.db.fetch_all("""
             select id, name, contents
             from documents
         """)
