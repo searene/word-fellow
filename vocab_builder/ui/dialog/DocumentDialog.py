@@ -1,8 +1,11 @@
-from PyQt5.QtWidgets import QDialog, QVBoxLayout, QHBoxLayout, QComboBox, QLabel
+from PyQt5.QtWidgets import QDialog, QVBoxLayout, QHBoxLayout, QComboBox, QLabel, QPushButton
 
 from vocab_builder.domain.document.Document import Document
 from vocab_builder.domain.word.WordStatus import WordStatus
+from vocab_builder.domain.word.WordValueObject import WordContext
 from vocab_builder.infrastructure import VocabBuilderDB
+from vocab_builder.ui.dialog.LongContextDialog import LongContextDialog
+from vocab_builder.ui.util import WordUtils
 
 
 class DocumentDialog(QDialog):
@@ -19,6 +22,9 @@ class DocumentDialog(QDialog):
     def show_dialog(self):
         self.show()
         self.exec_()
+
+    def close_dialog(self):
+        self.close()
 
     def __init_ui(self):
         self.setWindowTitle(self.__doc.name)
@@ -51,15 +57,36 @@ class DocumentDialog(QDialog):
             return hbox
         vbox = QVBoxLayout()
         for short_and_long_context in self.__word.get_short_and_long_contexts(self.__doc):
+
+            context_hbox = QHBoxLayout()
+
+            # Add a short context label
             short_context = short_and_long_context.short_context
             long_context = short_and_long_context.long_context
-            html = f"{short_context.get_prefix()}<b><u>{short_context.word}</u></b>{short_context.get_suffix()}"
-            label = QLabel(html)
-            # FIXME click on QLabel to show the long context
-            vbox.addWidget(label)
+            label = QLabel(WordUtils.convert_word_context_to_html(short_context))
+            context_hbox.addWidget(label)
+
+            # Add a button for long contexts
+            check_more_btn = QPushButton("Click for more")
+            check_more_btn.clicked.connect(lambda: self.__show_long_context_dialog(long_context))
+            context_hbox.addWidget(check_more_btn)
+
+            vbox.addLayout(context_hbox)
             hbox.addLayout(vbox)
         return hbox
 
+    def __show_long_context_dialog(self, long_context: WordContext) -> None:
+        long_context_dialog = LongContextDialog(long_context)
+        long_context_dialog.show_dialog()
+
     def __get_bottom_bar(self) -> QHBoxLayout:
-        # TODO
-        return QHBoxLayout()
+        res = QHBoxLayout()
+
+        close_btn = QPushButton("Close")
+        close_btn.setDefault(True)
+        close_btn.clicked.connect(self.close_dialog)
+        res.addWidget(close_btn)
+
+        # TODO Add other buttons
+
+        return res

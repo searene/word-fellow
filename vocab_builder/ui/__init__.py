@@ -3,8 +3,8 @@ from aqt.qt import *
 
 from vocab_builder.domain import utils
 from vocab_builder.domain.document.DocumentFactory import DocumentFactory
-from vocab_builder.ui.DatabaseUtils import prod_vocab_builder_db
-from vocab_builder.ui.MainDialog import MainDialog
+from vocab_builder.ui.util.DatabaseUtils import prod_vocab_builder_db
+from vocab_builder.ui.dialog.MainDialog import MainDialog
 import vocab_builder.domain.word.WordService as WordService
 import vocab_builder.domain.word.WordValueObject as WordValueObject
 

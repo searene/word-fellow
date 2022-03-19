@@ -9,9 +9,9 @@ from vocab_builder.domain.document.DocumentFactory import DocumentFactory
 from vocab_builder.domain.document.analyzer.DefaultDocumentAnalyzer import DefaultDocumentAnalyzer
 from vocab_builder.infrastructure import VocabBuilderDB
 from vocab_builder.ui import prod_vocab_builder_db
-from vocab_builder.ui.DocumentDialog import DocumentDialog
-from vocab_builder.ui.FileUtils import get_base_name_without_ext
-from vocab_builder.ui.PyQtUtils import get_horizontal_line
+from vocab_builder.ui.dialog.DocumentDialog import DocumentDialog
+from vocab_builder.ui.util.FileUtils import get_base_name_without_ext
+from vocab_builder.ui.util.PyQtUtils import get_horizontal_line
 from pathlib import Path
 
 
@@ -74,6 +74,7 @@ class MainDialog(QDialog):
     def __open_document_dialog(self, doc: Document):
         doc_dialog = DocumentDialog(doc, self.__db)
         doc_dialog.show_dialog()
+        # TODO How to close the current dialog before showing the document dialog
         self.close()
 
     def __convert_doc_to_hbox(self, doc: Document) -> QHBoxLayout:
