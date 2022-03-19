@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QDialog, QVBoxLayout, QHBoxLayout, QComboBox, QLabel, QPushButton
+from PyQt5.QtWidgets import QDialog, QVBoxLayout, QHBoxLayout, QComboBox, QLabel, QPushButton, QApplication
 
 from vocab_builder.domain.document.Document import Document
 from vocab_builder.domain.word.WordStatus import WordStatus
@@ -6,6 +6,8 @@ from vocab_builder.domain.word.WordValueObject import WordContext
 from vocab_builder.infrastructure import VocabBuilderDB
 from vocab_builder.ui.dialog.LongContextDialog import LongContextDialog
 from vocab_builder.ui.util import WordUtils
+from aqt import mw
+from aqt.utils import tooltip
 
 
 class DocumentDialog(QDialog):
@@ -82,6 +84,8 @@ class DocumentDialog(QDialog):
     def __get_bottom_bar(self) -> QHBoxLayout:
         res = QHBoxLayout()
 
+        res.addWidget(self.__get_add_to_anki_btn())
+
         close_btn = QPushButton("Close")
         close_btn.setDefault(True)
         close_btn.clicked.connect(self.close_dialog)
@@ -90,3 +94,13 @@ class DocumentDialog(QDialog):
         # TODO Add other buttons
 
         return res
+
+    def __get_add_to_anki_btn(self) -> QPushButton:
+        add_to_anki_btn = QPushButton("Add to anki")
+        add_to_anki_btn.clicked.connect(lambda: self.__show_anki_add_dialog())
+        return add_to_anki_btn
+
+    def __show_anki_add_dialog(self) -> None:
+        mw.onAddCard()
+        QApplication.clipboard().setText(self.__word.text)
+        tooltip("The word has been copied into the clipboard.", 3000)
