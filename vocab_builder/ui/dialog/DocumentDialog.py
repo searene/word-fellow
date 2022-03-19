@@ -1,6 +1,8 @@
 from PyQt5.QtWidgets import QDialog, QVBoxLayout, QHBoxLayout, QComboBox, QLabel, QPushButton, QApplication
 
 from vocab_builder.domain.document.Document import Document
+from vocab_builder.domain.status.GlobalWordStatus import update_word_status, Status
+from vocab_builder.domain.word.Word import Word
 from vocab_builder.domain.word.WordStatus import WordStatus
 from vocab_builder.domain.word.WordValueObject import WordContext
 from vocab_builder.infrastructure import VocabBuilderDB
@@ -17,9 +19,10 @@ class DocumentDialog(QDialog):
         self.__db = db
         self.__doc = doc
         self.__offset = 0
-        self.__status_combo_box = DocumentDialog.__get_status_combo_box()
+        self.__status_combo_box = self.__get_status_combo_box()
         self.__word = doc.get_next_word(0, self.__get_word_status(), db)
-        self.__init_ui()
+        self.__context_vbox = self.__get_context_vbox(self.__word, self.__doc)
+        self.__init_ui(self.__context_vbox)
 
     def show_dialog(self):
         self.show()
@@ -28,12 +31,12 @@ class DocumentDialog(QDialog):
     def close_dialog(self):
         self.close()
 
-    def __init_ui(self):
+    def __init_ui(self, context_vbox: QVBoxLayout):
         self.setWindowTitle(self.__doc.name)
 
         vbox = QVBoxLayout()
         vbox.addLayout(self.__get_top_bar())
-        vbox.addLayout(self.__get_middle_area())
+        vbox.addLayout(self.__get_middle_area(context_vbox))
         vbox.addLayout(self.__get_bottom_bar())
         self.setLayout(vbox)
 
@@ -42,23 +45,26 @@ class DocumentDialog(QDialog):
         hbox.addWidget(self.__status_combo_box)
         return hbox
 
-    @staticmethod
-    def __get_status_combo_box() -> QComboBox:
+    def __get_status_combo_box(self) -> QComboBox:
         status_combo_box = QComboBox()
         for status in WordStatus:
             status_combo_box.addItem(status.name)
+        status_combo_box.activated.connect(self.__on_status_selected)
         return status_combo_box
+
+    def __on_status_selected(self, status_name: str) -> None:
+        # TODO
+        pass
 
     def __get_word_status(self) -> WordStatus:
         return WordStatus[self.__status_combo_box.currentText()]
 
-    def __get_middle_area(self) -> QHBoxLayout:
-        hbox = QHBoxLayout()
-        if self.__word is None:
-            hbox.addWidget(QLabel("No word is available"))
-            return hbox
+    def __get_context_vbox(self, word: Word, doc: Document) -> QVBoxLayout:
         vbox = QVBoxLayout()
-        for short_and_long_context in self.__word.get_short_and_long_contexts(self.__doc):
+        if word is None:
+            vbox.addWidget(QLabel("No word is available"))
+            return vbox
+        for short_and_long_context in word.get_short_and_long_contexts(doc):
 
             context_hbox = QHBoxLayout()
 
@@ -74,7 +80,11 @@ class DocumentDialog(QDialog):
             context_hbox.addWidget(check_more_btn)
 
             vbox.addLayout(context_hbox)
-            hbox.addLayout(vbox)
+        return vbox
+
+    def __get_middle_area(self, context_vbox: QVBoxLayout) -> QHBoxLayout:
+        hbox = QHBoxLayout()
+        hbox.addLayout(self.__context_vbox)
         return hbox
 
     def __show_long_context_dialog(self, long_context: WordContext) -> None:
@@ -105,4 +115,11 @@ class DocumentDialog(QDialog):
         QApplication.clipboard().setText(self.__word.text)
         tooltip("The word has been copied into the clipboard.", 3000)
 
-        # TODO Set the word status to STUDYING
+        # Set the word status to STUDYING
+        update_word_status(self.__word.text, Status.STUDYING, self.__db)
+
+        self.__refresh_ui()
+
+    def __refresh_ui(self):
+        # TODO
+        pass
