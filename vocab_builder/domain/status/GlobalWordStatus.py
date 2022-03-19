@@ -42,3 +42,9 @@ def insert_word_status(word: str, status: Status, db: VocabBuilderDB) -> GlobalW
     INSERT INTO global_word_status (word, status) VALUES (?, ?)
     """, (word, status.name))
     return GlobalWordStatus(global_word_status_id, word, status)
+
+
+def update_word_status(word: str, status: Status, db: VocabBuilderDB) -> None:
+    db.execute("""
+    UPDATE global_word_status SET status = ? WHERE word = ?
+    """, (status.name, word))

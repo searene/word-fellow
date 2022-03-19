@@ -98,10 +98,28 @@ COMMIT;""", ))
         GlobalWordStatus.insert_word_status("test2", Status.KNOWN, db)
 
         # invoke the method
-        unknown_word = WordFactory.get_next_word(doc_id=1, offset=0, word_status=WordStatus.KNOWN, db=db)
+        known_word = WordFactory.get_next_word(doc_id=1, offset=0, word_status=WordStatus.KNOWN, db=db)
 
         # check result
-        self.assertTrue(unknown_word.has_same_values(word_value_object2))
+        self.assertTrue(known_word.has_same_values(word_value_object2))
+
+    def test_update_word_status(self):
+        # prepare test data
+        db = get_test_vocab_builder_db()
+        word_value_object1 = WordValueObject("test1", 1, {"test1": [0]}, False)
+        word_value_object2 = WordValueObject("test2", 1, {"test2": [0]}, False)
+        WordService.batch_insert([word_value_object1, word_value_object2], db)
+
+        GlobalWordStatus.insert_word_status("test2", Status.KNOWN, db)
+        GlobalWordStatus.update_word_status("test2", Status.STUDYING, db)
+
+        # invoke the method
+        known_word = WordFactory.get_next_word(doc_id=1, offset=0, word_status=WordStatus.KNOWN, db=db)
+        studying_word = WordFactory.get_next_word(doc_id=1, offset=0, word_status=WordStatus.STUDYING, db=db)
+
+        # check result
+        self.assertEqual(known_word, None)
+        self.assertTrue(studying_word.has_same_values(word_value_object2))
 
     def test_get_next_skipped_word(self):
         # prepare test data
@@ -145,3 +163,4 @@ COMMIT;""", ))
         expected_short_and_long_contexts1 = ShortAndLongContext(expected_context1, expected_context1)
         expected_short_and_long_contexts2 = ShortAndLongContext(expected_context2, expected_context2)
         self.assertEqual(short_and_long_contexts, [expected_short_and_long_contexts1, expected_short_and_long_contexts2])
+

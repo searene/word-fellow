@@ -97,10 +97,12 @@ class DocumentDialog(QDialog):
 
     def __get_add_to_anki_btn(self) -> QPushButton:
         add_to_anki_btn = QPushButton("Add to anki")
-        add_to_anki_btn.clicked.connect(lambda: self.__show_anki_add_dialog())
+        add_to_anki_btn.clicked.connect(lambda: self.__on_add_to_anki_button())
         return add_to_anki_btn
 
-    def __show_anki_add_dialog(self) -> None:
+    def __on_add_to_anki_button(self) -> None:
         mw.onAddCard()
         QApplication.clipboard().setText(self.__word.text)
         tooltip("The word has been copied into the clipboard.", 3000)
+
+        # TODO Set the word status to STUDYING
