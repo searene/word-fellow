@@ -103,7 +103,7 @@ COMMIT;""", ))
         # check result
         self.assertTrue(known_word.has_same_values(word_value_object2))
 
-    def test_update_word_status(self):
+    def test_upsert_word_status_when_we_should_update(self):
         # prepare test data
         db = get_test_vocab_builder_db()
         word_value_object1 = WordValueObject("test1", 1, {"test1": [0]}, False)
@@ -111,7 +111,7 @@ COMMIT;""", ))
         WordService.batch_insert([word_value_object1, word_value_object2], db)
 
         GlobalWordStatus.insert_word_status("test2", Status.KNOWN, db)
-        GlobalWordStatus.update_word_status("test2", Status.STUDYING, db)
+        GlobalWordStatus.upsert_word_status("test2", Status.STUDYING, db)
 
         # invoke the method
         known_word = WordFactory.get_next_word(doc_id=1, offset=0, word_status=WordStatus.KNOWN, db=db)
@@ -119,6 +119,21 @@ COMMIT;""", ))
 
         # check result
         self.assertEqual(known_word, None)
+        self.assertTrue(studying_word.has_same_values(word_value_object2))
+
+    def test_upsert_word_status_when_we_should_insert(self):
+        # prepare test data
+        db = get_test_vocab_builder_db()
+        word_value_object1 = WordValueObject("test1", 1, {"test1": [0]}, False)
+        word_value_object2 = WordValueObject("test2", 1, {"test2": [0]}, False)
+        WordService.batch_insert([word_value_object1, word_value_object2], db)
+
+        GlobalWordStatus.upsert_word_status("test2", Status.STUDYING, db)
+
+        # invoke the method
+        studying_word = WordFactory.get_next_word(doc_id=1, offset=0, word_status=WordStatus.STUDYING, db=db)
+
+        # check result
         self.assertTrue(studying_word.has_same_values(word_value_object2))
 
     def test_get_next_skipped_word(self):

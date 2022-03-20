@@ -44,7 +44,11 @@ def insert_word_status(word: str, status: Status, db: VocabBuilderDB) -> GlobalW
     return GlobalWordStatus(global_word_status_id, word, status)
 
 
-def update_word_status(word: str, status: Status, db: VocabBuilderDB) -> None:
-    db.execute("""
-    UPDATE global_word_status SET status = ? WHERE word = ?
-    """, (status.name, word))
+def upsert_word_status(word: str, status: Status, db: VocabBuilderDB) -> None:
+    cnt = db.fetch_one("select count(*) as cnt from global_word_status where word = ?", (word, ))[0]
+    if cnt == 0:
+        db.execute("insert into global_word_status (word, status) values (?, ?)", (word, status.name))
+    else:
+        db.execute("""
+        UPDATE global_word_status SET status = ? WHERE word = ?
+        """, (status.name, word))
