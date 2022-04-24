@@ -1,16 +1,14 @@
 from typing import Dict, Optional
 
 from PyQt5 import QtWidgets
-from PyQt5.QtWidgets import QVBoxLayout, QLabel, QHBoxLayout, QPushButton
+from PyQt5.QtWidgets import QVBoxLayout, QLabel
 
 from vocab_builder.domain.document.Document import Document
 from vocab_builder.domain.word.Word import Word
 from vocab_builder.domain.word.WordStatus import WordStatus
-from vocab_builder.domain.word.WordValueObject import WordContext
+from vocab_builder.domain.word.WordValueObject import ShortAndLongContext, WordContext
 from vocab_builder.infrastructure import VocabBuilderDB
 from vocab_builder.ui.dialog.ContextItem import ContextItem
-from vocab_builder.ui.dialog.LongContextDialog import LongContextDialog
-from vocab_builder.ui.util import WordUtils
 
 
 class ContextList(QtWidgets.QWidget):
@@ -47,6 +45,11 @@ class ContextList(QtWidgets.QWidget):
             return vbox
         for short_and_long_context in word.get_short_and_long_contexts(doc):
             context_item = ContextItem(short_and_long_context)
+            # FIXME remove it
+            context_item.update_layout(ShortAndLongContext(
+                WordContext("test", "asdftsdaf", 2),
+                WordContext("test", "asdftsdaf", 3)
+            ))
             vbox.addWidget(context_item)
         self.setLayout(vbox)
         return vbox
