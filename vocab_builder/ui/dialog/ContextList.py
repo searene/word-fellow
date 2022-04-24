@@ -5,18 +5,22 @@ from vocab_builder.domain.document.Document import Document
 from vocab_builder.domain.word.Word import Word
 from vocab_builder.domain.word.WordStatus import WordStatus
 from vocab_builder.domain.word.WordValueObject import WordContext
+from vocab_builder.infrastructure import VocabBuilderDB
 from vocab_builder.ui.dialog.LongContextDialog import LongContextDialog
 from vocab_builder.ui.util import WordUtils
 
 
 class ContextList(QtWidgets.QWidget):
 
-    def __init__(self, word: Word, doc: Document, status: WordStatus):
+    def __init__(self, doc: Document, status: WordStatus, db: VocabBuilderDB):
         super(ContextList, self).__init__()
+        self.__db = db
 
-        self.__init_ui(word, doc, status)
+        # FIXME pass offset
+        self.__word = doc.get_next_word(0, status, db)
+        self.__init_ui(self.__word, doc)
 
-    def __init_ui(self, word: Word, doc: Document, status: WordStatus):
+    def __init_ui(self, word: Word, doc: Document):
         vbox = QVBoxLayout()
         if word is None:
             vbox.addWidget(QLabel("No word is available"))

@@ -19,8 +19,7 @@ class DocumentDialog(QDialog):
         self.__offset = 0
         self.__status_combo_box = self.__get_status_combo_box()
         word_status = self.__get_word_status()
-        self.__word = doc.get_next_word(0, word_status, db)
-        self.__context_list = self.__get_context_list(self.__word, self.__doc, word_status)
+        self.__context_list = self.__get_context_list(self.__doc, word_status, db)
         self.__middle_area_hbox = self.__get_middle_area(self.__context_list)
         self.__dialog_layout = self.__get_dialog_layout(self.__middle_area_hbox)
         self.__init_ui(self.__dialog_layout)
@@ -62,8 +61,8 @@ class DocumentDialog(QDialog):
     def __get_word_status(self) -> WordStatus:
         return WordStatus[self.__status_combo_box.currentText()]
 
-    def __get_context_list(self, word: Word, doc: Document, status: WordStatus) -> ContextList:
-        context_list = ContextList(word, doc, status)
+    def __get_context_list(self, doc: Document, status: WordStatus, db: VocabBuilderDB) -> ContextList:
+        context_list = ContextList(doc, status, db)
         return context_list
 
     def __get_middle_area(self, context_list: ContextList) -> QHBoxLayout:
