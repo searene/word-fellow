@@ -20,6 +20,9 @@ class ContextList(QtWidgets.QWidget):
         self.__word = doc.get_next_word(0, status, db)
         self.__init_ui(self.__word, doc)
 
+    def update_status(self, status: WordStatus):
+        pass
+
     def __init_ui(self, word: Word, doc: Document):
         vbox = QVBoxLayout()
         if word is None:

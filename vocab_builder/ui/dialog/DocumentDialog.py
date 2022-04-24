@@ -55,8 +55,9 @@ class DocumentDialog(QDialog):
         return status_combo_box
 
     def __on_status_selected(self, status_name: str) -> None:
+        status = WordStatus[status_name]
+        self.__context_list.update_status(status)
         # TODO
-        pass
 
     def __get_word_status(self) -> WordStatus:
         return WordStatus[self.__status_combo_box.currentText()]
