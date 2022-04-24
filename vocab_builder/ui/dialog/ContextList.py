@@ -8,6 +8,7 @@ from vocab_builder.domain.word.Word import Word
 from vocab_builder.domain.word.WordStatus import WordStatus
 from vocab_builder.domain.word.WordValueObject import WordContext
 from vocab_builder.infrastructure import VocabBuilderDB
+from vocab_builder.ui.dialog.ContextItem import ContextItem
 from vocab_builder.ui.dialog.LongContextDialog import LongContextDialog
 from vocab_builder.ui.util import WordUtils
 
@@ -25,7 +26,8 @@ class ContextList(QtWidgets.QWidget):
 
     def update_status(self, status: WordStatus):
         self.__word = self.__get_word(self.__doc, status, self.__status_to_offset_dict, self.__db)
-        self.__init_ui(self.__word, self.__doc)
+        self.__layout.setParent(None)
+        # self.__layout = self.__init_ui(self.__word, self.__doc)
 
     def __get_word(self, doc: Document, status: WordStatus, status_to_offset_dict: Dict[WordStatus, int],
                    db: VocabBuilderDB) -> Optional[str]:
@@ -44,23 +46,8 @@ class ContextList(QtWidgets.QWidget):
             self.setLayout(vbox)
             return vbox
         for short_and_long_context in word.get_short_and_long_contexts(doc):
-            context_hbox = QHBoxLayout()
-
-            # Add a short context label
-            short_context = short_and_long_context.short_context
-            long_context = short_and_long_context.long_context
-            label = QLabel(WordUtils.convert_word_context_to_html(short_context))
-            context_hbox.addWidget(label)
-
-            # Add a button for long contexts
-            check_more_btn = QPushButton("Click for more")
-            check_more_btn.clicked.connect(lambda: self.__show_long_context_dialog(long_context))
-            context_hbox.addWidget(check_more_btn)
-
-            vbox.addLayout(context_hbox)
+            context_item = ContextItem(short_and_long_context)
+            vbox.addWidget(context_item)
         self.setLayout(vbox)
         return vbox
 
-    def __show_long_context_dialog(self, long_context: WordContext) -> None:
-        long_context_dialog = LongContextDialog(long_context)
-        long_context_dialog.show_dialog()
