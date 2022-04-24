@@ -28,7 +28,7 @@ class ContextList(QtWidgets.QWidget):
             self.__show_no_word_available_label()
         else:
             short_and_long_contexts = self.__word.get_short_and_long_contexts(self.__doc)
-            self.__hide_no_word_available_label()
+            self.__delete_no_word_available_label()
             for i in range(len(short_and_long_contexts)):
                 self.__context_items[i].update_layout(short_and_long_contexts[i])
                 self.__context_items[i].show()
@@ -60,10 +60,14 @@ class ContextList(QtWidgets.QWidget):
         self.setLayout(vbox)
         return vbox
 
-    def __hide_no_word_available_label(self) -> None:
+    def __delete_no_word_available_label(self) -> None:
+        self.__layout.removeWidget(self.__no_word_available_label)
+        self.__no_word_available_label.deleteLater()
         self.__no_word_available_label.setParent(None)
+        self.__no_word_available_label = None
 
     def __show_no_word_available_label(self) -> None:
+        self.__no_word_available_label = self.__get_no_word_available_label()
         self.__layout.addWidget(self.__no_word_available_label)
 
     def __get_no_word_available_label(self) -> QLabel:
