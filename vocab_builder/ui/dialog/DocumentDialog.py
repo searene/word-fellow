@@ -6,6 +6,7 @@ from vocab_builder.domain.word.Word import Word
 from vocab_builder.domain.word.WordStatus import WordStatus
 from vocab_builder.domain.word.WordValueObject import WordContext
 from vocab_builder.infrastructure import VocabBuilderDB
+from vocab_builder.ui.dialog.ContextList import ContextList
 from vocab_builder.ui.dialog.LongContextDialog import LongContextDialog
 from vocab_builder.ui.util import WordUtils
 from aqt import mw
@@ -21,8 +22,8 @@ class DocumentDialog(QDialog):
         self.__offset = 0
         self.__status_combo_box = self.__get_status_combo_box()
         self.__word = doc.get_next_word(0, self.__get_word_status(), db)
-        self.__context_vbox = self.__get_context_vbox(self.__word, self.__doc)
-        self.__middle_area_hbox = self.__get_middle_area(self.__context_vbox)
+        self.__context_list = self.__get_context_list(self.__word, self.__doc)
+        self.__middle_area_hbox = self.__get_middle_area(self.__context_list)
         self.__dialog_layout = self.__get_dialog_layout(self.__middle_area_hbox)
         self.__init_ui(self.__dialog_layout)
 
@@ -63,32 +64,14 @@ class DocumentDialog(QDialog):
     def __get_word_status(self) -> WordStatus:
         return WordStatus[self.__status_combo_box.currentText()]
 
-    def __get_context_vbox(self, word: Word, doc: Document) -> QVBoxLayout:
-        vbox = QVBoxLayout()
-        if word is None:
-            vbox.addWidget(QLabel("No word is available"))
-            return vbox
-        for short_and_long_context in word.get_short_and_long_contexts(doc):
+    def __get_context_list(self, word: Word, doc: Document) -> ContextList:
+        # FIXME pass status
+        context_list = ContextList(word, doc, WordStatus.UNKNOWN)
+        return context_list
 
-            context_hbox = QHBoxLayout()
-
-            # Add a short context label
-            short_context = short_and_long_context.short_context
-            long_context = short_and_long_context.long_context
-            label = QLabel(WordUtils.convert_word_context_to_html(short_context))
-            context_hbox.addWidget(label)
-
-            # Add a button for long contexts
-            check_more_btn = QPushButton("Click for more")
-            check_more_btn.clicked.connect(lambda: self.__show_long_context_dialog(long_context))
-            context_hbox.addWidget(check_more_btn)
-
-            vbox.addLayout(context_hbox)
-        return vbox
-
-    def __get_middle_area(self, context_vbox: QVBoxLayout) -> QHBoxLayout:
+    def __get_middle_area(self, context_list: ContextList) -> QHBoxLayout:
         hbox = QHBoxLayout()
-        hbox.addLayout(context_vbox)
+        hbox.addWidget(context_list)
         return hbox
 
     def __show_long_context_dialog(self, long_context: WordContext) -> None:
@@ -125,10 +108,10 @@ class DocumentDialog(QDialog):
         self.__refresh_ui()
 
     def __refresh_ui(self) -> None:
-        self.__middle_area_hbox.removeItem(self.__context_vbox)
+        self.__middle_area_hbox.removeItem(self.__context_list)
         self.__word = self.__doc.get_next_word(0, self.__get_word_status(), self.__db)
-        self.__context_vbox = self.__get_context_vbox(self.__word, self.__doc)
-        self.__middle_area_hbox.addLayout(self.__context_vbox)
+        self.__context_list = self.__get_context_list(self.__word, self.__doc)
+        self.__middle_area_hbox.addLayout(self.__context_list)
         print(self.__word.text)
-        print(self.__context_vbox)
+        print(self.__context_list)
         print(self.__middle_area_hbox)
