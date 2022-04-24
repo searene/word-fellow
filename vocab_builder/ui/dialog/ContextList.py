@@ -37,11 +37,12 @@ class ContextList(QtWidgets.QWidget):
             status_to_offset_dict[status] = 0
         return status_to_offset_dict[status]
 
-    def __init_ui(self, word: Optional[Word], doc: Document):
+    def __init_ui(self, word: Optional[Word], doc: Document) -> None:
         vbox = QVBoxLayout()
         if word is None:
             vbox.addWidget(QLabel("No word is available"))
-            return vbox
+            self.setLayout(vbox)
+            return
         for short_and_long_context in word.get_short_and_long_contexts(doc):
             context_hbox = QHBoxLayout()
 
