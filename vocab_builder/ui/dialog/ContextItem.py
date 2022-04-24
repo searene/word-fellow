@@ -17,14 +17,8 @@ class ContextItem(QtWidgets.QWidget):
     def update_layout(self, short_and_long_context: ShortAndLongContext) -> None:
         self.__label.setText(WordUtils.convert_word_context_to_html(short_and_long_context.short))
 
-        self.__layout.removeWidget(self.__check_more_btn)
-        self.__check_more_btn.deleteLater()
-        # Don't know why we need to set its parent to None.
-        # It seems only to be necessary if we are inside Anki
-        self.__check_more_btn.setParent(None)
-
-        self.__check_more_btn = self.__get_btn(short_and_long_context.long)
-        self.__layout.addWidget(self.__check_more_btn)
+        self.__check_more_btn.clicked.disconnect()
+        self.__check_more_btn.clicked.connect(lambda: self.__show_long_context_dialog(short_and_long_context.long))
 
     def __get_layout(self, short_and_long_context: ShortAndLongContext) -> QHBoxLayout:
         res = QHBoxLayout()
