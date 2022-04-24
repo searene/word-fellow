@@ -23,9 +23,20 @@ class ContextList(QtWidgets.QWidget):
 
     def update_status(self, status: WordStatus):
         self.__word = self.__get_word(self.__doc, status, self.__status_to_offset_dict, self.__db)
+        if self.__word is None:
+            [item.hide() for item in self.__context_items]
+            self.__show_no_word_available_label()
+        else:
+            short_and_long_contexts = self.__word.get_short_and_long_contexts(self.__doc)
+            self.__hide_no_word_available_label()
+            for i in range(len(short_and_long_contexts)):
+                self.__context_items[i].update_layout(short_and_long_contexts[i])
+                self.__context_items[i].show()
+            for i in range(len(short_and_long_contexts), len(self.__context_items)):
+                self.__context_items[i].hide()
 
     def __get_word(self, doc: Document, status: WordStatus, status_to_offset_dict: Dict[WordStatus, int],
-                   db: VocabBuilderDB) -> Optional[str]:
+                   db: VocabBuilderDB) -> Optional[Word]:
         offset = self.__get_offset(status, status_to_offset_dict)
         return doc.get_next_word(offset, status, db)
 
@@ -37,8 +48,9 @@ class ContextList(QtWidgets.QWidget):
     def __init_ui(self, word: Optional[Word], doc: Document) -> QVBoxLayout:
         vbox = QVBoxLayout()
         self.__context_items = []
+        self.__no_word_available_label = self.__get_no_word_available_label()
         if word is None:
-            vbox.addWidget(QLabel("No word is available"))
+            vbox.addWidget(self.__no_word_available_label)
             self.setLayout(vbox)
             return vbox
         for short_and_long_context in word.get_short_and_long_contexts(doc):
@@ -47,4 +59,13 @@ class ContextList(QtWidgets.QWidget):
             self.__context_items.append(context_item)
         self.setLayout(vbox)
         return vbox
+
+    def __hide_no_word_available_label(self) -> None:
+        self.__no_word_available_label.setParent(None)
+
+    def __show_no_word_available_label(self) -> None:
+        self.__layout.addWidget(self.__no_word_available_label)
+
+    def __get_no_word_available_label(self) -> QLabel:
+        return QLabel("No word is available")
 
