@@ -45,11 +45,6 @@ class ContextList(QtWidgets.QWidget):
             return vbox
         for short_and_long_context in word.get_short_and_long_contexts(doc):
             context_item = ContextItem(short_and_long_context)
-            # FIXME remove it
-            context_item.update_layout(ShortAndLongContext(
-                WordContext("test", "asdftsdaf", 2),
-                WordContext("test", "asdftsdaf", 3)
-            ))
             vbox.addWidget(context_item)
         self.setLayout(vbox)
         return vbox

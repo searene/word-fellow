@@ -19,7 +19,10 @@ class ContextItem(QtWidgets.QWidget):
 
         self.__layout.removeWidget(self.__check_more_btn)
         self.__check_more_btn.deleteLater()
-        self.__check_more_btn = None
+        # Don't know why we need to set its parent to None.
+        # It seems only to be necessary if we are inside Anki
+        self.__check_more_btn.setParent(None)
+
         self.__check_more_btn = self.__get_btn(short_and_long_context.long)
         self.__layout.addWidget(self.__check_more_btn)
 
