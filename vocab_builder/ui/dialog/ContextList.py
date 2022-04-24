@@ -6,7 +6,6 @@ from PyQt5.QtWidgets import QVBoxLayout, QLabel
 from vocab_builder.domain.document.Document import Document
 from vocab_builder.domain.word.Word import Word
 from vocab_builder.domain.word.WordStatus import WordStatus
-from vocab_builder.domain.word.WordValueObject import ShortAndLongContext, WordContext
 from vocab_builder.infrastructure import VocabBuilderDB
 from vocab_builder.ui.dialog.ContextItem import ContextItem
 
@@ -24,8 +23,6 @@ class ContextList(QtWidgets.QWidget):
 
     def update_status(self, status: WordStatus):
         self.__word = self.__get_word(self.__doc, status, self.__status_to_offset_dict, self.__db)
-        self.__layout.setParent(None)
-        # self.__layout = self.__init_ui(self.__word, self.__doc)
 
     def __get_word(self, doc: Document, status: WordStatus, status_to_offset_dict: Dict[WordStatus, int],
                    db: VocabBuilderDB) -> Optional[str]:
@@ -39,6 +36,7 @@ class ContextList(QtWidgets.QWidget):
 
     def __init_ui(self, word: Optional[Word], doc: Document) -> QVBoxLayout:
         vbox = QVBoxLayout()
+        self.__context_items = []
         if word is None:
             vbox.addWidget(QLabel("No word is available"))
             self.setLayout(vbox)
@@ -46,6 +44,7 @@ class ContextList(QtWidgets.QWidget):
         for short_and_long_context in word.get_short_and_long_contexts(doc):
             context_item = ContextItem(short_and_long_context)
             vbox.addWidget(context_item)
+            self.__context_items.append(context_item)
         self.setLayout(vbox)
         return vbox
 
