@@ -21,7 +21,7 @@ class ContextList(QtWidgets.QWidget):
         self.__db = db
         self.__status_to_offset_dict = {}
         self.__word = self.__get_word(doc, status, self.__status_to_offset_dict, db)
-        self.__init_ui(self.__word, doc)
+        self.__layout = self.__init_ui(self.__word, doc)
 
     def update_status(self, status: WordStatus):
         self.__word = self.__get_word(self.__doc, status, self.__status_to_offset_dict, self.__db)
@@ -37,12 +37,12 @@ class ContextList(QtWidgets.QWidget):
             status_to_offset_dict[status] = 0
         return status_to_offset_dict[status]
 
-    def __init_ui(self, word: Optional[Word], doc: Document) -> None:
+    def __init_ui(self, word: Optional[Word], doc: Document) -> QVBoxLayout:
         vbox = QVBoxLayout()
         if word is None:
             vbox.addWidget(QLabel("No word is available"))
             self.setLayout(vbox)
-            return
+            return vbox
         for short_and_long_context in word.get_short_and_long_contexts(doc):
             context_hbox = QHBoxLayout()
 
@@ -59,6 +59,7 @@ class ContextList(QtWidgets.QWidget):
 
             vbox.addLayout(context_hbox)
         self.setLayout(vbox)
+        return vbox
 
     def __show_long_context_dialog(self, long_context: WordContext) -> None:
         long_context_dialog = LongContextDialog(long_context)
