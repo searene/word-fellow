@@ -27,13 +27,13 @@ class WordContext:
 class ShortAndLongContext:
 
     def __init__(self, short_context: WordContext, long_context: WordContext):
-        self.short_context = short_context
-        self.long_context = long_context
+        self.short = short_context
+        self.long = long_context
 
     def __eq__(self, other):
         if not isinstance(other, ShortAndLongContext):
             return False
-        return self.short_context == other.short_context and self.long_context == other.long_context
+        return self.short == other.short and self.long == other.long
 
 
 class WordValueObject:
