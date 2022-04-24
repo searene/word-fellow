@@ -51,13 +51,12 @@ class DocumentDialog(QDialog):
         status_combo_box = QComboBox()
         for status in WordStatus:
             status_combo_box.addItem(status.name)
-        status_combo_box.activated.connect(self.__on_status_selected)
+        status_combo_box.currentTextChanged.connect(self.__on_status_selected)
         return status_combo_box
 
     def __on_status_selected(self, status_name: str) -> None:
         status = WordStatus[status_name]
         self.__context_list.update_status(status)
-        # TODO
 
     def __get_word_status(self) -> WordStatus:
         return WordStatus[self.__status_combo_box.currentText()]
