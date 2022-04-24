@@ -4,6 +4,8 @@ from PyQt5.QtWidgets import QVBoxLayout, QLabel, QHBoxLayout, QPushButton
 from vocab_builder.domain.document.Document import Document
 from vocab_builder.domain.word.Word import Word
 from vocab_builder.domain.word.WordStatus import WordStatus
+from vocab_builder.domain.word.WordValueObject import WordContext
+from vocab_builder.ui.dialog.LongContextDialog import LongContextDialog
 from vocab_builder.ui.util import WordUtils
 
 
@@ -34,4 +36,9 @@ class ContextList(QtWidgets.QWidget):
             context_hbox.addWidget(check_more_btn)
 
             vbox.addLayout(context_hbox)
-        return vbox
+        self.setLayout(vbox)
+
+    def __show_long_context_dialog(self, long_context: WordContext) -> None:
+        long_context_dialog = LongContextDialog(long_context)
+        long_context_dialog.show_dialog()
+

@@ -4,11 +4,8 @@ from vocab_builder.domain.document.Document import Document
 from vocab_builder.domain.status.GlobalWordStatus import upsert_word_status, Status
 from vocab_builder.domain.word.Word import Word
 from vocab_builder.domain.word.WordStatus import WordStatus
-from vocab_builder.domain.word.WordValueObject import WordContext
 from vocab_builder.infrastructure import VocabBuilderDB
 from vocab_builder.ui.dialog.ContextList import ContextList
-from vocab_builder.ui.dialog.LongContextDialog import LongContextDialog
-from vocab_builder.ui.util import WordUtils
 from aqt import mw
 from aqt.utils import tooltip
 
@@ -21,8 +18,9 @@ class DocumentDialog(QDialog):
         self.__doc = doc
         self.__offset = 0
         self.__status_combo_box = self.__get_status_combo_box()
-        self.__word = doc.get_next_word(0, self.__get_word_status(), db)
-        self.__context_list = self.__get_context_list(self.__word, self.__doc)
+        word_status = self.__get_word_status()
+        self.__word = doc.get_next_word(0, word_status, db)
+        self.__context_list = self.__get_context_list(self.__word, self.__doc, word_status)
         self.__middle_area_hbox = self.__get_middle_area(self.__context_list)
         self.__dialog_layout = self.__get_dialog_layout(self.__middle_area_hbox)
         self.__init_ui(self.__dialog_layout)
@@ -64,19 +62,14 @@ class DocumentDialog(QDialog):
     def __get_word_status(self) -> WordStatus:
         return WordStatus[self.__status_combo_box.currentText()]
 
-    def __get_context_list(self, word: Word, doc: Document) -> ContextList:
-        # FIXME pass status
-        context_list = ContextList(word, doc, WordStatus.UNKNOWN)
+    def __get_context_list(self, word: Word, doc: Document, status: WordStatus) -> ContextList:
+        context_list = ContextList(word, doc, status)
         return context_list
 
     def __get_middle_area(self, context_list: ContextList) -> QHBoxLayout:
         hbox = QHBoxLayout()
         hbox.addWidget(context_list)
         return hbox
-
-    def __show_long_context_dialog(self, long_context: WordContext) -> None:
-        long_context_dialog = LongContextDialog(long_context)
-        long_context_dialog.show_dialog()
 
     def __get_bottom_bar(self) -> QHBoxLayout:
         res = QHBoxLayout()
@@ -110,7 +103,7 @@ class DocumentDialog(QDialog):
     def __refresh_ui(self) -> None:
         self.__middle_area_hbox.removeItem(self.__context_list)
         self.__word = self.__doc.get_next_word(0, self.__get_word_status(), self.__db)
-        self.__context_list = self.__get_context_list(self.__word, self.__doc)
+        self.__context_list = self.__get_context_list(self.__word, self.__doc, word_status)
         self.__middle_area_hbox.addLayout(self.__context_list)
         print(self.__word.text)
         print(self.__context_list)
