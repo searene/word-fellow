@@ -36,6 +36,22 @@ class DocumentServiceTestCase(unittest.TestCase):
         self.assertEqual(document_list[0], document1)
         self.assertEqual(document_list[1], document2)
 
+    def test_should_remove_all_documents(self):
+
+        # prepare
+        db = get_test_vocab_builder_db()
+        Document.init_database(db)
+        document_service = DocumentService(db)
+        document1 = document_service.create_new_document("test_document_name_1", "test_document_contents_1")
+        document2 = document_service.create_new_document("test_document_name_2", "test_document_contents_2")
+
+        # invoke
+        document_service.remove_all()
+
+        # check
+        document_list = document_service.get_document_list()
+        self.assertEqual(len(document_list), 0)
+
 
 if __name__ == '__main__':
     unittest.main()

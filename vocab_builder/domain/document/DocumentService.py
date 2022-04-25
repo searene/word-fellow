@@ -27,3 +27,6 @@ class DocumentService:
             from documents
         """)
         return convert_sql_res_to_document_object(query_res)
+
+    def remove_all(self) -> None:
+        self.db.execute("delete from documents")
