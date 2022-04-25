@@ -31,10 +31,15 @@ def show_main_dialog() -> None:
     dialog.show_dialog()
 
 
-__init_database()
-# create a new menu item, "test"
-action = QAction("Anki Vocab Builder", mw)
-# set it to call testFunction when it's clicked
-qconnect(action.triggered, show_main_dialog)
-# and add it to the tools menu
-mw.form.menuTools.addAction(action)
+def init_addon() -> None:
+    __init_database()
+    # create a new menu item, "test"
+    action = QAction("Anki Vocab Builder", mw)
+    # set it to call testFunction when it's clicked
+    qconnect(action.triggered, show_main_dialog)
+    # and add it to the tools menu
+    mw.form.menuTools.addAction(action)
+
+
+if __name__ == "__main__":
+    init_addon()

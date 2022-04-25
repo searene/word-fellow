@@ -15,4 +15,14 @@ Build your vocabulary in Anki.
    pip install -r requirements.txt
    ```
 
-3. Then you can run the basic test `test_my_addon` in `test_main.py`.
+3. Open the Anki addon folder, create a link to the project (you may need to change the source and target directory):
+
+   ```shell
+   ln -s ~/PycharmProjects/anki-vocab-builder/vocab_builder ~/Library/Application Support/Anki2/addons21
+   ```
+
+4. Run `run_anki.py`:
+
+   ```shell
+   python3 run_anki.py
+   ```
