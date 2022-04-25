@@ -16,6 +16,7 @@ def __init_database():
 
 def insert_test_data():
     document_service = DocumentService(prod_vocab_builder_db)
+    document_service.remove_all()
     doc1 = document_service.create_new_document("test name1", "this is this this")
     doc2 = document_service.create_new_document("test name2", "test_contents2")
 
