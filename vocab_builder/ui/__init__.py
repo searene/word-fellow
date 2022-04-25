@@ -2,7 +2,7 @@ from aqt import mw
 from aqt.qt import *
 
 from vocab_builder.domain import utils
-from vocab_builder.domain.document.DocumentFactory import DocumentFactory
+from vocab_builder.domain.document.DocumentService import DocumentService
 from vocab_builder.ui.util.DatabaseUtils import prod_vocab_builder_db
 from vocab_builder.ui.dialog.MainDialog import MainDialog
 import vocab_builder.domain.word.WordService as WordService
@@ -15,9 +15,9 @@ def __init_database():
 
 
 def insert_test_data():
-    document_factory = DocumentFactory(prod_vocab_builder_db)
-    doc1 = document_factory.create_new_document("test name1", "this is this this")
-    doc2 = document_factory.create_new_document("test name2", "test_contents2")
+    document_service = DocumentService(prod_vocab_builder_db)
+    doc1 = document_service.create_new_document("test name1", "this is this this")
+    doc2 = document_service.create_new_document("test name2", "test_contents2")
 
     word_value_objects = [
         WordValueObject.WordValueObject("this", doc1.document_id, {"this": [0, 8, 13]}, False),

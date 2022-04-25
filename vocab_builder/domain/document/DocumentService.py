@@ -4,7 +4,7 @@ from vocab_builder.domain.document.analyzer import IDocumentAnalyzer
 from vocab_builder.infrastructure.VocabBuilderDB import VocabBuilderDB
 
 
-class DocumentFactory:
+class DocumentService:
 
     def __init__(self, db: VocabBuilderDB):
         self.db = db

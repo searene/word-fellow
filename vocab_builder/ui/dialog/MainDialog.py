@@ -5,7 +5,7 @@ from PyQt5.QtWidgets import (QPushButton, QApplication, QHBoxLayout, QVBoxLayout
 from aqt.utils import showInfo
 
 from vocab_builder.domain.document.Document import Document
-from vocab_builder.domain.document.DocumentFactory import DocumentFactory
+from vocab_builder.domain.document.DocumentService import DocumentService
 from vocab_builder.domain.document.analyzer.DefaultDocumentAnalyzer import DefaultDocumentAnalyzer
 from vocab_builder.infrastructure import VocabBuilderDB
 from vocab_builder.ui import prod_vocab_builder_db
@@ -56,17 +56,17 @@ class MainDialog(QDialog):
         doc_name = get_base_name_without_ext(document_file_path)
         doc_contents = Path(document_file_path).read_text()
 
-        document_factory = DocumentFactory(self.__db)
+        document_service = DocumentService(self.__db)
         default_document_analyzer = DefaultDocumentAnalyzer(self.__db)
-        doc = document_factory.import_document(doc_name, doc_contents, default_document_analyzer)
+        doc = document_service.import_document(doc_name, doc_contents, default_document_analyzer)
         self.__doc_list_vbox.addLayout(self.__convert_doc_to_hbox(doc))
         showInfo("Importing is done.")
 
     def __get_document_list(self) -> QVBoxLayout:
         vbox = QVBoxLayout()
 
-        document_factory = DocumentFactory(prod_vocab_builder_db)
-        documents = document_factory.get_document_list()
+        document_service = DocumentService(prod_vocab_builder_db)
+        documents = document_service.get_document_list()
         for doc in documents:
             vbox.addLayout(self.__convert_doc_to_hbox(doc))
         return vbox

@@ -2,7 +2,7 @@ import unittest
 
 from tests.utils import get_test_vocab_builder_db
 from vocab_builder.domain.document.Document import Document
-from vocab_builder.domain.document.DocumentFactory import DocumentFactory
+from vocab_builder.domain.document.DocumentService import DocumentService
 from vocab_builder.domain.document.analyzer.DefaultDocumentAnalyzer import DefaultDocumentAnalyzer
 
 
@@ -10,8 +10,8 @@ class DefaultDocumentAnalyzerTest(unittest.TestCase):
 
     def test_analyze(self):
         db = get_test_vocab_builder_db()
-        document_factory = DocumentFactory(db)
-        test_doc = document_factory.create_new_document("test_name", "test contents")
+        document_service = DocumentService(db)
+        test_doc = document_service.create_new_document("test_name", "test contents")
 
         analyzer = DefaultDocumentAnalyzer(db)
         words = analyzer.import_words(test_doc)
@@ -35,8 +35,8 @@ class DefaultDocumentAnalyzerTest(unittest.TestCase):
         Test analyze a document with duplicated words.
         """
         db = get_test_vocab_builder_db()
-        document_factory = DocumentFactory(db)
-        test_doc = document_factory.create_new_document("test_name", "test contents test")
+        document_service = DocumentService(db)
+        test_doc = document_service.create_new_document("test_name", "test contents test")
 
         analyzer = DefaultDocumentAnalyzer(db)
         words = analyzer.import_words(test_doc)
