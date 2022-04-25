@@ -136,3 +136,4 @@ anki_testing
 .idea
 
 vocab.db
+.DS_Store
