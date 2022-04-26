@@ -9,7 +9,7 @@ from vocab_builder.domain.document.DocumentService import DocumentService
 from vocab_builder.domain.document.analyzer.DefaultDocumentAnalyzer import DefaultDocumentAnalyzer
 from vocab_builder.infrastructure import VocabBuilderDB
 from vocab_builder.ui import prod_vocab_builder_db
-from vocab_builder.ui.dialog.DocumentDialog import DocumentDialog
+from vocab_builder.ui.dialog.DocumentWindow import DocumentWindow
 from vocab_builder.ui.util.FileUtils import get_base_name_without_ext
 from vocab_builder.ui.util.PyQtUtils import get_horizontal_line
 from pathlib import Path
@@ -72,8 +72,8 @@ class MainDialog(QDialog):
         return vbox
 
     def __open_document_dialog(self, doc: Document):
-        doc_dialog = DocumentDialog(doc, self.__db)
-        doc_dialog.show_dialog()
+        doc_dialog = DocumentWindow(doc, self.__db)
+        doc_dialog.show()
         # TODO How to close the current dialog before showing the document dialog
         self.close()
 

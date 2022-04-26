@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QDialog, QVBoxLayout, QHBoxLayout, QComboBox, QLabel, QPushButton, QApplication
+from PyQt5.QtWidgets import QDialog, QVBoxLayout, QHBoxLayout, QComboBox, QLabel, QPushButton, QApplication, QWidget
 
 from vocab_builder.domain.document.Document import Document
 from vocab_builder.domain.status.GlobalWordStatus import upsert_word_status, Status
@@ -10,10 +10,10 @@ from aqt import mw
 from aqt.utils import tooltip
 
 
-class DocumentDialog(QDialog):
+class DocumentWindow(QWidget):
 
     def __init__(self, doc: Document, db: VocabBuilderDB):
-        super(DocumentDialog, self).__init__()
+        super(DocumentWindow, self).__init__()
         self.__db = db
         self.__doc = doc
         self.__offset = 0
@@ -23,13 +23,6 @@ class DocumentDialog(QDialog):
         self.__middle_area_hbox = self.__get_middle_area(self.__context_list)
         self.__dialog_layout = self.__get_dialog_layout(self.__middle_area_hbox)
         self.__init_ui(self.__dialog_layout)
-
-    def show_dialog(self):
-        self.show()
-        self.exec_()
-
-    def close_dialog(self):
-        self.close()
 
     def __get_dialog_layout(self, middle_area_hbox: QHBoxLayout) -> QVBoxLayout:
         vbox = QVBoxLayout()
@@ -77,7 +70,7 @@ class DocumentDialog(QDialog):
 
         close_btn = QPushButton("Close")
         close_btn.setDefault(True)
-        close_btn.clicked.connect(self.close_dialog)
+        close_btn.clicked.connect(self.close)
         res.addWidget(close_btn)
 
         # TODO Add other buttons
