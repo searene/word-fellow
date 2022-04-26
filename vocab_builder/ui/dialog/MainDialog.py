@@ -15,7 +15,7 @@ from vocab_builder.ui.util.PyQtUtils import get_horizontal_line
 from pathlib import Path
 
 
-class MainWindow(QWidget):
+class MainDialog(QDialog):
 
     def __init__(self, db: VocabBuilderDB):
         super().__init__()
@@ -61,7 +61,7 @@ class MainWindow(QWidget):
 
     def __get_document_list(self) -> QVBoxLayout:
         vbox = QVBoxLayout()
-        self.__no_document_label = QLabel("No document is available, click \"import new document\" to start.")
+        self.__no_document_label = QLabel("No document is available.")
         vbox.addWidget(self.__no_document_label)
 
         document_service = DocumentService(prod_vocab_builder_db)
@@ -90,5 +90,5 @@ class MainWindow(QWidget):
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    ex = MainWindow(prod_vocab_builder_db)
+    ex = MainDialog(prod_vocab_builder_db)
     sys.exit(app.exec_())
