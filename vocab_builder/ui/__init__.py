@@ -4,7 +4,7 @@ from aqt.qt import *
 from vocab_builder.domain import utils
 from vocab_builder.domain.document.DocumentService import DocumentService
 from vocab_builder.ui.util.DatabaseUtils import prod_vocab_builder_db
-from vocab_builder.ui.dialog.MainDialog import MainDialog
+from vocab_builder.ui.dialog.MainWindow import MainWindow
 import vocab_builder.domain.word.WordService as WordService
 import vocab_builder.domain.word.WordValueObject as WordValueObject
 
@@ -28,8 +28,8 @@ def insert_test_data():
 
 
 def show_main_dialog() -> None:
-    dialog = MainDialog(prod_vocab_builder_db)
-    dialog.show_dialog()
+    dialog = MainWindow(prod_vocab_builder_db)
+    dialog.show()
 
 
 def init_addon() -> None:

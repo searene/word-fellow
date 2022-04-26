@@ -1,7 +1,7 @@
 import sys
 
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import (QPushButton, QApplication, QHBoxLayout, QVBoxLayout, QLabel, QDialog, QFileDialog)
+from PyQt5.QtWidgets import (QPushButton, QApplication, QHBoxLayout, QVBoxLayout, QLabel, QDialog, QFileDialog, QWidget)
 from aqt.utils import showInfo
 
 from vocab_builder.domain.document.Document import Document
@@ -15,17 +15,13 @@ from vocab_builder.ui.util.PyQtUtils import get_horizontal_line
 from pathlib import Path
 
 
-class MainDialog(QDialog):
+class MainWindow(QWidget):
 
     def __init__(self, db: VocabBuilderDB):
         super().__init__()
         self.__db = db
         self.__doc_list_vbox = self.__get_document_list()
         self.__init_ui()
-
-    def show_dialog(self):
-        self.show()
-        self.exec_()
 
     def __init_ui(self):
         vbox = QVBoxLayout()
@@ -87,5 +83,5 @@ class MainDialog(QDialog):
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    ex = MainDialog(prod_vocab_builder_db)
+    ex = MainWindow(prod_vocab_builder_db)
     sys.exit(app.exec_())
