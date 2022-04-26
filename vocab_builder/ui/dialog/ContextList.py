@@ -6,6 +6,7 @@ from PyQt5.QtWidgets import QVBoxLayout, QLabel
 from vocab_builder.domain.document.Document import Document
 from vocab_builder.domain.word.Word import Word
 from vocab_builder.domain.word.WordStatus import WordStatus
+from vocab_builder.domain.word.WordValueObject import ShortAndLongContext
 from vocab_builder.infrastructure import VocabBuilderDB
 from vocab_builder.ui.dialog.ContextItem import ContextItem
 
@@ -38,10 +39,20 @@ class ContextList(QtWidgets.QWidget):
             short_and_long_contexts = self.word.get_short_and_long_contexts(self.__doc)
             self.__no_word_available_label.hide()
             for i in range(len(short_and_long_contexts)):
-                self.__context_items[i].update_layout(short_and_long_contexts[i])
-                self.__context_items[i].show()
+                self.__update_and_show_context_item(self.__context_items, i, short_and_long_contexts[i], self.__layout)
             for i in range(len(short_and_long_contexts), len(self.__context_items)):
                 self.__context_items[i].hide()
+
+    def __update_and_show_context_item(self, context_items: [ContextItem], item_index: int,
+                                       short_and_long_context: ShortAndLongContext, layout: QVBoxLayout) -> None:
+        if len(context_items) <= item_index:
+            # create a new context item
+            context_item = ContextItem(short_and_long_context)
+            layout.addWidget(context_item)
+            context_items.append(context_item)
+        else:
+            context_items[item_index].update_layout(short_and_long_context)
+            context_items[item_index].show()
 
     def __get_word(self, doc: Document, status: WordStatus, status_to_offset_dict: Dict[WordStatus, int],
                    db: VocabBuilderDB) -> Optional[Word]:
@@ -55,7 +66,7 @@ class ContextList(QtWidgets.QWidget):
 
     def __init_ui(self, word: Optional[Word], doc: Document) -> QVBoxLayout:
         vbox = QVBoxLayout()
-        self.__context_items = []
+        self.__context_items: [ContextItem] = []
         self.__no_word_available_label = self.__get_no_word_available_label()
         vbox.addWidget(self.__no_word_available_label)
         if word is None:
