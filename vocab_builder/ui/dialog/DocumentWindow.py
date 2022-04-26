@@ -1,4 +1,6 @@
+from PyQt5.QtGui import QCloseEvent
 from PyQt5.QtWidgets import QDialog, QVBoxLayout, QHBoxLayout, QComboBox, QLabel, QPushButton, QApplication, QWidget
+from anki.notes import Note
 
 from vocab_builder.domain.document.Document import Document
 from vocab_builder.domain.status.GlobalWordStatus import upsert_word_status, Status
@@ -8,6 +10,7 @@ from vocab_builder.infrastructure import VocabBuilderDB
 from vocab_builder.ui.dialog.ContextList import ContextList
 from aqt import mw
 from aqt.utils import tooltip
+from aqt import gui_hooks
 
 
 class DocumentWindow(QWidget):
@@ -23,6 +26,13 @@ class DocumentWindow(QWidget):
         self.__middle_area_hbox = self.__get_middle_area(self.__context_list)
         self.__dialog_layout = self.__get_dialog_layout(self.__middle_area_hbox)
         self.__init_ui(self.__dialog_layout)
+        gui_hooks.add_cards_did_add_note.append(self.__raise)
+
+    def closeEvent(self, event: QCloseEvent) -> None:
+        gui_hooks.add_cards_did_add_note.remove(self.__raise)
+
+    def __raise(self, note: Note):
+        self.raise_()
 
     def __get_dialog_layout(self, middle_area_hbox: QHBoxLayout) -> QVBoxLayout:
         vbox = QVBoxLayout()

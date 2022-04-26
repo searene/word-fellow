@@ -7,6 +7,7 @@ from vocab_builder.ui.util.DatabaseUtils import prod_vocab_builder_db
 from vocab_builder.ui.dialog.MainWindow import MainWindow
 import vocab_builder.domain.word.WordService as WordService
 import vocab_builder.domain.word.WordValueObject as WordValueObject
+from aqt import gui_hooks
 
 
 def __init_database():
@@ -40,7 +41,6 @@ def init_addon() -> None:
     qconnect(action.triggered, show_main_dialog)
     # and add it to the tools menu
     mw.form.menuTools.addAction(action)
-
 
 if __name__ == "__main__":
     init_addon()
