@@ -55,16 +55,23 @@ class MainWindow(QWidget):
         document_service = DocumentService(self.__db)
         default_document_analyzer = DefaultDocumentAnalyzer(self.__db)
         doc = document_service.import_document(doc_name, doc_contents, default_document_analyzer)
+        # TODO hide the "no documents available" label
         self.__doc_list_vbox.addLayout(self.__convert_doc_to_hbox(doc))
         showInfo("Importing is done.")
 
     def __get_document_list(self) -> QVBoxLayout:
         vbox = QVBoxLayout()
+        self.__no_document_label = QLabel("No document is available, click \"import new document\" to start.")
+        vbox.addWidget(self.__no_document_label)
 
         document_service = DocumentService(prod_vocab_builder_db)
         documents = document_service.get_document_list()
-        for doc in documents:
-            vbox.addLayout(self.__convert_doc_to_hbox(doc))
+        if len(documents) == 0:
+            self.__no_document_label.show()
+        else:
+            self.__no_document_label.hide()
+            for doc in documents:
+                vbox.addLayout(self.__convert_doc_to_hbox(doc))
         return vbox
 
     def __open_document_dialog(self, doc: Document):
