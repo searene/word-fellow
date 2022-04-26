@@ -17,12 +17,20 @@ class ContextList(QtWidgets.QWidget):
         self.__doc = doc
         self.__status = status
         self.__db = db
-        self.__status_to_offset_dict = {}
+        self.__status_to_offset_dict: Dict[WordStatus, int] = {}
         self.__word = self.__get_word(doc, status, self.__status_to_offset_dict, db)
         self.__layout = self.__init_ui(self.__word, doc)
 
+    def next_page(self):
+        self.__status_to_offset_dict[self.__status] = self.__status_to_offset_dict[self.__status] + 1
+        self.__update_ui()
+
     def update_status(self, status: WordStatus):
-        self.__word = self.__get_word(self.__doc, status, self.__status_to_offset_dict, self.__db)
+        self.__status = status
+        self.__update_ui()
+
+    def __update_ui(self):
+        self.__word = self.__get_word(self.__doc, self.__status, self.__status_to_offset_dict, self.__db)
         if self.__word is None:
             [item.hide() for item in self.__context_items]
             self.__no_word_available_label.show()

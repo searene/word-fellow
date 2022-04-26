@@ -97,6 +97,7 @@ class DocumentDialog(QDialog):
         # Set the word status to STUDYING
         upsert_word_status(self.__word.text, Status.STUDYING, self.__db)
 
+        self.__context_list.update_status()
         self.__refresh_ui()
 
     def __refresh_ui(self) -> None:
