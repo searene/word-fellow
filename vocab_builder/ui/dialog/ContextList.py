@@ -18,8 +18,8 @@ class ContextList(QtWidgets.QWidget):
         self.__status = status
         self.__db = db
         self.__status_to_offset_dict: Dict[WordStatus, int] = {}
-        self.__word = self.__get_word(doc, status, self.__status_to_offset_dict, db)
-        self.__layout = self.__init_ui(self.__word, doc)
+        self.word = self.__get_word(doc, status, self.__status_to_offset_dict, db)
+        self.__layout = self.__init_ui(self.word, doc)
 
     def next_page(self):
         self.__status_to_offset_dict[self.__status] = self.__status_to_offset_dict[self.__status] + 1
@@ -30,12 +30,12 @@ class ContextList(QtWidgets.QWidget):
         self.__update_ui()
 
     def __update_ui(self):
-        self.__word = self.__get_word(self.__doc, self.__status, self.__status_to_offset_dict, self.__db)
-        if self.__word is None:
+        self.word = self.__get_word(self.__doc, self.__status, self.__status_to_offset_dict, self.__db)
+        if self.word is None:
             [item.hide() for item in self.__context_items]
             self.__no_word_available_label.show()
         else:
-            short_and_long_contexts = self.__word.get_short_and_long_contexts(self.__doc)
+            short_and_long_contexts = self.word.get_short_and_long_contexts(self.__doc)
             self.__no_word_available_label.hide()
             for i in range(len(short_and_long_contexts)):
                 self.__context_items[i].update_layout(short_and_long_contexts[i])

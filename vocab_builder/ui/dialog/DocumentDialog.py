@@ -91,20 +91,10 @@ class DocumentDialog(QDialog):
 
     def __on_add_to_anki(self) -> None:
         mw.onAddCard()
-        QApplication.clipboard().setText(self.__word.text)
+        QApplication.clipboard().setText(self.__context_list.word.text)
         tooltip("The word has been copied into the clipboard.", 3000)
 
         # Set the word status to STUDYING
-        upsert_word_status(self.__word.text, Status.STUDYING, self.__db)
+        upsert_word_status(self.__context_list.word.text, Status.STUDYING, self.__db)
 
-        self.__context_list.update_status()
-        self.__refresh_ui()
-
-    def __refresh_ui(self) -> None:
-        self.__middle_area_hbox.removeItem(self.__context_list)
-        self.__word = self.__doc.get_next_word(0, self.__get_word_status(), self.__db)
-        self.__context_list = self.__get_context_list(self.__word, self.__doc, word_status)
-        self.__middle_area_hbox.addLayout(self.__context_list)
-        print(self.__word.text)
-        print(self.__context_list)
-        print(self.__middle_area_hbox)
+        self.__context_list.next_page()
