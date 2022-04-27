@@ -30,3 +30,5 @@ class DocumentService:
 
     def remove_all(self) -> None:
         self.db.execute("delete from documents")
+        self.db.execute("delete from words")
+        self.db.execute("delete from global_word_status")
