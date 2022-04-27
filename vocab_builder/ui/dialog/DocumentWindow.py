@@ -80,12 +80,15 @@ class DocumentWindow(QWidget):
 
         close_btn = QPushButton("Close")
         close_btn.setDefault(True)
-        close_btn.clicked.connect(self.close)
+        close_btn.clicked.connect(self.__close_window)
         res.addWidget(close_btn)
 
         # TODO Add other buttons
 
         return res
+
+    def __close_window(self) -> None:
+        self.close()
 
     def __get_add_to_anki_btn(self) -> QPushButton:
         add_to_anki_btn = QPushButton("Add to anki")
