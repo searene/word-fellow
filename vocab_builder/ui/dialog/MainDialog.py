@@ -22,14 +22,13 @@ class MainDialog(QDialog):
     def __init__(self, db: VocabBuilderDB):
         super().__init__()
         self.__db = db
-        doc_list = self.__get_document_list()
-        self.__init_ui(doc_list)
+        self.__init_ui()
 
-    def __init_ui(self, doc_list: QWidget):
+    def __init_ui(self):
         vbox = QVBoxLayout()
         vbox.addStretch(1)
         vbox.addLayout(self.__get_top_bar())
-        vbox.addWidget(doc_list)
+        self.__add_document_list(vbox)
 
         self.setLayout(vbox)
         self.setWindowTitle("Vocab Builder")
@@ -41,7 +40,7 @@ class MainDialog(QDialog):
         return hbox
 
     def __get_import_new_document_button(self) -> QPushButton:
-        btn = QPushButton("Import New Document")
+        btn = QPushButton("Add")
         btn.clicked.connect(self.__open_import_new_document_dialog)
         return btn
 
@@ -57,23 +56,26 @@ class MainDialog(QDialog):
         default_document_analyzer = DefaultDocumentAnalyzer(self.__db)
         doc = document_service.import_document(doc_name, doc_contents, default_document_analyzer)
         self.__list_widget.addItem(self.__to_list_item(doc))
+        self.__list_widget.show()
         self.__no_document_label.hide()
         showInfo("Importing is done.")
 
-    def __get_document_list(self) -> QWidget:
+    def __add_document_list(self, parent: QVBoxLayout) -> None:
         self.__no_document_label = QLabel("No document is available.")
+        self.__list_widget = QListWidget()
+        self.__list_widget.itemDoubleClicked.connect(self.on_list_item_clicked)
+        parent.addWidget(self.__no_document_label)
+        parent.addWidget(self.__list_widget)
 
         document_service = DocumentService(prod_vocab_builder_db)
         # Store the contents of all the documents may not be a good idea
         documents = document_service.get_document_list()
         if len(documents) == 0:
-            return self.__no_document_label
+            self.__list_widget.hide()
         else:
-            self.__list_widget = QListWidget()
-            self.__list_widget.itemDoubleClicked.connect(self.on_list_item_clicked)
+            self.__no_document_label.hide()
             for doc in documents:
                 self.__list_widget.addItem(self.__to_list_item(doc))
-            return self.__list_widget
 
     def __to_list_item(self, doc: Document) -> QListWidgetItem:
         res = QListWidgetItem()
