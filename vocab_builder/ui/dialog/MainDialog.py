@@ -77,7 +77,6 @@ class MainDialog(QDialog):
     def __open_document_dialog(self, doc: Document):
         doc_dialog = DocumentWindow(doc, self.__db)
         doc_dialog.show()
-        # TODO How to close the current dialog before showing the document dialog
         self.close()
 
     def __convert_doc_to_hbox(self, doc: Document) -> QHBoxLayout:
