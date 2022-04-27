@@ -82,9 +82,6 @@ class DocumentWindow(QWidget):
         close_btn.setDefault(True)
         close_btn.clicked.connect(self.__close_window)
         res.addWidget(close_btn)
-
-        # TODO Add other buttons
-
         return res
 
     def __close_window(self) -> None:
