@@ -73,6 +73,7 @@ class ContextList(QtWidgets.QWidget):
             self.__no_word_available_label.show()
             self.setLayout(vbox)
             return vbox
+        self.__no_word_available_label.hide()
         for short_and_long_context in word.get_short_and_long_contexts(doc):
             context_item = ContextItem(short_and_long_context)
             vbox.addWidget(context_item)
