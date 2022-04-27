@@ -1,7 +1,9 @@
 import sys
 
+from PyQt5 import QtCore
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import (QPushButton, QApplication, QHBoxLayout, QVBoxLayout, QLabel, QDialog, QFileDialog, QWidget)
+from PyQt5.QtWidgets import (QPushButton, QApplication, QHBoxLayout, QVBoxLayout, QLabel, QDialog, QFileDialog, QWidget,
+                             QListWidget, QListWidgetItem)
 from aqt.utils import showInfo
 
 from vocab_builder.domain.document.Document import Document
@@ -20,15 +22,14 @@ class MainDialog(QDialog):
     def __init__(self, db: VocabBuilderDB):
         super().__init__()
         self.__db = db
-        self.__doc_list_vbox = self.__get_document_list()
-        self.__init_ui()
+        doc_list = self.__get_document_list()
+        self.__init_ui(doc_list)
 
-    def __init_ui(self):
+    def __init_ui(self, doc_list: QWidget):
         vbox = QVBoxLayout()
         vbox.addStretch(1)
         vbox.addLayout(self.__get_top_bar())
-        vbox.addWidget(get_horizontal_line())
-        vbox.addLayout(self.__doc_list_vbox)
+        vbox.addWidget(doc_list)
 
         self.setLayout(vbox)
         self.setWindowTitle("Vocab Builder")
@@ -55,24 +56,34 @@ class MainDialog(QDialog):
         document_service = DocumentService(self.__db)
         default_document_analyzer = DefaultDocumentAnalyzer(self.__db)
         doc = document_service.import_document(doc_name, doc_contents, default_document_analyzer)
-        self.__doc_list_vbox.addLayout(self.__convert_doc_to_hbox(doc))
+        self.__list_widget.addItem(self.__to_list_item(doc))
         self.__no_document_label.hide()
         showInfo("Importing is done.")
 
-    def __get_document_list(self) -> QVBoxLayout:
-        vbox = QVBoxLayout()
+    def __get_document_list(self) -> QWidget:
         self.__no_document_label = QLabel("No document is available.")
-        vbox.addWidget(self.__no_document_label)
 
         document_service = DocumentService(prod_vocab_builder_db)
+        # Store the contents of all the documents may not be a good idea
         documents = document_service.get_document_list()
         if len(documents) == 0:
-            self.__no_document_label.show()
+            return self.__no_document_label
         else:
-            self.__no_document_label.hide()
+            self.__list_widget = QListWidget()
+            self.__list_widget.itemDoubleClicked.connect(self.on_list_item_clicked)
             for doc in documents:
-                vbox.addLayout(self.__convert_doc_to_hbox(doc))
-        return vbox
+                self.__list_widget.addItem(self.__to_list_item(doc))
+            return self.__list_widget
+
+    def __to_list_item(self, doc: Document) -> QListWidgetItem:
+        res = QListWidgetItem()
+        res.setText(doc.name)
+        res.setData(QtCore.Qt.UserRole, doc)
+        return res
+
+    def on_list_item_clicked(self, item: QListWidgetItem) -> None:
+        doc: Document = item.data(QtCore.Qt.UserRole)
+        self.__open_document_dialog(doc)
 
     def __open_document_dialog(self, doc: Document):
         doc_dialog = DocumentWindow(doc, self.__db)
