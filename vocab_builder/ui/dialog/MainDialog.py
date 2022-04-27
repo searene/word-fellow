@@ -55,8 +55,8 @@ class MainDialog(QDialog):
         document_service = DocumentService(self.__db)
         default_document_analyzer = DefaultDocumentAnalyzer(self.__db)
         doc = document_service.import_document(doc_name, doc_contents, default_document_analyzer)
-        # TODO hide the "no documents available" label
         self.__doc_list_vbox.addLayout(self.__convert_doc_to_hbox(doc))
+        self.__no_document_label.hide()
         showInfo("Importing is done.")
 
     def __get_document_list(self) -> QVBoxLayout:
