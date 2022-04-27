@@ -1,37 +1,40 @@
-from sqlite3 import Cursor
+from sqlite3 import connect
 from typing import Any, List, Tuple, Optional
-from sqlite3 import dbapi2 as sqlite
+from contextlib import closing
 
 
-# TODO should I call close manually?
-# TODO should I call commit manually?
 class VocabBuilderDB:
     def __init__(self, db_path: str):
-        self.db = sqlite.connect(db_path)
+        self.__conn = connect(db_path)
+        self.__db_path = db_path
 
-    def execute(self, sql: str, *params: Tuple) -> Cursor:
-        return self.db.execute(sql, *params)
+    def execute(self, sql: str, *params: Tuple) -> None:
+        with self.__conn:  # auto-commits
+            with closing(self.__conn.cursor()) as cursor:  # auto-closes
+                cursor.execute(sql, *params)
 
-    def execute_script(self, script: str) -> Cursor:
-        return self.db.executescript(script)
+    def execute_script(self, script: str) -> None:
+        with self.__conn:  # auto-commits
+            with closing(self.__conn.cursor()) as cursor:  # auto-closes
+                cursor.executescript(script)
 
     def insert(self, sql: str, *params: Tuple) -> int:
         """Insert a record, return its id"""
-        cursor = self.db.execute(sql, *params)
-        return cursor.lastrowid
+        with self.__conn:  # auto-commits
+            with closing(self.__conn.cursor()) as cursor:  # auto-closes
+                return cursor.execute(sql, *params).lastrowid
 
     def first(self, sql: str) -> Any:
-        c = self.db.execute(sql)
-        res = c.fetchone()
-        return res
-
-    def commit(self) -> None:
-        return self.db.commit()
+        with self.__conn:  # auto-commits
+            with closing(self.__conn.cursor()) as cursor:  # auto-closes
+                return cursor.execute(sql).fetchone()
 
     def fetch_one(self, sql: str, *params: Tuple) -> Optional[Tuple]:
-        c = self.execute(sql, *params)
-        return c.fetchone()
+        with self.__conn:  # auto-commits
+            with closing(self.__conn.cursor()) as cursor:  # auto-closes
+                return cursor.execute(sql, *params).fetchone()
 
     def fetch_all(self, sql: str, *params: Tuple) -> List[Tuple]:
-        c = self.execute(sql, *params)
-        return c.fetchall()
+        with self.__conn:  # auto-commits
+            with closing(self.__conn.cursor()) as cursor:  # auto-closes
+                return cursor.execute(sql, *params).fetchall()
