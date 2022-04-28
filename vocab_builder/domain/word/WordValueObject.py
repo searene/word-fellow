@@ -17,6 +17,9 @@ class WordContext:
     def get_suffix(self):
         return self.context[self.word_pos_in_context + len(self.word):]
 
+    def to_html(self):
+        return f"{self.get_prefix()}<b>{self.word}</b>{self.get_suffix()}"
+
     def __eq__(self, other):
         if not isinstance(other, WordContext):
             return False

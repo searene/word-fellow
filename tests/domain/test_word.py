@@ -179,3 +179,10 @@ COMMIT;""", ))
         expected_short_and_long_contexts2 = ShortAndLongContext(expected_context2, expected_context2)
         self.assertEqual(short_and_long_contexts, [expected_short_and_long_contexts1, expected_short_and_long_contexts2])
 
+    def test_to_html(self):
+        word_context = WordContext("test", "abc test xyz", 4)
+
+        html = word_context.to_html()
+
+        self.assertEqual(html, "abc <b>test</b> xyz")
+

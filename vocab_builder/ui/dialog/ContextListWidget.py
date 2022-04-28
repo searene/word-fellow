@@ -75,6 +75,7 @@ class ContextListWidget(QtWidgets.QWidget):
 
     def __get_item(self, short_and_long_context: ShortAndLongContext) -> QListWidgetItem:
         item = QListWidgetItem()
+        # TODO show html
         item.setText(short_and_long_context.short.context)
         item.setData(QtCore.Qt.UserRole, short_and_long_context.long)
         return item
