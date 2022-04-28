@@ -6,9 +6,10 @@ from PyQt5.QtWidgets import QVBoxLayout, QLabel, QListWidget, QListWidgetItem
 from vocab_builder.domain.document.Document import Document
 from vocab_builder.domain.word.Word import Word
 from vocab_builder.domain.word.WordStatus import WordStatus
-from vocab_builder.domain.word.WordValueObject import ShortAndLongContext
+from vocab_builder.domain.word.WordValueObject import ShortAndLongContext, WordContext
 from vocab_builder.infrastructure import VocabBuilderDB
 from vocab_builder.ui.dialog.ContextItemWidget import ContextItemWidget
+from vocab_builder.ui.dialog.LongContextDialog import LongContextDialog
 
 
 class ContextListWidget(QtWidgets.QWidget):
@@ -67,11 +68,17 @@ class ContextListWidget(QtWidgets.QWidget):
     def __init_ui(self, word: Optional[Word], doc: Document) -> QVBoxLayout:
         vbox = QVBoxLayout()
         list_widget = QListWidget()
+        list_widget.clicked.connect(self.__on_item_clicked)
         for short_and_long_context in word.get_short_and_long_contexts(doc):
             list_widget.addItem(self.__get_item(short_and_long_context))
         vbox.addWidget(list_widget)
         self.setLayout(vbox)
         return vbox
+
+    def __on_item_clicked(self, item: QListWidgetItem) -> None:
+        long_context: WordContext = item.data(QtCore.Qt.UserRole)
+        long_context_dialog = LongContextDialog(long_context)
+        long_context_dialog.show_dialog()
 
     def __get_item(self, short_and_long_context: ShortAndLongContext) -> QListWidgetItem:
         item = QListWidgetItem()
