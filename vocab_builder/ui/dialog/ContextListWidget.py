@@ -1,7 +1,7 @@
 from typing import Dict, Optional
 
 from PyQt5 import QtWidgets, QtCore
-from PyQt5.QtWidgets import QVBoxLayout, QLabel, QListWidget, QListWidgetItem
+from PyQt5.QtWidgets import QVBoxLayout, QLabel, QListWidget, QListWidgetItem, QHBoxLayout, QLayout, QWidget
 
 from vocab_builder.domain.document.Document import Document
 from vocab_builder.domain.word.Word import Word
@@ -68,9 +68,9 @@ class ContextListWidget(QtWidgets.QWidget):
     def __init_ui(self, word: Optional[Word], doc: Document) -> QVBoxLayout:
         vbox = QVBoxLayout()
         list_widget = QListWidget()
-        list_widget.clicked.connect(self.__on_item_clicked)
+        list_widget.itemDoubleClicked.connect(self.__on_item_clicked)
         for short_and_long_context in word.get_short_and_long_contexts(doc):
-            list_widget.addItem(self.__get_item(short_and_long_context))
+            self.__add_item(list_widget, short_and_long_context)
         vbox.addWidget(list_widget)
         self.setLayout(vbox)
         return vbox
@@ -80,11 +80,20 @@ class ContextListWidget(QtWidgets.QWidget):
         long_context_dialog = LongContextDialog(long_context)
         long_context_dialog.show_dialog()
 
-    def __get_item(self, short_and_long_context: ShortAndLongContext) -> QListWidgetItem:
+    def __add_item(self, list_widget: QListWidget, short_and_long_context: ShortAndLongContext) -> QListWidgetItem:
         item = QListWidgetItem()
-        # TODO show html
-        item.setText(short_and_long_context.short.context)
+
+        label = QLabel(short_and_long_context.short.to_html())
+        widget_layout = QHBoxLayout()
+        widget_layout.addWidget(label)
+        widget_layout.setSizeConstraint(QLayout.SetFixedSize)
+        widget = QWidget()
+        widget.setLayout(widget_layout)
+
         item.setData(QtCore.Qt.UserRole, short_and_long_context.long)
+        item.setSizeHint(widget.sizeHint())
+        list_widget.addItem(item)
+        list_widget.setItemWidget(item, widget)
         return item
 
     def __get_no_word_available_label(self) -> QLabel:
