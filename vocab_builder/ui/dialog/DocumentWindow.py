@@ -24,8 +24,7 @@ class DocumentWindow(QWidget):
         self.__status_combo_box = self.__get_status_combo_box()
         word_status = self.__get_word_status()
         self.__context_list = self.__get_context_list(self.__doc, word_status, db)
-        self.__middle_area_hbox = self.__get_middle_area(self.__context_list)
-        self.__dialog_layout = self.__get_dialog_layout(self.__middle_area_hbox)
+        self.__dialog_layout = self.__get_dialog_layout(self.__context_list)
         self.__init_ui(self.__dialog_layout)
         gui_hooks.add_cards_did_add_note.append(self.__raise)
 
@@ -35,10 +34,10 @@ class DocumentWindow(QWidget):
     def __raise(self, note: Note):
         self.raise_()
 
-    def __get_dialog_layout(self, middle_area_hbox: QHBoxLayout) -> QVBoxLayout:
+    def __get_dialog_layout(self, context_list: ContextListWidget) -> QVBoxLayout:
         vbox = QVBoxLayout()
         vbox.addLayout(self.__get_top_bar())
-        vbox.addLayout(middle_area_hbox)
+        vbox.addWidget(context_list)
         vbox.addLayout(self.__get_bottom_bar())
         return vbox
 
