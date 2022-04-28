@@ -39,21 +39,16 @@ class ContextListWidget(QtWidgets.QWidget):
         else:
             short_and_long_contexts = self.word.get_short_and_long_contexts(self.__doc)
             self.__no_word_available_label.hide()
+            self.__list_widget.show()
+            self.__clear_list_widget(self.__list_widget, self.__list_items)
             for i in range(len(short_and_long_contexts)):
-                self.__update_and_show_context_item(self.__list_widget, i, short_and_long_contexts[i], self.__layout)
-            for i in range(len(short_and_long_contexts), len(self.__context_items)):
-                self.__list_widget.takeItem(i)
+                self.__list_items.append(self.__add_item_to_list_widget(self.__list_widget, short_and_long_contexts[i], i))
 
-    def __update_and_show_context_item(self, list_widget: QListWidget, item_index: int,
-                                       short_and_long_context: ShortAndLongContext, layout: QVBoxLayout) -> None:
-        if len(context_items) <= item_index:
-            # create a new context item
-            context_item = ContextItemWidget(short_and_long_context)
-            layout.addWidget(context_item)
-            context_items.append(context_item)
-        else:
-            context_items[item_index].update_layout(short_and_long_context)
-            context_items[item_index].show()
+    def __clear_list_widget(self, list_widget: QListWidget, items: [QListWidgetItem]) -> None:
+        item_count = len(items)
+        for i in range(item_count):
+            list_widget.takeItem(i)
+            items.pop()
 
     def __get_word(self, doc: Document, status: WordStatus, status_to_offset_dict: Dict[WordStatus, int],
                    db: VocabBuilderDB) -> Optional[Word]:
@@ -106,6 +101,7 @@ class ContextListWidget(QtWidgets.QWidget):
 
         item.setData(QtCore.Qt.UserRole, short_and_long_context.long)
         item.setSizeHint(widget.sizeHint())
+        item.setHidden(False)
         list_widget.insertItem(item_index, item)
         list_widget.setItemWidget(item, widget)
         return item
