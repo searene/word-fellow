@@ -1,5 +1,6 @@
 from PyQt5.QtGui import QCloseEvent
-from PyQt5.QtWidgets import QDialog, QVBoxLayout, QHBoxLayout, QComboBox, QLabel, QPushButton, QApplication, QWidget
+from PyQt5.QtWidgets import QDialog, QVBoxLayout, QHBoxLayout, QComboBox, QLabel, QPushButton, QApplication, QWidget, \
+    QSizePolicy
 from anki.notes import Note
 
 from vocab_builder.domain.document.Document import Document
@@ -47,6 +48,10 @@ class DocumentWindow(QWidget):
 
     def __get_top_bar(self) -> QHBoxLayout:
         hbox = QHBoxLayout()
+        status_label = QLabel("Status")
+        size_policy = QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Preferred)
+        status_label.setSizePolicy(size_policy)
+        hbox.addWidget(status_label)
         hbox.addWidget(self.__status_combo_box)
         return hbox
 
