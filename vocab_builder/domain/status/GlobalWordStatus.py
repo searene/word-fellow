@@ -6,7 +6,8 @@ from vocab_builder.infrastructure import VocabBuilderDB
 
 class Status(enum.Enum):
     KNOWN = "KNOWN",
-    STUDYING = "STUDYING"
+    STUDYING = "STUDYING",
+    IGNORED = "IGNORED"
 
 
 class GlobalWordStatus:

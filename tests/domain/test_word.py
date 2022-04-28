@@ -15,30 +15,28 @@ from vocab_builder.domain.word.WordValueObject import WordValueObject, WordConte
 class WordTestCase(unittest.TestCase):
     def test_batch_insert_with_one_batch(self):
         word_value_objects = [
-            WordValueObject("word1", 1, {"word1": [0]}, False),
-            WordValueObject("word2", 1, {"word2": [6, 15]}, False),
+            WordValueObject("word1", 1, {"word1": [0]}),
+            WordValueObject("word2", 1, {"word2": [6, 15]}),
         ]
         db = Mock()
 
         batch_insert(word_value_objects, db)
 
         db.execute_script.assert_called_once_with("""BEGIN TRANSACTION;
-INSERT INTO words (text, document_id, positions, skipped) VALUES
+INSERT INTO words (text, document_id, positions) VALUES
               ('word1',
                1,
-               '{"word1": [0]}',
-               0);
-INSERT INTO words (text, document_id, positions, skipped) VALUES
+               '{"word1": [0]}');
+INSERT INTO words (text, document_id, positions) VALUES
               ('word2',
                1,
-               '{"word2": [6, 15]}',
-               0);
+               '{"word2": [6, 15]}');
 COMMIT;""")
 
     def test_batch_insert_with_two_batches(self):
         word_value_objects = [
-            WordValueObject("word1", 1, {"word1": [0]}, False),
-            WordValueObject("word2", 1, {"word2": [6, 15]}, False),
+            WordValueObject("word1", 1, {"word1": [0]}),
+            WordValueObject("word2", 1, {"word2": [6, 15]}),
         ]
         db = Mock()
 
@@ -49,50 +47,48 @@ COMMIT;""")
 
         self.assertEqual(db.execute_script.call_count, 2)
         self.assertEqual(args1, ("""BEGIN TRANSACTION;
-INSERT INTO words (text, document_id, positions, skipped) VALUES
+INSERT INTO words (text, document_id, positions) VALUES
               ('word1',
                1,
-               '{"word1": [0]}',
-               0);
+               '{"word1": [0]}');
 COMMIT;""", ))
         self.assertEqual(args2, ("""BEGIN TRANSACTION;
-INSERT INTO words (text, document_id, positions, skipped) VALUES
+INSERT INTO words (text, document_id, positions) VALUES
               ('word2',
                1,
-               '{"word2": [6, 15]}',
-               0);
+               '{"word2": [6, 15]}');
 COMMIT;""", ))
 
     def test_get_words_by_document_id(self):
         db = get_test_vocab_builder_db()
-        db.insert("""INSERT INTO words (id, text, document_id, positions, skipped) VALUES
-                  (1, 'word1', 1, '{"word1": [0]}', 0),
-                  (2, 'word2', 1, '{"word2": [6, 15]}', 1)""")
+        db.insert("""INSERT INTO words (id, text, document_id, positions) VALUES
+                  (1, 'word1', 1, '{"word1": [0]}'),
+                  (2, 'word2', 1, '{"word2": [6, 15]}')""")
 
         words = get_words_by_document_id(1, db)
 
-        expected_word1 = Word(1, "word1", 1, {"word1": [0]}, False)
-        expected_word2 = Word(2, "word2", 1, {"word2": [6, 15]}, True)
+        expected_word1 = Word(1, "word1", 1, {"word1": [0]})
+        expected_word2 = Word(2, "word2", 1, {"word2": [6, 15]})
         self.assertEqual(words, [expected_word1, expected_word2])
 
     def test_get_next_unknown_word(self):
         # prepare test data
         db = get_test_vocab_builder_db()
-        word_value_object1 = WordValueObject("test1", 1, {"test1": [0]}, True)
-        word_value_object2 = WordValueObject("test2", 1, {"test2": [0]}, False)
+        word_value_object1 = WordValueObject("test1", 1, {"test1": [0]})
+        word_value_object2 = WordValueObject("test2", 1, {"test2": [0]})
         WordService.batch_insert([word_value_object1, word_value_object2], db)
 
         # invoke the method
         unknown_word = WordFactory.get_next_word(doc_id=1, offset=0, word_status=WordStatus.UNKNOWN, db=db)
 
         # check result
-        self.assertTrue(unknown_word.has_same_values(word_value_object2))
+        self.assertTrue(unknown_word.has_same_values(word_value_object1))
 
     def test_get_next_known_word(self):
         # prepare test data
         db = get_test_vocab_builder_db()
-        word_value_object1 = WordValueObject("test1", 1, {"test1": [0]}, True)
-        word_value_object2 = WordValueObject("test2", 1, {"test2": [0]}, False)
+        word_value_object1 = WordValueObject("test1", 1, {"test1": [0]})
+        word_value_object2 = WordValueObject("test2", 1, {"test2": [0]})
         WordService.batch_insert([word_value_object1, word_value_object2], db)
 
         GlobalWordStatus.insert_word_status("test2", Status.KNOWN, db)
@@ -106,8 +102,8 @@ COMMIT;""", ))
     def test_upsert_word_status_when_we_should_update(self):
         # prepare test data
         db = get_test_vocab_builder_db()
-        word_value_object1 = WordValueObject("test1", 1, {"test1": [0]}, False)
-        word_value_object2 = WordValueObject("test2", 1, {"test2": [0]}, False)
+        word_value_object1 = WordValueObject("test1", 1, {"test1": [0]})
+        word_value_object2 = WordValueObject("test2", 1, {"test2": [0]})
         WordService.batch_insert([word_value_object1, word_value_object2], db)
 
         GlobalWordStatus.insert_word_status("test2", Status.KNOWN, db)
@@ -124,8 +120,8 @@ COMMIT;""", ))
     def test_upsert_word_status_when_we_should_insert(self):
         # prepare test data
         db = get_test_vocab_builder_db()
-        word_value_object1 = WordValueObject("test1", 1, {"test1": [0]}, False)
-        word_value_object2 = WordValueObject("test2", 1, {"test2": [0]}, False)
+        word_value_object1 = WordValueObject("test1", 1, {"test1": [0]})
+        word_value_object2 = WordValueObject("test2", 1, {"test2": [0]})
         WordService.batch_insert([word_value_object1, word_value_object2], db)
 
         GlobalWordStatus.upsert_word_status("test2", Status.STUDYING, db)
@@ -136,22 +132,24 @@ COMMIT;""", ))
         # check result
         self.assertTrue(studying_word.has_same_values(word_value_object2))
 
-    def test_get_next_skipped_word(self):
+    def test_get_next_ignored_word(self):
         # prepare test data
         db = get_test_vocab_builder_db()
-        word_value_object1 = WordValueObject("test1", 1, {"test1": [0]}, True)
-        word_value_object2 = WordValueObject("test2", 1, {"test2": [0]}, False)
+        word_value_object1 = WordValueObject("test1", 1, {"test1": [0]})
+        word_value_object2 = WordValueObject("test2", 1, {"test2": [0]})
         WordService.batch_insert([word_value_object1, word_value_object2], db)
 
+        GlobalWordStatus.insert_word_status("test1", Status.IGNORED, db)
+
         # invoke the method
-        unknown_word = WordFactory.get_next_word(doc_id=1, offset=0, word_status=WordStatus.SKIPPED, db=db)
+        unknown_word = WordFactory.get_next_word(doc_id=1, offset=0, word_status=WordStatus.IGNORED, db=db)
 
         # check result
         self.assertTrue(unknown_word.has_same_values(word_value_object1))
 
     def test_get_context_without_exceeding_boundaries(self):
         doc = Document(1, "test doc", "This test is here.")
-        word = Word(1, "test", 1, {"test": [5]}, False)
+        word = Word(1, "test", 1, {"test": [5]})
 
         context = word._WordValueObject__get_context(2, doc, "test", 5)
 
@@ -160,7 +158,7 @@ COMMIT;""", ))
 
     def test_get_context_with_exceeded_boundaries(self):
         doc = Document(1, "test doc", "This test is here.")
-        word = Word(1, "test", 1, {"test": [5]}, False)
+        word = Word(1, "test", 1, {"test": [5]})
 
         context = word._WordValueObject__get_context(100, doc, "test", 5)
 
@@ -169,7 +167,7 @@ COMMIT;""", ))
 
     def test_get_short_contexts(self):
         doc = Document(1, "test doc", "This test is a test.")
-        word = Word(1, "test", 1, {"test": [5, 15]}, False)
+        word = Word(1, "test", 1, {"test": [5, 15]})
 
         short_and_long_contexts = word.get_short_and_long_contexts(doc)
 

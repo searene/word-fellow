@@ -22,11 +22,10 @@ def batch_insert(words: List[WordValueObject], db: VocabBuilderDB, max_insert_al
 
 
 def __get_insert_sql(word: WordValueObject) -> str:
-    return f"""INSERT INTO words (text, document_id, positions, skipped) VALUES
+    return f"""INSERT INTO words (text, document_id, positions) VALUES
               ('{DBUtils.escape_for_sql_statement(word.text)}',
                {word.document_id},
-               '{DBUtils.escape_for_sql_statement(json.dumps(word.word_to_start_pos_dict))}',
-               {1 if word.skipped else 0});"""
+               '{DBUtils.escape_for_sql_statement(json.dumps(word.word_to_start_pos_dict))}');"""
 
 
 def __get_insert_script(words: [WordValueObject], start: int, end: int) -> str:

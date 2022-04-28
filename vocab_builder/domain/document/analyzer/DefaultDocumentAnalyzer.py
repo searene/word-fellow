@@ -28,5 +28,5 @@ class DefaultDocumentAnalyzer(IDocumentAnalyzer):
                 word_to_value_object_dict[word].word_to_start_pos_dict[word].append(start_pos)
             else:
                 word_to_start_pos_dict = {word: [start_pos]}
-                word_to_value_object_dict[word] = WordValueObject(word, doc.document_id, word_to_start_pos_dict, False)
+                word_to_value_object_dict[word] = WordValueObject(word, doc.document_id, word_to_start_pos_dict)
         return [word_value_object for word_value_object in word_to_value_object_dict.values()]
