@@ -1,7 +1,7 @@
 from typing import Dict, Optional
 
-from PyQt5 import QtWidgets
-from PyQt5.QtWidgets import QVBoxLayout, QLabel
+from PyQt5 import QtWidgets, QtCore
+from PyQt5.QtWidgets import QVBoxLayout, QLabel, QListWidget, QListWidgetItem
 
 from vocab_builder.domain.document.Document import Document
 from vocab_builder.domain.word.Word import Word
@@ -66,20 +66,18 @@ class ContextListWidget(QtWidgets.QWidget):
 
     def __init_ui(self, word: Optional[Word], doc: Document) -> QVBoxLayout:
         vbox = QVBoxLayout()
-        self.__context_items: [ContextItemWidget] = []
-        self.__no_word_available_label = self.__get_no_word_available_label()
-        vbox.addWidget(self.__no_word_available_label)
-        if word is None:
-            self.__no_word_available_label.show()
-            self.setLayout(vbox)
-            return vbox
-        self.__no_word_available_label.hide()
+        list_widget = QListWidget()
         for short_and_long_context in word.get_short_and_long_contexts(doc):
-            context_item = ContextItemWidget(short_and_long_context)
-            vbox.addWidget(context_item)
-            self.__context_items.append(context_item)
+            list_widget.addItem(self.__get_item(short_and_long_context))
+        vbox.addWidget(list_widget)
         self.setLayout(vbox)
         return vbox
+
+    def __get_item(self, short_and_long_context: ShortAndLongContext) -> QListWidgetItem:
+        item = QListWidgetItem()
+        item.setText(short_and_long_context.short.context)
+        item.setData(QtCore.Qt.UserRole, short_and_long_context.long)
+        return item
 
     def __get_no_word_available_label(self) -> QLabel:
         return QLabel("No word is available")
