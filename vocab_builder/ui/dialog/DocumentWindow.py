@@ -27,6 +27,7 @@ class DocumentWindow(QWidget):
         self.__dialog_layout = self.__get_dialog_layout(self.__context_list)
         self.__init_ui(self.__dialog_layout)
         gui_hooks.add_cards_did_add_note.append(self.__raise)
+        self.showMaximized()
 
     def closeEvent(self, event: QCloseEvent) -> None:
         gui_hooks.add_cards_did_add_note.remove(self.__raise)
