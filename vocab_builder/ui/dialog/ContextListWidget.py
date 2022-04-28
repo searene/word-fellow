@@ -81,6 +81,7 @@ class ContextListWidget(QtWidgets.QWidget):
                 self.__list_items.append(item)
 
         self.setLayout(vbox)
+        vbox.setContentsMargins(0, 0, 0, 0)
         return vbox
 
     def __on_item_clicked(self, item: QListWidgetItem) -> None:
