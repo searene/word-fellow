@@ -7,7 +7,7 @@ from vocab_builder.domain.status.GlobalWordStatus import upsert_word_status, Sta
 from vocab_builder.domain.word.Word import Word
 from vocab_builder.domain.word.WordStatus import WordStatus
 from vocab_builder.infrastructure import VocabBuilderDB
-from vocab_builder.ui.dialog.ContextList import ContextList
+from vocab_builder.ui.dialog.ContextListWidget import ContextListWidget
 from aqt import mw
 from aqt.utils import tooltip
 from aqt import gui_hooks
@@ -64,11 +64,11 @@ class DocumentWindow(QWidget):
     def __get_word_status(self) -> WordStatus:
         return WordStatus[self.__status_combo_box.currentText()]
 
-    def __get_context_list(self, doc: Document, status: WordStatus, db: VocabBuilderDB) -> ContextList:
-        context_list = ContextList(doc, status, db)
+    def __get_context_list(self, doc: Document, status: WordStatus, db: VocabBuilderDB) -> ContextListWidget:
+        context_list = ContextListWidget(doc, status, db)
         return context_list
 
-    def __get_middle_area(self, context_list: ContextList) -> QHBoxLayout:
+    def __get_middle_area(self, context_list: ContextListWidget) -> QHBoxLayout:
         hbox = QHBoxLayout()
         hbox.addWidget(context_list)
         return hbox

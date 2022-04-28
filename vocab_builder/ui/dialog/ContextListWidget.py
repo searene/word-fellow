@@ -8,13 +8,13 @@ from vocab_builder.domain.word.Word import Word
 from vocab_builder.domain.word.WordStatus import WordStatus
 from vocab_builder.domain.word.WordValueObject import ShortAndLongContext
 from vocab_builder.infrastructure import VocabBuilderDB
-from vocab_builder.ui.dialog.ContextItem import ContextItem
+from vocab_builder.ui.dialog.ContextItemWidget import ContextItemWidget
 
 
-class ContextList(QtWidgets.QWidget):
+class ContextListWidget(QtWidgets.QWidget):
 
     def __init__(self, doc: Document, status: WordStatus, db: VocabBuilderDB):
-        super(ContextList, self).__init__()
+        super(ContextListWidget, self).__init__()
         self.__doc = doc
         self.__status = status
         self.__db = db
@@ -43,11 +43,11 @@ class ContextList(QtWidgets.QWidget):
             for i in range(len(short_and_long_contexts), len(self.__context_items)):
                 self.__context_items[i].hide()
 
-    def __update_and_show_context_item(self, context_items: [ContextItem], item_index: int,
+    def __update_and_show_context_item(self, context_items: [ContextItemWidget], item_index: int,
                                        short_and_long_context: ShortAndLongContext, layout: QVBoxLayout) -> None:
         if len(context_items) <= item_index:
             # create a new context item
-            context_item = ContextItem(short_and_long_context)
+            context_item = ContextItemWidget(short_and_long_context)
             layout.addWidget(context_item)
             context_items.append(context_item)
         else:
@@ -66,7 +66,7 @@ class ContextList(QtWidgets.QWidget):
 
     def __init_ui(self, word: Optional[Word], doc: Document) -> QVBoxLayout:
         vbox = QVBoxLayout()
-        self.__context_items: [ContextItem] = []
+        self.__context_items: [ContextItemWidget] = []
         self.__no_word_available_label = self.__get_no_word_available_label()
         vbox.addWidget(self.__no_word_available_label)
         if word is None:
@@ -75,7 +75,7 @@ class ContextList(QtWidgets.QWidget):
             return vbox
         self.__no_word_available_label.hide()
         for short_and_long_context in word.get_short_and_long_contexts(doc):
-            context_item = ContextItem(short_and_long_context)
+            context_item = ContextItemWidget(short_and_long_context)
             vbox.addWidget(context_item)
             self.__context_items.append(context_item)
         self.setLayout(vbox)

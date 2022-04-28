@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QDialog, QVBoxLayout, QLabel, QHBoxLayout, QPushButton, QSizePolicy
+from PyQt5.QtWidgets import QDialog, QVBoxLayout, QLabel, QHBoxLayout, QPushButton, QSizePolicy, QTextEdit
 
 from vocab_builder.domain.word.WordValueObject import WordContext
 from vocab_builder.ui.util import WordUtils
@@ -24,8 +24,11 @@ class LongContextDialog(QDialog):
         vbox.addLayout(self.__get_bottom_btn_area())
         self.setLayout(vbox)
 
-    def __get_context_area(self, long_context: WordContext) -> QLabel:
-        return QLabel(WordUtils.convert_word_context_to_html(long_context))
+    def __get_context_area(self, long_context: WordContext) -> QTextEdit:
+        text_edit = QTextEdit()
+        text_edit.setHtml(WordUtils.convert_word_context_to_html(long_context))
+        text_edit.setReadOnly(True)
+        return text_edit
 
     def __get_bottom_btn_area(self) -> QHBoxLayout:
         res = QHBoxLayout()
