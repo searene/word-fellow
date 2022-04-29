@@ -19,6 +19,7 @@ class ContextItemWidget(QtWidgets.QWidget):
         widget_layout = QHBoxLayout()
         widget_layout.addWidget(label)
         widget_layout.setSizeConstraint(QLayout.SetFixedSize)
+        widget_layout.setContentsMargins(0, 0, 0, 0)
         return widget_layout
 
     def __get_item(self, short_and_long_context: ShortAndLongContext) -> QListWidgetItem:
