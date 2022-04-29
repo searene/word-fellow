@@ -11,8 +11,8 @@ from vocab_builder.domain.document.Document import Document
 from vocab_builder.domain.document.DocumentService import DocumentService
 from vocab_builder.domain.document.analyzer.DefaultDocumentAnalyzer import DefaultDocumentAnalyzer
 from vocab_builder.infrastructure import VocabBuilderDB
-from vocab_builder.ui import get_prod_vocab_builder_db
 from vocab_builder.ui.dialog.DocumentWindow import DocumentWindow
+from vocab_builder.ui.util.DatabaseUtils import get_prod_vocab_builder_db
 from vocab_builder.ui.util.FileUtils import get_base_name_without_ext
 
 
