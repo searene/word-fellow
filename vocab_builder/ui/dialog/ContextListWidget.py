@@ -1,7 +1,7 @@
 from typing import Dict, Optional
 
 from PyQt5 import QtWidgets, QtCore
-from PyQt5.QtWidgets import QVBoxLayout, QLabel, QListWidget, QListWidgetItem, QHBoxLayout, QLayout, QWidget
+from PyQt5.QtWidgets import QVBoxLayout, QLabel, QListWidget, QListWidgetItem
 
 from vocab_builder.domain.document.Document import Document
 from vocab_builder.domain.word.Word import Word
@@ -34,21 +34,18 @@ class ContextListWidget(QtWidgets.QWidget):
     def get_item_htmls(self) -> [str]:
         return [item.short_html for item in self.__list_items]
 
-    def get_item_count(self):
-        return len(self.__list_items)
-
     def __update_ui(self):
         self.word = self.__get_word(self.__doc, self.__status, self.__status_to_offset_dict, self.__db)
-        self.__clear_list_widget(self.__list_widget, self.__list_items)
+        self.__clear_list_widget(self._list_widget, self.__list_items)
         if self.word is None:
-            self.__list_widget.hide()
+            self._list_widget.hide()
             self.__no_word_available_label.show()
         else:
             short_and_long_contexts = self.word.get_short_and_long_contexts(self.__doc)
             self.__no_word_available_label.hide()
-            self.__list_widget.show()
+            self._list_widget.show()
             for i in range(len(short_and_long_contexts)):
-                self.__list_items.append(self.__add_item_to_list_widget(self.__list_widget, short_and_long_contexts[i]))
+                self.__list_items.append(self.__add_item_to_list_widget(self._list_widget, short_and_long_contexts[i]))
 
     def __clear_list_widget(self, list_widget: QListWidget, items: [ContextItemWidget]) -> None:
         item_count = len(items)
@@ -69,9 +66,9 @@ class ContextListWidget(QtWidgets.QWidget):
     def __init_ui(self, word: Optional[Word], doc: Document) -> QVBoxLayout:
         vbox = QVBoxLayout()
 
-        self.__list_widget = QListWidget()
-        self.__list_widget.itemDoubleClicked.connect(self.__on_item_clicked)
-        vbox.addWidget(self.__list_widget)
+        self._list_widget = QListWidget()
+        self._list_widget.itemDoubleClicked.connect(self.__on_item_clicked)
+        vbox.addWidget(self._list_widget)
 
         self.__no_word_available_label = QLabel("No word is available")
         vbox.addWidget(self.__no_word_available_label)
@@ -79,11 +76,11 @@ class ContextListWidget(QtWidgets.QWidget):
         self.__list_items: [ContextItemWidget] = []
 
         if word is None:
-            self.__list_widget.hide()
+            self._list_widget.hide()
         else:
             self.__no_word_available_label.hide()
             for item_index, short_and_long_context in list(enumerate(word.get_short_and_long_contexts(doc))):
-                item = self.__add_item_to_list_widget(self.__list_widget, short_and_long_context)
+                item = self.__add_item_to_list_widget(self._list_widget, short_and_long_context)
                 self.__list_items.append(item)
 
         self.setLayout(vbox)

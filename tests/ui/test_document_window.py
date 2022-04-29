@@ -6,6 +6,7 @@ from aqt import AnkiApp
 
 from anki_testing import anki_running
 from tests.utils import get_test_vocab_builder_db
+from tests.utils.UiUtils import get_visible_item_widget
 from vocab_builder.domain.document.DocumentService import DocumentService
 from vocab_builder.domain.document.analyzer.DefaultDocumentAnalyzer import DefaultDocumentAnalyzer
 from vocab_builder.domain.word.WordStatus import WordStatus
@@ -25,11 +26,11 @@ class DocumentWindowTestCase(unittest.TestCase):
     def tearDown(self):
         self.anki_app.__exit__(None, None, None)
 
-    def test_should_give_the_same_number_of_contexts_when_switching_back(self):
-        """Situation: Change the status from unknown to ignored, then to unknown.
+    def test_should_give_the_same_contexts_when_switching_status_back(self):
+        """Situation: Change the status from unknown to ignored, then to unknown again.
            Expected: The number of contexts in both unknown statuses is the same"""
-        unknown_item_texts1 = self.form._context_list.get_item_htmls()
+        short_html1 = [item.short_html for item in get_visible_item_widget(self.form._context_list._list_widget)]
         self.form._status_combo_box.currentTextChanged.emit(WordStatus.IGNORED.name)
         self.form._status_combo_box.currentTextChanged.emit(WordStatus.UNKNOWN.name)
-        unknown_item_texts2 = self.form._context_list.get_item_htmls()
-        self.assertEqual(unknown_item_texts1, unknown_item_texts2)
+        short_html2 = [item.short_html for item in get_visible_item_widget(self.form._context_list._list_widget)]
+        self.assertEqual(short_html1, short_html2)
