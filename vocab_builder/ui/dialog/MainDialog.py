@@ -1,8 +1,9 @@
 import sys
+from pathlib import Path
 
 from PyQt5 import QtCore
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import (QPushButton, QApplication, QHBoxLayout, QVBoxLayout, QLabel, QDialog, QFileDialog, QWidget,
+from PyQt5.QtWidgets import (QPushButton, QApplication, QHBoxLayout, QVBoxLayout, QLabel, QDialog, QFileDialog,
                              QListWidget, QListWidgetItem)
 from aqt.utils import showInfo
 
@@ -10,11 +11,9 @@ from vocab_builder.domain.document.Document import Document
 from vocab_builder.domain.document.DocumentService import DocumentService
 from vocab_builder.domain.document.analyzer.DefaultDocumentAnalyzer import DefaultDocumentAnalyzer
 from vocab_builder.infrastructure import VocabBuilderDB
-from vocab_builder.ui import prod_vocab_builder_db
+from vocab_builder.ui import get_prod_vocab_builder_db
 from vocab_builder.ui.dialog.DocumentWindow import DocumentWindow
 from vocab_builder.ui.util.FileUtils import get_base_name_without_ext
-from vocab_builder.ui.util.PyQtUtils import get_horizontal_line
-from pathlib import Path
 
 
 class MainDialog(QDialog):
@@ -67,7 +66,7 @@ class MainDialog(QDialog):
         parent.addWidget(self.__no_document_label)
         parent.addWidget(self.__list_widget)
 
-        document_service = DocumentService(prod_vocab_builder_db)
+        document_service = DocumentService(get_prod_vocab_builder_db())
         # Store the contents of all the documents may not be a good idea
         documents = document_service.get_document_list()
         if len(documents) == 0:
@@ -102,5 +101,5 @@ class MainDialog(QDialog):
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    ex = MainDialog(prod_vocab_builder_db)
+    ex = MainDialog(get_prod_vocab_builder_db())
     sys.exit(app.exec_())
