@@ -24,4 +24,4 @@ class DocumentWindowTestCase(unittest.TestCase):
         self.anki_app.__exit__(None, None, None)
 
     def test_ignore_and_change_status(self):
-        print("hello")
+        self.assertEqual(self.form._status_combo_box.currentText(), "UNKNOWN")

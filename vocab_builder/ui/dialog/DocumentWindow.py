@@ -21,7 +21,7 @@ class DocumentWindow(QWidget):
         self.__db = db
         self.__doc = doc
         self.__offset = 0
-        self.__status_combo_box = self.__get_status_combo_box()
+        self._status_combo_box = self.__get_status_combo_box()
         word_status = self.__get_word_status()
         self.__context_list = self.__get_context_list(self.__doc, word_status, db)
         self.__dialog_layout = self.__get_dialog_layout(self.__context_list)
@@ -52,7 +52,7 @@ class DocumentWindow(QWidget):
         size_policy = QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Preferred)
         status_label.setSizePolicy(size_policy)
         hbox.addWidget(status_label)
-        hbox.addWidget(self.__status_combo_box)
+        hbox.addWidget(self._status_combo_box)
         return hbox
 
     def __get_status_combo_box(self) -> QComboBox:
@@ -67,7 +67,7 @@ class DocumentWindow(QWidget):
         self.__context_list.update_status(status)
 
     def __get_word_status(self) -> WordStatus:
-        return WordStatus[self.__status_combo_box.currentText()]
+        return WordStatus[self._status_combo_box.currentText()]
 
     def __get_context_list(self, doc: Document, status: WordStatus, db: VocabBuilderDB) -> ContextListWidget:
         context_list = ContextListWidget(doc, status, db)
