@@ -81,12 +81,16 @@ class DocumentWindow(QWidget):
     def __get_bottom_bar(self) -> QHBoxLayout:
         res = QHBoxLayout()
 
+        # TODO It gives me an illusion that I'm operating on the selected item in the list
+        # Maybe we shouldn't let the user select in the list, we only let the user click
         res.addWidget(self.__get_add_to_anki_btn())
+        res.addWidget(self.__get_ignore_btn())
 
         close_btn = QPushButton("Close")
         close_btn.setDefault(True)
         close_btn.clicked.connect(self.__close_window)
         res.addWidget(close_btn)
+
         return res
 
     def __close_window(self) -> None:
@@ -96,6 +100,15 @@ class DocumentWindow(QWidget):
         add_to_anki_btn = QPushButton("Add to anki")
         add_to_anki_btn.clicked.connect(lambda: self.__on_add_to_anki())
         return add_to_anki_btn
+
+    def __get_ignore_btn(self) -> QPushButton:
+        res = QPushButton("Ignore")
+        res.clicked.connect(lambda: self.__on_ignore())
+        return res
+
+    def __on_ignore(self) -> None:
+        upsert_word_status(self.__context_list.word.text, Status.IGNORED, self.__db)
+        self.__context_list.next_page()
 
     def __on_add_to_anki(self) -> None:
         mw.onAddCard()
