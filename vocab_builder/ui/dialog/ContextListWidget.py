@@ -31,8 +31,15 @@ class ContextListWidget(QtWidgets.QWidget):
         self.__status = status
         self.__update_ui()
 
+    def get_item_htmls(self) -> [str]:
+        return [item.short_html for item in self.__list_items]
+
+    def get_item_count(self):
+        return len(self.__list_items)
+
     def __update_ui(self):
         self.word = self.__get_word(self.__doc, self.__status, self.__status_to_offset_dict, self.__db)
+        self.__clear_list_widget(self.__list_widget, self.__list_items)
         if self.word is None:
             self.__list_widget.hide()
             self.__no_word_available_label.show()
@@ -40,11 +47,10 @@ class ContextListWidget(QtWidgets.QWidget):
             short_and_long_contexts = self.word.get_short_and_long_contexts(self.__doc)
             self.__no_word_available_label.hide()
             self.__list_widget.show()
-            self.__clear_list_widget(self.__list_widget, self.__list_items)
             for i in range(len(short_and_long_contexts)):
                 self.__list_items.append(self.__add_item_to_list_widget(self.__list_widget, short_and_long_contexts[i], i))
 
-    def __clear_list_widget(self, list_widget: QListWidget, items: [QListWidgetItem]) -> None:
+    def __clear_list_widget(self, list_widget: QListWidget, items: [ContextItemWidget]) -> None:
         item_count = len(items)
         for i in range(item_count):
             list_widget.takeItem(i)
@@ -70,7 +76,7 @@ class ContextListWidget(QtWidgets.QWidget):
         self.__no_word_available_label = QLabel("No word is available")
         vbox.addWidget(self.__no_word_available_label)
 
-        self.__list_items: [QListWidgetItem] = []
+        self.__list_items: [ContextItemWidget] = []
 
         if word is None:
             self.__list_widget.hide()
@@ -90,22 +96,11 @@ class ContextListWidget(QtWidgets.QWidget):
         long_context_dialog.show_dialog()
 
     def __add_item_to_list_widget(self, list_widget: QListWidget, short_and_long_context: ShortAndLongContext,
-                                  item_index: int) -> QListWidgetItem:
-        item = QListWidgetItem()
-
-        label = QLabel(short_and_long_context.short.to_html())
-        widget_layout = QHBoxLayout()
-        widget_layout.addWidget(label)
-        widget_layout.setSizeConstraint(QLayout.SetFixedSize)
-        widget = QWidget()
-        widget.setLayout(widget_layout)
-
-        item.setData(QtCore.Qt.UserRole, short_and_long_context.long)
-        item.setSizeHint(widget.sizeHint())
-        item.setHidden(False)
-        list_widget.insertItem(item_index, item)
-        list_widget.setItemWidget(item, widget)
-        return item
+                                  item_index: int) -> ContextItemWidget:
+        context_item = ContextItemWidget(short_and_long_context)
+        list_widget.insertItem(item_index, context_item.item)
+        list_widget.setItemWidget(context_item.item, context_item)
+        return context_item
 
     def __get_no_word_available_label(self) -> QLabel:
         return QLabel("No word is available")

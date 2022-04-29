@@ -23,8 +23,8 @@ class DocumentWindow(QWidget):
         self.__offset = 0
         self._status_combo_box = self.__get_status_combo_box()
         word_status = self.__get_word_status()
-        self.__context_list = self.__get_context_list(self.__doc, word_status, db)
-        self.__dialog_layout = self.__get_dialog_layout(self.__context_list)
+        self._context_list = self.__get_context_list(self.__doc, word_status, db)
+        self.__dialog_layout = self.__get_dialog_layout(self._context_list)
         self.__init_ui(self.__dialog_layout)
         gui_hooks.add_cards_did_add_note.append(self.__raise)
         self.showMaximized()
@@ -64,7 +64,7 @@ class DocumentWindow(QWidget):
 
     def __on_status_selected(self, status_name: str) -> None:
         status = WordStatus[status_name]
-        self.__context_list.update_status(status)
+        self._context_list.update_status(status)
 
     def __get_word_status(self) -> WordStatus:
         return WordStatus[self._status_combo_box.currentText()]
@@ -107,15 +107,15 @@ class DocumentWindow(QWidget):
         return res
 
     def __on_ignore(self) -> None:
-        upsert_word_status(self.__context_list.word.text, Status.IGNORED, self.__db)
-        self.__context_list.next_page()
+        upsert_word_status(self._context_list.word.text, Status.IGNORED, self.__db)
+        self._context_list.next_page()
 
     def __on_add_to_anki(self) -> None:
         mw.onAddCard()
-        QApplication.clipboard().setText(self.__context_list.word.text)
+        QApplication.clipboard().setText(self._context_list.word.text)
         tooltip("The word has been copied into the clipboard.", 3000)
 
         # Set the word status to STUDYING
-        upsert_word_status(self.__context_list.word.text, Status.STUDYING, self.__db)
+        upsert_word_status(self._context_list.word.text, Status.STUDYING, self.__db)
 
-        self.__context_list.next_page()
+        self._context_list.next_page()
