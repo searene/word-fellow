@@ -48,13 +48,13 @@ class ContextListWidget(QtWidgets.QWidget):
             self.__no_word_available_label.hide()
             self.__list_widget.show()
             for i in range(len(short_and_long_contexts)):
-                self.__list_items.append(self.__add_item_to_list_widget(self.__list_widget, short_and_long_contexts[i], i))
+                self.__list_items.append(self.__add_item_to_list_widget(self.__list_widget, short_and_long_contexts[i]))
 
     def __clear_list_widget(self, list_widget: QListWidget, items: [ContextItemWidget]) -> None:
         item_count = len(items)
         for i in range(item_count):
-            list_widget.takeItem(i)
-            items.pop()
+            items.pop(0)
+            list_widget.takeItem(0)
 
     def __get_word(self, doc: Document, status: WordStatus, status_to_offset_dict: Dict[WordStatus, int],
                    db: VocabBuilderDB) -> Optional[Word]:
@@ -83,7 +83,7 @@ class ContextListWidget(QtWidgets.QWidget):
         else:
             self.__no_word_available_label.hide()
             for item_index, short_and_long_context in list(enumerate(word.get_short_and_long_contexts(doc))):
-                item = self.__add_item_to_list_widget(self.__list_widget, short_and_long_context, item_index)
+                item = self.__add_item_to_list_widget(self.__list_widget, short_and_long_context)
                 self.__list_items.append(item)
 
         self.setLayout(vbox)
@@ -95,10 +95,9 @@ class ContextListWidget(QtWidgets.QWidget):
         long_context_dialog = LongContextDialog(long_context)
         long_context_dialog.show_dialog()
 
-    def __add_item_to_list_widget(self, list_widget: QListWidget, short_and_long_context: ShortAndLongContext,
-                                  item_index: int) -> ContextItemWidget:
+    def __add_item_to_list_widget(self, list_widget: QListWidget, short_and_long_context: ShortAndLongContext) -> ContextItemWidget:
         context_item = ContextItemWidget(short_and_long_context)
-        list_widget.insertItem(item_index, context_item.item)
+        list_widget.addItem(context_item.item)
         list_widget.setItemWidget(context_item.item, context_item)
         return context_item
 
