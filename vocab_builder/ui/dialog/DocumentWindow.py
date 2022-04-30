@@ -92,7 +92,6 @@ class DocumentWindow(QWidget):
         res.addWidget(self._study_later_btn)
         res.addItem(QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum))
 
-        # TODO set the button to be disabled if there is no prev/next page
         self._prev_page_btn = self.__get_prev_page_btn()
         self._next_page_btn = self.__get_next_page_btn(context_list)
         res.addWidget(self._prev_page_btn)
