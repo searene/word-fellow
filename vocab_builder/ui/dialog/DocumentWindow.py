@@ -84,12 +84,15 @@ class DocumentWindow(QWidget):
 
         # TODO It gives me an illusion that I'm operating on the selected item in the list
         # Maybe we shouldn't let the user select in the list, we only let the user click
+        # TODO Add button tips
         self._add_to_anki_btn = self.__get_add_to_anki_btn()
         self._ignore_bnt = self.__get_ignore_btn()
         self._know_btn = self.__get_know_btn()
+        self._study_later_btn = self.__get_study_later_btn()
         res.addWidget(self._add_to_anki_btn)
         res.addWidget(self._ignore_bnt)
         res.addWidget(self._know_btn)
+        res.addWidget(self._study_later_btn)
         res.addItem(QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum))
 
         # TODO set the button to be disabled if there is no prev/next page
@@ -136,6 +139,15 @@ class DocumentWindow(QWidget):
         res = QPushButton("I Know It!")
         res.clicked.connect(lambda: self.__on_know())
         return res
+
+    def __get_study_later_btn(self) -> QPushButton:
+        res = QPushButton("Study Later")
+        res.clicked.connect(lambda: self.__on_study_later())
+        return res
+
+    def __on_study_later(self) -> None:
+        upsert_word_status(self._context_list.word.text, Status.STUDY_LATER, self.__db)
+        self.__update_ui()
 
     def __on_know(self) -> None:
         upsert_word_status(self._context_list.word.text, Status.KNOWN, self.__db)

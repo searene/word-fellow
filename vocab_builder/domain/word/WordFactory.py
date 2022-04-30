@@ -48,7 +48,7 @@ def __get_next_ignored_word(doc_id: int, offset: int, db: VocabBuilderDB) -> Opt
 def get_next_word(doc_id: int, offset: int, word_status: WordStatus, db: VocabBuilderDB) -> Optional[Word]:
     if word_status == WordStatus.UNKNOWN:
         return __get_next_unknown_word(doc_id, offset, db)
-    elif word_status in (WordStatus.KNOWN, WordStatus.STUDYING, WordStatus.IGNORED):
+    elif word_status in (WordStatus.KNOWN, WordStatus.STUDYING, WordStatus.IGNORED, WordStatus.STUDY_LATER):
         return __get_next_global_word(doc_id, offset, word_status, db)
     else:
         raise ValueError("Unknown word status: " + word_status.name)

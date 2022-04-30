@@ -49,6 +49,17 @@ class DocumentWindowTestCase(unittest.TestCase):
         short_htmls = self.__get_widget_list_htmls()
         self.assertEqual(short_htmls, ["<b>this</b> is this", "this is <b>this</b>"])
 
+    def test_should_go_to_next_page_when_clicking_on_study_later(self):
+        QTest.mouseClick(self.form._study_later_btn, Qt.LeftButton)
+        short_htmls = self.__get_widget_list_htmls()
+        self.assertEqual(short_htmls, ["this <b>is</b> this"])
+
+    def test_should_show_study_later_contexts_contexts_when_a_word_is_set_study_later(self):
+        QTest.mouseClick(self.form._study_later_btn, Qt.LeftButton)
+        self.form._status_combo_box.currentTextChanged.emit(WordStatus.STUDY_LATER.name)
+        short_htmls = self.__get_widget_list_htmls()
+        self.assertEqual(short_htmls, ["<b>this</b> is this", "this is <b>this</b>"])
+
     def test_should_go_to_next_page_when_clicking_on_know_it(self):
         QTest.mouseClick(self.form._know_btn, Qt.LeftButton)
         short_htmls = self.__get_widget_list_htmls()
