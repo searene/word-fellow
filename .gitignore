@@ -130,7 +130,6 @@ dmypy.json
 
 # anki
 anki_root
-anki_testing
 
 # PyCharm
 .idea

@@ -5,7 +5,7 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtTest import QSignalSpy, QTest
 from aqt import AnkiApp
 
-from anki_testing import anki_running
+from tests.anki_testing import anki_running
 from tests.utils import get_test_vocab_builder_db
 from tests.utils.UiUtils import get_visible_item_widget
 from vocab_builder.domain.document.DocumentService import DocumentService
