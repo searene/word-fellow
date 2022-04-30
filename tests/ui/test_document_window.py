@@ -39,12 +39,12 @@ class DocumentWindowTestCase(unittest.TestCase):
         self.assertEqual(short_html1, short_html2)
 
     def test_should_go_to_next_page_when_clicking_on_ignore(self):
-        QTest.mouseClick(self.form._ignore_bnt, Qt.LeftButton)
+        QTest.mouseClick(self.form._ignore_btn, Qt.LeftButton)
         short_htmls = self.__get_widget_list_htmls()
         self.assertEqual(short_htmls, ["this <b>is</b> this"])
 
     def test_should_show_ignored_contexts_when_a_word_is_ignored(self):
-        QTest.mouseClick(self.form._ignore_bnt, Qt.LeftButton)
+        QTest.mouseClick(self.form._ignore_btn, Qt.LeftButton)
         self.__change_status(WordStatus.IGNORED)
         short_htmls = self.__get_widget_list_htmls()
         self.assertEqual(short_htmls, ["<b>this</b> is this", "this is <b>this</b>"])
@@ -124,6 +124,22 @@ class DocumentWindowTestCase(unittest.TestCase):
         QTest.mouseClick(self.form._next_page_btn, Qt.LeftButton)
         QTest.mouseClick(self.form._prev_page_btn, Qt.LeftButton)
         self.assertFalse(self.form._prev_page_btn.isEnabled())
+
+    def test_should_disable_add_to_anki_button_when_current_status_is_studying(self):
+        self.__change_status(WordStatus.STUDYING)
+        self.assertFalse(self.form._add_to_anki_btn.isEnabled())
+
+    def test_should_disable_ignore_button_when_current_status_is_ignore(self):
+        self.__change_status(WordStatus.IGNORED)
+        self.assertFalse(self.form._ignore_btn.isEnabled())
+
+    def test_should_disable_study_later_button_when_current_status_is_study_later(self):
+        self.__change_status(WordStatus.STUDY_LATER)
+        self.assertFalse(self.form._study_later_btn.isEnabled())
+
+    def test_should_disable_know_button_when_current_status_is_known(self):
+        self.__change_status(WordStatus.KNOWN)
+        self.assertFalse(self.form._know_btn.isEnabled())
 
     def __get_widget_list_htmls(self):
         return [item.short_html for item in get_visible_item_widget(self.form._context_list._list_widget)]

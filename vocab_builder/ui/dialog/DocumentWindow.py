@@ -22,8 +22,8 @@ class DocumentWindow(QWidget):
         self.__doc = doc
         self.__offset = 0
         self._status_combo_box = self.__get_status_combo_box()
-        word_status = self.__get_word_status()
-        self._context_list = self.__get_context_list(self.__doc, word_status, db)
+        self.__status = WordStatus(self._status_combo_box.currentText())
+        self._context_list = self.__get_context_list(self.__doc, self.__status, db)
         self.__dialog_layout = self.__get_dialog_layout(self._context_list)
         self.__init_ui(self.__dialog_layout)
         gui_hooks.add_cards_did_add_note.append(self.__raise)
@@ -63,12 +63,9 @@ class DocumentWindow(QWidget):
         return status_combo_box
 
     def __on_status_selected(self, status_value: str) -> None:
-        status = WordStatus(status_value)
-        self._context_list.update_status(status)
+        self.__status = WordStatus(status_value)
+        self._context_list.update_status(self.__status)
         self.__update_ui()
-
-    def __get_word_status(self) -> WordStatus:
-        return WordStatus(self._status_combo_box.currentText())
 
     def __get_context_list(self, doc: Document, status: WordStatus, db: VocabBuilderDB) -> ContextListWidget:
         context_list = ContextListWidget(doc, status, db)
@@ -86,11 +83,11 @@ class DocumentWindow(QWidget):
         # Maybe we shouldn't let the user select in the list, we only let the user click
         # TODO Add button tips
         self._add_to_anki_btn = self.__get_add_to_anki_btn()
-        self._ignore_bnt = self.__get_ignore_btn()
+        self._ignore_btn = self.__get_ignore_btn()
         self._know_btn = self.__get_know_btn()
         self._study_later_btn = self.__get_study_later_btn()
         res.addWidget(self._add_to_anki_btn)
-        res.addWidget(self._ignore_bnt)
+        res.addWidget(self._ignore_btn)
         res.addWidget(self._know_btn)
         res.addWidget(self._study_later_btn)
         res.addItem(QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum))
@@ -117,13 +114,11 @@ class DocumentWindow(QWidget):
 
     def __on_prev_page_clicked(self) -> None:
         self._context_list.prev_page()
-        self._prev_page_btn.setDisabled(self._context_list.get_page_no() == 1)
-        self._next_page_btn.setEnabled(True)
+        self.__update_ui()
 
     def __on_next_page_clicked(self) -> None:
         self._context_list.next_page()
-        self._next_page_btn.setEnabled(self._context_list.is_word_available())
-        self._prev_page_btn.setEnabled(True)
+        self.__update_ui()
 
     def __close_window(self) -> None:
         self.close()
@@ -175,3 +170,7 @@ class DocumentWindow(QWidget):
         self._context_list.update_data()
         self._prev_page_btn.setDisabled(self._context_list.get_page_no() == 1)
         self._next_page_btn.setEnabled(self._context_list.is_word_available())
+        self._add_to_anki_btn.setDisabled(self.__status == WordStatus.STUDYING)
+        self._ignore_btn.setDisabled(self.__status == WordStatus.IGNORED)
+        self._know_btn.setDisabled(self.__status == WordStatus.KNOWN)
+        self._study_later_btn.setDisabled(self.__status == WordStatus.STUDY_LATER)

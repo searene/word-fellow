@@ -33,11 +33,9 @@ class ContextListWidget(QtWidgets.QWidget):
 
     def next_page(self):
         self.__status_to_offset_dict[self.__status] = self.__status_to_offset_dict[self.__status] + 1
-        self.update_data()
 
     def update_status(self, status: WordStatus):
         self.__status = status
-        self.update_data()
 
     def is_word_available(self) -> bool:
         return self.word is not None
