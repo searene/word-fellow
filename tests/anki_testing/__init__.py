@@ -17,6 +17,9 @@ from aqt import AnkiApp
 from aqt.profiles import ProfileManager
 
 
+origin_sys_excepthook = sys.excepthook
+
+
 @contextmanager
 def temporary_user(dir_name, name="__Temporary Test User__", lang="en_US"):
 
@@ -73,6 +76,11 @@ def anki_running():
 
     # clean up what was spoiled
     aqt.mw.cleanupAndExit()
+
+    # Anki sets sys.excepthook to None in cleanUpAndExit(),
+    # which causes the next test to throw exceptions,
+    # let's set it back
+    sys.excepthook = origin_sys_excepthook
 
     # remove hooks added during app initialization
     from anki import hooks
