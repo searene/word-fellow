@@ -136,7 +136,7 @@ class DocumentWindow(QWidget):
         return res
 
     def __get_know_btn(self, is_word_available: bool) -> QPushButton:
-        res = QPushButton("I Know It!")
+        res = QPushButton("I Know It")
         res.setEnabled(is_word_available)
         res.clicked.connect(lambda: self.__on_know())
         return res
