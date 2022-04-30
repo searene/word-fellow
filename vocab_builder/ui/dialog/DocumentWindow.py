@@ -58,17 +58,17 @@ class DocumentWindow(QWidget):
     def __get_status_combo_box(self) -> QComboBox:
         status_combo_box = QComboBox()
         for status in WordStatus:
-            status_combo_box.addItem(status.name)
+            status_combo_box.addItem(status.value)
         status_combo_box.currentTextChanged.connect(self.__on_status_selected)
         return status_combo_box
 
-    def __on_status_selected(self, status_name: str) -> None:
-        status = WordStatus[status_name]
+    def __on_status_selected(self, status_value: str) -> None:
+        status = WordStatus(status_value)
         self._context_list.update_status(status)
         self.__update_ui()
 
     def __get_word_status(self) -> WordStatus:
-        return WordStatus[self._status_combo_box.currentText()]
+        return WordStatus(self._status_combo_box.currentText())
 
     def __get_context_list(self, doc: Document, status: WordStatus, db: VocabBuilderDB) -> ContextListWidget:
         context_list = ContextListWidget(doc, status, db)

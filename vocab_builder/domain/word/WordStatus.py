@@ -5,7 +5,7 @@ class WordStatus(enum.Enum):
 
     # TODO change the description
     UNREVIEWED = "Unreviewed"
-    KNOWN = "KNOWN"
-    STUDYING = "STUDYING"
-    IGNORED = "IGNORED"
-    STUDY_LATER = "STUDY_LATER"
+    KNOWN = "I Know It"
+    STUDYING = "Added In Anki"
+    IGNORED = "Ignored"
+    STUDY_LATER = "Study Later"
