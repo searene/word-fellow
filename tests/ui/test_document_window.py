@@ -58,5 +58,16 @@ class DocumentWindowTestCase(unittest.TestCase):
         short_htmls = self.__get_widget_list_htmls()
         self.assertEqual(short_htmls, ["<b>this</b> is this", "this is <b>this</b>"])
 
+    def test_click_on_next_page(self):
+        QTest.mouseClick(self.form._next_page_btn, Qt.LeftButton)
+        short_htmls = self.__get_widget_list_htmls()
+        self.assertEqual(short_htmls, ["this <b>is</b> this"])
+
+    def test_click_on_prev_page(self):
+        QTest.mouseClick(self.form._next_page_btn, Qt.LeftButton)
+        QTest.mouseClick(self.form._prev_page_btn, Qt.LeftButton)
+        short_htmls = self.__get_widget_list_htmls()
+        self.assertEqual(short_htmls, ["<b>this</b> is this", "this is <b>this</b>"])
+
     def __get_widget_list_htmls(self):
         return [item.short_html for item in get_visible_item_widget(self.form._context_list._list_widget)]

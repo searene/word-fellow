@@ -1,6 +1,6 @@
 from PyQt5.QtGui import QCloseEvent
 from PyQt5.QtWidgets import QDialog, QVBoxLayout, QHBoxLayout, QComboBox, QLabel, QPushButton, QApplication, QWidget, \
-    QSizePolicy
+    QSizePolicy, QSpacerItem
 from anki.notes import Note
 
 from vocab_builder.domain.document.Document import Document
@@ -85,17 +85,35 @@ class DocumentWindow(QWidget):
         # Maybe we shouldn't let the user select in the list, we only let the user click
         self._add_to_anki_btn = self.__get_add_to_anki_btn()
         self._ignore_bnt = self.__get_ignore_btn()
-        # TODO
         self._know_btn = self.__get_know_btn()
         res.addWidget(self._add_to_anki_btn)
         res.addWidget(self._ignore_bnt)
+        res.addWidget(self._know_btn)
+        res.addItem(QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum))
 
-        close_btn = QPushButton("Close")
-        close_btn.setDefault(True)
-        close_btn.clicked.connect(self.__close_window)
-        res.addWidget(close_btn)
+        # TODO set the button to be disabled if there is no prev/next page
+        self._prev_page_btn = self.__get_prev_page_btn()
+        self._next_page_btn = self.__get_next_page_btn()
+        res.addWidget(self._prev_page_btn)
+        res.addWidget(self._next_page_btn)
 
         return res
+
+    def __get_prev_page_btn(self) -> QPushButton:
+        btn = QPushButton("<")
+        btn.clicked.connect(self.__on_prev_page_clicked)
+        return btn
+
+    def __get_next_page_btn(self) -> QPushButton:
+        btn = QPushButton(">")
+        btn.clicked.connect(self.__on_next_page_clicked)
+        return btn
+
+    def __on_prev_page_clicked(self) -> None:
+        self._context_list.prev_page()
+
+    def __on_next_page_clicked(self) -> None:
+        self._context_list.next_page()
 
     def __close_window(self) -> None:
         self.close()
