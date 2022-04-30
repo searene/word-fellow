@@ -30,11 +30,11 @@ class DocumentWindowTestCase(unittest.TestCase):
         self.anki_app.__exit__(None, None, None)
 
     def test_should_give_the_same_contexts_when_switching_status_back(self):
-        """Situation: Change the status from unknown to ignored, then to unknown again.
-           Expected: The number of contexts in both unknown statuses is the same"""
+        """Situation: Change the status from unreviewed to ignored, then to unreviewed again.
+           Expected: The number of contexts in both unreviewed statuses is the same"""
         short_html1 = self.__get_widget_list_htmls()
         self.form._status_combo_box.currentTextChanged.emit(WordStatus.IGNORED.name)
-        self.form._status_combo_box.currentTextChanged.emit(WordStatus.UNKNOWN.name)
+        self.form._status_combo_box.currentTextChanged.emit(WordStatus.UNREVIEWED.name)
         short_html2 = self.__get_widget_list_htmls()
         self.assertEqual(short_html1, short_html2)
 

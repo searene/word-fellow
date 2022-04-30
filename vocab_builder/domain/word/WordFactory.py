@@ -6,7 +6,7 @@ from vocab_builder.domain.word.WordStatus import WordStatus
 from vocab_builder.infrastructure import VocabBuilderDB
 
 
-def __get_next_unknown_word(doc_id: int, offset: int, db: VocabBuilderDB) -> Optional[Word]:
+def __get_next_unreviewed_word(doc_id: int, offset: int, db: VocabBuilderDB) -> Optional[Word]:
     word_query_res = db.fetch_one(f"""
     select w.* from words w
     left join global_word_status g on w.text = g.word
@@ -46,8 +46,8 @@ def __get_next_ignored_word(doc_id: int, offset: int, db: VocabBuilderDB) -> Opt
 
 
 def get_next_word(doc_id: int, offset: int, word_status: WordStatus, db: VocabBuilderDB) -> Optional[Word]:
-    if word_status == WordStatus.UNKNOWN:
-        return __get_next_unknown_word(doc_id, offset, db)
+    if word_status == WordStatus.UNREVIEWED:
+        return __get_next_unreviewed_word(doc_id, offset, db)
     elif word_status in (WordStatus.KNOWN, WordStatus.STUDYING, WordStatus.IGNORED, WordStatus.STUDY_LATER):
         return __get_next_global_word(doc_id, offset, word_status, db)
     else:

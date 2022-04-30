@@ -3,9 +3,8 @@ import enum
 
 class WordStatus(enum.Enum):
 
-    # TODO rename it to unreviewed?
     # TODO change the description
-    UNKNOWN = "UNKNOWN"
+    UNREVIEWED = "Unreviewed"
     KNOWN = "KNOWN"
     STUDYING = "STUDYING"
     IGNORED = "IGNORED"

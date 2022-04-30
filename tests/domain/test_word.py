@@ -71,7 +71,7 @@ COMMIT;""", ))
         expected_word2 = Word(2, "word2", 1, {"word2": [6, 15]})
         self.assertEqual(words, [expected_word1, expected_word2])
 
-    def test_get_next_unknown_word(self):
+    def test_get_next_unreviewed_word(self):
         # prepare test data
         db = get_test_vocab_builder_db()
         word_value_object1 = WordValueObject("test1", 1, {"test1": [0]})
@@ -79,10 +79,10 @@ COMMIT;""", ))
         WordService.batch_insert([word_value_object1, word_value_object2], db)
 
         # invoke the method
-        unknown_word = WordFactory.get_next_word(doc_id=1, offset=0, word_status=WordStatus.UNKNOWN, db=db)
+        unreviewed_word = WordFactory.get_next_word(doc_id=1, offset=0, word_status=WordStatus.UNREVIEWED, db=db)
 
         # check result
-        self.assertTrue(unknown_word.has_same_values(word_value_object1))
+        self.assertTrue(unreviewed_word.has_same_values(word_value_object1))
 
     def test_get_next_known_word(self):
         # prepare test data
@@ -142,10 +142,10 @@ COMMIT;""", ))
         GlobalWordStatus.insert_word_status("test1", Status.IGNORED, db)
 
         # invoke the method
-        unknown_word = WordFactory.get_next_word(doc_id=1, offset=0, word_status=WordStatus.IGNORED, db=db)
+        unreviewed_word = WordFactory.get_next_word(doc_id=1, offset=0, word_status=WordStatus.IGNORED, db=db)
 
         # check result
-        self.assertTrue(unknown_word.has_same_values(word_value_object1))
+        self.assertTrue(unreviewed_word.has_same_values(word_value_object1))
 
     def test_get_context_without_exceeding_boundaries(self):
         doc = Document(1, "test doc", "This test is here.")
