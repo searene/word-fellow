@@ -85,6 +85,8 @@ class DocumentWindow(QWidget):
         # Maybe we shouldn't let the user select in the list, we only let the user click
         self._add_to_anki_btn = self.__get_add_to_anki_btn()
         self._ignore_bnt = self.__get_ignore_btn()
+        # TODO
+        self._know_btn = self.__get_know_btn()
         res.addWidget(self._add_to_anki_btn)
         res.addWidget(self._ignore_bnt)
 
@@ -107,6 +109,15 @@ class DocumentWindow(QWidget):
         res = QPushButton("Ignore")
         res.clicked.connect(lambda: self.__on_ignore())
         return res
+
+    def __get_know_btn(self) -> QPushButton:
+        res = QPushButton("I Know It!")
+        res.clicked.connect(lambda: self.__on_know())
+        return res
+
+    def __on_know(self) -> None:
+        upsert_word_status(self._context_list.word.text, Status.KNOWN, self.__db)
+        self._context_list.update_data()
 
     def __on_ignore(self) -> None:
         upsert_word_status(self._context_list.word.text, Status.IGNORED, self.__db)

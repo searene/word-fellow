@@ -47,5 +47,16 @@ class DocumentWindowTestCase(unittest.TestCase):
         short_htmls = self.__get_widget_list_htmls()
         self.assertEqual(short_htmls, ["<b>this</b> is this", "this is <b>this</b>"])
 
+    def test_should_go_to_next_page_when_clicking_on_know_it(self):
+        QTest.mouseClick(self.form._know_btn, Qt.LeftButton)
+        short_htmls = self.__get_widget_list_htmls()
+        self.assertEqual(short_htmls, ["this <b>is</b> this"])
+
+    def test_should_show_known_contexts_when_a_word_is_set_known(self):
+        QTest.mouseClick(self.form._know_btn, Qt.LeftButton)
+        self.form._status_combo_box.currentTextChanged.emit(WordStatus.KNOWN.name)
+        short_htmls = self.__get_widget_list_htmls()
+        self.assertEqual(short_htmls, ["<b>this</b> is this", "this is <b>this</b>"])
+
     def __get_widget_list_htmls(self):
         return [item.short_html for item in get_visible_item_widget(self.form._context_list._list_widget)]
