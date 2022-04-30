@@ -1,7 +1,8 @@
 import unittest
 from typing import Optional
 
-from PyQt5.QtTest import QSignalSpy
+from PyQt5.QtCore import Qt
+from PyQt5.QtTest import QSignalSpy, QTest
 from aqt import AnkiApp
 
 from anki_testing import anki_running
@@ -20,7 +21,7 @@ class DocumentWindowTestCase(unittest.TestCase):
         self.anki_app.__enter__()
         db = get_test_vocab_builder_db()
         document_service = DocumentService(db)
-        doc = document_service.import_document("test doc", "this is this this", DefaultDocumentAnalyzer(db))
+        doc = document_service.import_document("test doc", "this is this", DefaultDocumentAnalyzer(db))
         self.form = DocumentWindow(doc, db)
 
     def tearDown(self):
@@ -29,8 +30,16 @@ class DocumentWindowTestCase(unittest.TestCase):
     def test_should_give_the_same_contexts_when_switching_status_back(self):
         """Situation: Change the status from unknown to ignored, then to unknown again.
            Expected: The number of contexts in both unknown statuses is the same"""
-        short_html1 = [item.short_html for item in get_visible_item_widget(self.form._context_list._list_widget)]
+        short_html1 = self.__get_widget_list_htmls()
         self.form._status_combo_box.currentTextChanged.emit(WordStatus.IGNORED.name)
         self.form._status_combo_box.currentTextChanged.emit(WordStatus.UNKNOWN.name)
-        short_html2 = [item.short_html for item in get_visible_item_widget(self.form._context_list._list_widget)]
+        short_html2 = self.__get_widget_list_htmls()
         self.assertEqual(short_html1, short_html2)
+
+    def test_should_go_to_next_page_when_clicking_on_ignore(self):
+        QTest.mouseClick(self.form._ignore_bnt, Qt.LeftButton)
+        short_htmls = self.__get_widget_list_htmls()
+        self.assertEqual(short_htmls, ["this <b>is</b> this"])
+
+    def __get_widget_list_htmls(self):
+        return [item.short_html for item in get_visible_item_widget(self.form._context_list._list_widget)]
