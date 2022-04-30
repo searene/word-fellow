@@ -160,4 +160,5 @@ class DocumentWindow(QWidget):
         self._context_list.update_data()
         if not self._context_list.is_word_available():
             self._next_page_btn.setDisabled(True)
-        # TODO change prev btn to be disabled if there is no prev page
+        if self._context_list.get_page_no() == 1:
+            self._prev_page_btn.setDisabled(True)

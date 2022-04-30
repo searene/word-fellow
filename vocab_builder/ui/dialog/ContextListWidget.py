@@ -23,6 +23,10 @@ class ContextListWidget(QtWidgets.QWidget):
         self.word = self.__get_word(doc, status, self.__status_to_offset_dict, db)
         self.__layout = self.__init_ui(self.word, doc)
 
+    def get_page_no(self) -> int:
+        """Get the page number of the current status, starting with 1."""
+        return self.__status_to_offset_dict[self.__status] + 1
+
     def prev_page(self):
         self.__status_to_offset_dict[self.__status] = self.__status_to_offset_dict[self.__status] - 1
         self.update_data()

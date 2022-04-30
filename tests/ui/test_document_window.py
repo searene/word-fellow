@@ -83,11 +83,18 @@ class DocumentWindowTestCase(unittest.TestCase):
         form = DocumentWindow(doc, self.__db)
         self.assertFalse(form._next_page_btn.isEnabled())
 
-    def test_should_disable_next_btn_if_no_word_is_available_when_changing_status(self):
+    def test_should_disable_next_btn_if_no_word_is_available_after_changing_status(self):
         for status in [WordStatus.STUDYING, WordStatus.IGNORED, WordStatus.KNOWN]:
             with self.subTest():
                 self.form._status_combo_box.currentTextChanged.emit(status.name)
                 self.assertFalse(self.form._next_page_btn.isEnabled())
+
+    def test_should_disable_prev_btn_if_at_first_page_after_changing_status(self):
+        QTest.mouseClick(self.form._next_page_btn, Qt.LeftButton)
+        for status in [WordStatus.KNOWN, WordStatus.IGNORED, WordStatus.STUDYING]:
+            with self.subTest():
+                self.form._status_combo_box.currentTextChanged.emit(status.name)
+                self.assertFalse(self.form._prev_page_btn.isEnabled())
 
     def __get_widget_list_htmls(self):
         return [item.short_html for item in get_visible_item_widget(self.form._context_list._list_widget)]

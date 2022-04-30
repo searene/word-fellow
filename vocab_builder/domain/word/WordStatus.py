@@ -10,4 +10,4 @@ class WordStatus(enum.Enum):
     IGNORED = "IGNORED"
 
     # TODO Support it
-    STUDY_LATER = "STUDY_LATER"
+    # STUDY_LATER = "STUDY_LATER"
