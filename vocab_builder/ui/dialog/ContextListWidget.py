@@ -35,6 +35,9 @@ class ContextListWidget(QtWidgets.QWidget):
         self.__status = status
         self.update_data()
 
+    def is_word_available(self) -> bool:
+        return self.word is not None
+
     def get_item_htmls(self) -> [str]:
         return [item.short_html for item in self.__list_items]
 

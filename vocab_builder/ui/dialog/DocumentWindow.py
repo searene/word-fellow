@@ -39,7 +39,7 @@ class DocumentWindow(QWidget):
         vbox = QVBoxLayout()
         vbox.addLayout(self.__get_top_bar())
         vbox.addWidget(context_list)
-        vbox.addLayout(self.__get_bottom_bar())
+        vbox.addLayout(self.__get_bottom_bar(context_list))
         return vbox
 
     def __init_ui(self, dialog_layout: QVBoxLayout):
@@ -65,6 +65,7 @@ class DocumentWindow(QWidget):
     def __on_status_selected(self, status_name: str) -> None:
         status = WordStatus[status_name]
         self._context_list.update_status(status)
+        self.__update_ui()
 
     def __get_word_status(self) -> WordStatus:
         return WordStatus[self._status_combo_box.currentText()]
@@ -78,7 +79,7 @@ class DocumentWindow(QWidget):
         hbox.addWidget(context_list)
         return hbox
 
-    def __get_bottom_bar(self) -> QHBoxLayout:
+    def __get_bottom_bar(self, context_list: ContextListWidget) -> QHBoxLayout:
         res = QHBoxLayout()
 
         # TODO It gives me an illusion that I'm operating on the selected item in the list
@@ -93,7 +94,7 @@ class DocumentWindow(QWidget):
 
         # TODO set the button to be disabled if there is no prev/next page
         self._prev_page_btn = self.__get_prev_page_btn()
-        self._next_page_btn = self.__get_next_page_btn()
+        self._next_page_btn = self.__get_next_page_btn(context_list)
         res.addWidget(self._prev_page_btn)
         res.addWidget(self._next_page_btn)
 
@@ -105,9 +106,10 @@ class DocumentWindow(QWidget):
         btn.clicked.connect(self.__on_prev_page_clicked)
         return btn
 
-    def __get_next_page_btn(self) -> QPushButton:
+    def __get_next_page_btn(self, context_list: ContextListWidget) -> QPushButton:
         btn = QPushButton(">")
         btn.clicked.connect(self.__on_next_page_clicked)
+        btn.setEnabled(context_list.is_word_available())
         return btn
 
     def __on_prev_page_clicked(self) -> None:
@@ -137,11 +139,11 @@ class DocumentWindow(QWidget):
 
     def __on_know(self) -> None:
         upsert_word_status(self._context_list.word.text, Status.KNOWN, self.__db)
-        self._context_list.update_data()
+        self.__update_ui()
 
     def __on_ignore(self) -> None:
         upsert_word_status(self._context_list.word.text, Status.IGNORED, self.__db)
-        self._context_list.update_data()
+        self.__update_ui()
 
     def __on_add_to_anki(self) -> None:
         mw.onAddCard()
@@ -152,3 +154,10 @@ class DocumentWindow(QWidget):
         upsert_word_status(self._context_list.word.text, Status.STUDYING, self.__db)
 
         self._context_list.next_page()
+        self.__update_ui()
+
+    def __update_ui(self) -> None:
+        self._context_list.update_data()
+        if not self._context_list.is_word_available():
+            self._next_page_btn.setDisabled(True)
+        # TODO change prev btn to be disabled if there is no prev page

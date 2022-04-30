@@ -10,6 +10,8 @@ from tests.utils import get_test_vocab_builder_db
 from tests.utils.UiUtils import get_visible_item_widget
 from vocab_builder.domain.document.DocumentService import DocumentService
 from vocab_builder.domain.document.analyzer.DefaultDocumentAnalyzer import DefaultDocumentAnalyzer
+from vocab_builder.domain.status import GlobalWordStatus
+from vocab_builder.domain.status.GlobalWordStatus import Status
 from vocab_builder.domain.word.WordStatus import WordStatus
 from vocab_builder.ui.dialog.DocumentWindow import DocumentWindow
 
@@ -19,10 +21,10 @@ class DocumentWindowTestCase(unittest.TestCase):
     def setUp(self):
         self.anki_app: Optional[AnkiApp] = anki_running()
         self.anki_app.__enter__()
-        db = get_test_vocab_builder_db()
-        document_service = DocumentService(db)
-        doc = document_service.import_document("test doc", "this is this", DefaultDocumentAnalyzer(db))
-        self.form = DocumentWindow(doc, db)
+        self.__db = get_test_vocab_builder_db()
+        document_service = DocumentService(self.__db)
+        self.__doc = document_service.import_document("test doc", "this is this", DefaultDocumentAnalyzer(self.__db))
+        self.form = DocumentWindow(self.__doc, self.__db)
 
     def tearDown(self):
         self.anki_app.__exit__(None, None, None)
@@ -71,6 +73,21 @@ class DocumentWindowTestCase(unittest.TestCase):
 
     def test_should_disable_prev_btn_if_its_first_page(self):
         self.assertFalse(self.form._prev_page_btn.isEnabled())
+
+    def test_should_disable_next_btn_if_no_word_is_available_in_the_beginning(self):
+        document_service = DocumentService(self.__db)
+        document_service.remove_all()
+        doc = document_service.import_document("test doc", "this is this", DefaultDocumentAnalyzer(self.__db))
+        GlobalWordStatus.upsert_word_status("this", Status.STUDYING, self.__db)
+        GlobalWordStatus.upsert_word_status("is", Status.STUDYING, self.__db)
+        form = DocumentWindow(doc, self.__db)
+        self.assertFalse(form._next_page_btn.isEnabled())
+
+    def test_should_disable_next_btn_if_no_word_is_available_when_changing_status(self):
+        for status in [WordStatus.STUDYING, WordStatus.IGNORED, WordStatus.KNOWN]:
+            with self.subTest():
+                self.form._status_combo_box.currentTextChanged.emit(status.name)
+                self.assertFalse(self.form._next_page_btn.isEnabled())
 
     def __get_widget_list_htmls(self):
         return [item.short_html for item in get_visible_item_widget(self.form._context_list._list_widget)]
