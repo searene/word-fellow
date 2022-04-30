@@ -101,6 +101,7 @@ class DocumentWindow(QWidget):
 
     def __get_prev_page_btn(self) -> QPushButton:
         btn = QPushButton("<")
+        btn.setDisabled(True)
         btn.clicked.connect(self.__on_prev_page_clicked)
         return btn
 
@@ -114,6 +115,7 @@ class DocumentWindow(QWidget):
 
     def __on_next_page_clicked(self) -> None:
         self._context_list.next_page()
+        self._prev_page_btn.setEnabled(True)
 
     def __close_window(self) -> None:
         self.close()
