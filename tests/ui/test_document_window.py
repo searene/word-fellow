@@ -120,6 +120,11 @@ class DocumentWindowTestCase(unittest.TestCase):
         QTest.mouseClick(self.form._next_page_btn, Qt.LeftButton)
         self.assertFalse(self.form._next_page_btn.isEnabled())
 
+    def test_should_disable_prev_btn_if_at_first_page_after_going_to_prev_page(self):
+        QTest.mouseClick(self.form._next_page_btn, Qt.LeftButton)
+        QTest.mouseClick(self.form._prev_page_btn, Qt.LeftButton)
+        self.assertFalse(self.form._prev_page_btn.isEnabled())
+
     def __get_widget_list_htmls(self):
         return [item.short_html for item in get_visible_item_widget(self.form._context_list._list_widget)]
 
