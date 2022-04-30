@@ -53,10 +53,10 @@ class WordValueObject:
         self.word_to_start_pos_dict = word_to_start_pos_dict
 
     def get_long_context(self, doc: 'Document', word: str, pos: int) -> WordContext:
-        return self.__get_context(200, doc, word, pos)
+        return self._get_context(200, doc, word, pos)
 
     def get_short_context(self, doc: 'Document', word: str, pos: int) -> WordContext:
-        return self.__get_context(50, doc, word, pos)
+        return self._get_context(50, doc, word, pos)
 
     def get_short_and_long_contexts(self, doc: 'Document', limit=5) -> [ShortAndLongContext]:
         word_contexts = []
@@ -69,9 +69,17 @@ class WordValueObject:
                     return word_contexts
         return word_contexts
 
-    def __get_context(self, length_to_end: int, doc: 'Document', word: str, pos: int) -> WordContext:
+    def _get_context(self, length_to_end: int, doc: 'Document', word: str, pos: int) -> WordContext:
+        """
+        Args:
+            length_to_end: The maximum number of characters allowed after the word
+            doc: The document to which the word belongs.
+            word: The word to get the context for.
+            pos: The position of the word in the document.
+        """
         start_index = pos - length_to_end if pos - length_to_end >= 0 else 0
         end_index = pos + len(word) + length_to_end if pos + len(word) + length_to_end < len(doc.contents) else len(
-            doc.contents) - 1
+            doc.contents)
+
         word_pos_in_context = length_to_end if pos - length_to_end >= 0 else pos
         return WordContext(word, doc.contents[start_index: end_index], word_pos_in_context)

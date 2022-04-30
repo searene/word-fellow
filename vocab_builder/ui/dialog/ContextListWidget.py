@@ -25,16 +25,16 @@ class ContextListWidget(QtWidgets.QWidget):
 
     def next_page(self):
         self.__status_to_offset_dict[self.__status] = self.__status_to_offset_dict[self.__status] + 1
-        self.__update_ui()
+        self.update_data()
 
     def update_status(self, status: WordStatus):
         self.__status = status
-        self.__update_ui()
+        self.update_data()
 
     def get_item_htmls(self) -> [str]:
         return [item.short_html for item in self.__list_items]
 
-    def __update_ui(self):
+    def update_data(self):
         self.word = self.__get_word(self.__doc, self.__status, self.__status_to_offset_dict, self.__db)
         self.__clear_list_widget(self._list_widget, self.__list_items)
         if self.word is None:

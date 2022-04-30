@@ -83,8 +83,10 @@ class DocumentWindow(QWidget):
 
         # TODO It gives me an illusion that I'm operating on the selected item in the list
         # Maybe we shouldn't let the user select in the list, we only let the user click
-        res.addWidget(self.__get_add_to_anki_btn())
-        res.addWidget(self.__get_ignore_btn())
+        self._add_to_anki_btn = self.__get_add_to_anki_btn()
+        self._ignore_bnt = self.__get_ignore_btn()
+        res.addWidget(self._add_to_anki_btn)
+        res.addWidget(self._ignore_bnt)
 
         close_btn = QPushButton("Close")
         close_btn.setDefault(True)
@@ -108,7 +110,7 @@ class DocumentWindow(QWidget):
 
     def __on_ignore(self) -> None:
         upsert_word_status(self._context_list.word.text, Status.IGNORED, self.__db)
-        self._context_list.next_page()
+        self._context_list.update_data()
 
     def __on_add_to_anki(self) -> None:
         mw.onAddCard()

@@ -151,7 +151,7 @@ COMMIT;""", ))
         doc = Document(1, "test doc", "This test is here.")
         word = Word(1, "test", 1, {"test": [5]})
 
-        context = word._WordValueObject__get_context(2, doc, "test", 5)
+        context = word._get_context(2, doc, "test", 5)
 
         expected_context = WordContext("test", "s test i", 2)
         self.assertEqual(context, expected_context)
@@ -160,9 +160,9 @@ COMMIT;""", ))
         doc = Document(1, "test doc", "This test is here.")
         word = Word(1, "test", 1, {"test": [5]})
 
-        context = word._WordValueObject__get_context(100, doc, "test", 5)
+        context = word._get_context(100, doc, "test", 5)
 
-        expected_context = WordContext("test", "This test is here", 5)
+        expected_context = WordContext("test", "This test is here.", 5)
         self.assertEqual(context, expected_context)
 
     def test_get_short_contexts(self):
@@ -171,8 +171,8 @@ COMMIT;""", ))
 
         short_and_long_contexts = word.get_short_and_long_contexts(doc)
 
-        expected_context1 = WordContext("test", "This test is a test", 5)
-        expected_context2 = WordContext("test", "This test is a test", 15)
+        expected_context1 = WordContext("test", "This test is a test.", 5)
+        expected_context2 = WordContext("test", "This test is a test.", 15)
         expected_short_and_long_contexts1 = ShortAndLongContext(expected_context1, expected_context1)
         expected_short_and_long_contexts2 = ShortAndLongContext(expected_context2, expected_context2)
         self.assertEqual(short_and_long_contexts, [expected_short_and_long_contexts1, expected_short_and_long_contexts2])
