@@ -120,6 +120,7 @@ class DocumentWindow(QWidget):
 
     def __on_next_page_clicked(self) -> None:
         self._context_list.next_page()
+        self._next_page_btn.setEnabled(self._context_list.is_word_available())
         self._prev_page_btn.setEnabled(True)
 
     def __close_window(self) -> None:
