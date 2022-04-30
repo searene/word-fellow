@@ -33,8 +33,8 @@ class DocumentWindowTestCase(unittest.TestCase):
         """Situation: Change the status from unreviewed to ignored, then to unreviewed again.
            Expected: The number of contexts in both unreviewed statuses is the same"""
         short_html1 = self.__get_widget_list_htmls()
-        self.form._status_combo_box.currentTextChanged.emit(WordStatus.IGNORED.name)
-        self.form._status_combo_box.currentTextChanged.emit(WordStatus.UNREVIEWED.name)
+        self.__change_status(WordStatus.IGNORED)
+        self.__change_status(WordStatus.UNREVIEWED)
         short_html2 = self.__get_widget_list_htmls()
         self.assertEqual(short_html1, short_html2)
 
@@ -45,7 +45,7 @@ class DocumentWindowTestCase(unittest.TestCase):
 
     def test_should_show_ignored_contexts_when_a_word_is_ignored(self):
         QTest.mouseClick(self.form._ignore_bnt, Qt.LeftButton)
-        self.form._status_combo_box.currentTextChanged.emit(WordStatus.IGNORED.name)
+        self.__change_status(WordStatus.IGNORED)
         short_htmls = self.__get_widget_list_htmls()
         self.assertEqual(short_htmls, ["<b>this</b> is this", "this is <b>this</b>"])
 
@@ -56,7 +56,7 @@ class DocumentWindowTestCase(unittest.TestCase):
 
     def test_should_show_study_later_contexts_contexts_when_a_word_is_set_study_later(self):
         QTest.mouseClick(self.form._study_later_btn, Qt.LeftButton)
-        self.form._status_combo_box.currentTextChanged.emit(WordStatus.STUDY_LATER.name)
+        self.__change_status(WordStatus.STUDY_LATER)
         short_htmls = self.__get_widget_list_htmls()
         self.assertEqual(short_htmls, ["<b>this</b> is this", "this is <b>this</b>"])
 
@@ -67,7 +67,7 @@ class DocumentWindowTestCase(unittest.TestCase):
 
     def test_should_show_known_contexts_when_a_word_is_set_known(self):
         QTest.mouseClick(self.form._know_btn, Qt.LeftButton)
-        self.form._status_combo_box.currentTextChanged.emit(WordStatus.KNOWN.name)
+        self.__change_status(WordStatus.KNOWN)
         short_htmls = self.__get_widget_list_htmls()
         self.assertEqual(short_htmls, ["<b>this</b> is this", "this is <b>this</b>"])
 
@@ -94,18 +94,29 @@ class DocumentWindowTestCase(unittest.TestCase):
         form = DocumentWindow(doc, self.__db)
         self.assertFalse(form._next_page_btn.isEnabled())
 
+    def test_should_enable_next_btn_if_there_is_next_page_at_first(self):
+        self.assertTrue(self.form._next_page_btn.isEnabled())
+
+    def test_should_enable_next_btn_if_there_is_next_page_after_changing_status(self):
+        self.__change_status(WordStatus.IGNORED)
+        self.__change_status(WordStatus.UNREVIEWED)
+        self.assertTrue(self.form._next_page_btn.isEnabled())
+
     def test_should_disable_next_btn_if_no_word_is_available_after_changing_status(self):
         for status in [WordStatus.STUDYING, WordStatus.IGNORED, WordStatus.KNOWN]:
             with self.subTest():
-                self.form._status_combo_box.currentTextChanged.emit(status.name)
+                self.__change_status(status)
                 self.assertFalse(self.form._next_page_btn.isEnabled())
 
     def test_should_disable_prev_btn_if_at_first_page_after_changing_status(self):
         QTest.mouseClick(self.form._next_page_btn, Qt.LeftButton)
         for status in [WordStatus.KNOWN, WordStatus.IGNORED, WordStatus.STUDYING]:
             with self.subTest():
-                self.form._status_combo_box.currentTextChanged.emit(status.name)
+                self.__change_status(status)
                 self.assertFalse(self.form._prev_page_btn.isEnabled())
 
     def __get_widget_list_htmls(self):
         return [item.short_html for item in get_visible_item_widget(self.form._context_list._list_widget)]
+
+    def __change_status(self, status: WordStatus) -> None:
+        self.form._status_combo_box.currentTextChanged.emit(status.value)

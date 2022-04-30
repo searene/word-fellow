@@ -170,7 +170,5 @@ class DocumentWindow(QWidget):
 
     def __update_ui(self) -> None:
         self._context_list.update_data()
-        if not self._context_list.is_word_available():
-            self._next_page_btn.setDisabled(True)
-        if self._context_list.get_page_no() == 1:
-            self._prev_page_btn.setDisabled(True)
+        self._prev_page_btn.setDisabled(self._context_list.get_page_no() == 1)
+        self._next_page_btn.setEnabled(self._context_list.is_word_available())
