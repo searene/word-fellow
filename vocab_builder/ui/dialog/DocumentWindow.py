@@ -82,10 +82,10 @@ class DocumentWindow(QWidget):
         # TODO It gives me an illusion that I'm operating on the selected item in the list
         # Maybe we shouldn't let the user select in the list, we only let the user click
         # TODO Add button tips
-        self._add_to_anki_btn = self.__get_add_to_anki_btn()
-        self._ignore_btn = self.__get_ignore_btn()
-        self._know_btn = self.__get_know_btn()
-        self._study_later_btn = self.__get_study_later_btn()
+        self._add_to_anki_btn = self.__get_add_to_anki_btn(context_list.is_word_available())
+        self._ignore_btn = self.__get_ignore_btn(context_list.is_word_available())
+        self._know_btn = self.__get_know_btn(context_list.is_word_available())
+        self._study_later_btn = self.__get_study_later_btn(context_list.is_word_available())
         res.addWidget(self._add_to_anki_btn)
         res.addWidget(self._ignore_btn)
         res.addWidget(self._know_btn)
@@ -123,23 +123,27 @@ class DocumentWindow(QWidget):
     def __close_window(self) -> None:
         self.close()
 
-    def __get_add_to_anki_btn(self) -> QPushButton:
-        add_to_anki_btn = QPushButton("Add to anki")
-        add_to_anki_btn.clicked.connect(lambda: self.__on_add_to_anki())
-        return add_to_anki_btn
+    def __get_add_to_anki_btn(self, is_word_available: bool) -> QPushButton:
+        res = QPushButton("Add to anki")
+        res.setEnabled(is_word_available)
+        res.clicked.connect(lambda: self.__on_add_to_anki())
+        return res
 
-    def __get_ignore_btn(self) -> QPushButton:
+    def __get_ignore_btn(self, is_word_available: bool) -> QPushButton:
         res = QPushButton("Ignore")
+        res.setEnabled(is_word_available)
         res.clicked.connect(lambda: self.__on_ignore())
         return res
 
-    def __get_know_btn(self) -> QPushButton:
+    def __get_know_btn(self, is_word_available: bool) -> QPushButton:
         res = QPushButton("I Know It!")
+        res.setEnabled(is_word_available)
         res.clicked.connect(lambda: self.__on_know())
         return res
 
-    def __get_study_later_btn(self) -> QPushButton:
+    def __get_study_later_btn(self, is_word_available: bool) -> QPushButton:
         res = QPushButton("Study Later")
+        res.setEnabled(is_word_available)
         res.clicked.connect(lambda: self.__on_study_later())
         return res
 
@@ -170,7 +174,7 @@ class DocumentWindow(QWidget):
         self._context_list.update_data()
         self._prev_page_btn.setDisabled(self._context_list.get_page_no() == 1)
         self._next_page_btn.setEnabled(self._context_list.is_word_available())
-        self._add_to_anki_btn.setDisabled(self.__status == WordStatus.STUDYING)
-        self._ignore_btn.setDisabled(self.__status == WordStatus.IGNORED)
-        self._know_btn.setDisabled(self.__status == WordStatus.KNOWN)
-        self._study_later_btn.setDisabled(self.__status == WordStatus.STUDY_LATER)
+        self._add_to_anki_btn.setDisabled(self.__status == WordStatus.STUDYING or (not self._context_list.is_word_available()))
+        self._ignore_btn.setDisabled(self.__status == WordStatus.IGNORED or (not self._context_list.is_word_available()))
+        self._know_btn.setDisabled(self.__status == WordStatus.KNOWN or (not self._context_list.is_word_available()))
+        self._study_later_btn.setDisabled(self.__status == WordStatus.STUDY_LATER or (not self._context_list.is_word_available()))

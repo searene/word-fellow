@@ -38,6 +38,26 @@ class DocumentWindowTestCase(unittest.TestCase):
         short_html2 = self.__get_widget_list_htmls()
         self.assertEqual(short_html1, short_html2)
 
+    def test_should_disable_all_operate_buttons_when_no_word_is_available_at_first(self):
+        document_service = DocumentService(self.__db)
+        document_service.remove_all()
+        doc = document_service.import_document("test doc", "this is this", DefaultDocumentAnalyzer(self.__db))
+        GlobalWordStatus.upsert_word_status("this", Status.STUDYING, self.__db)
+        GlobalWordStatus.upsert_word_status("is", Status.STUDYING, self.__db)
+        form = DocumentWindow(doc, self.__db)
+
+        self.assertFalse(form._ignore_btn.isEnabled())
+        self.assertFalse(form._add_to_anki_btn.isEnabled())
+        self.assertFalse(form._know_btn.isEnabled())
+        self.assertFalse(form._study_later_btn.isEnabled())
+
+    def test_should_disable_all_operate_buttons_when_no_word_is_available_after_changing_status(self):
+        self.__change_status(WordStatus.IGNORED)
+        self.assertFalse(self.form._ignore_btn.isEnabled())
+        self.assertFalse(self.form._add_to_anki_btn.isEnabled())
+        self.assertFalse(self.form._know_btn.isEnabled())
+        self.assertFalse(self.form._study_later_btn.isEnabled())
+
     def test_should_go_to_next_page_when_clicking_on_ignore(self):
         QTest.mouseClick(self.form._ignore_btn, Qt.LeftButton)
         short_htmls = self.__get_widget_list_htmls()
