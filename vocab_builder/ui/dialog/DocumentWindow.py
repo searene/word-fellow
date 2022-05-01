@@ -63,6 +63,8 @@ class DocumentWindow(QWidget):
 
     def __get_page_info_label(self, status: WordStatus, doc: Document, db: VocabBuilderDB, context_list: ContextListWidget) -> QLabel:
         page_info_label = QLabel()
+        page_info_label.setMinimumWidth(50)
+        page_info_label.setAlignment(Qt.AlignCenter)
         page_info_label.setSizePolicy(QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Preferred))
         page_info_label.setToolTip("Current / Total")
         self.__update_page_info_label(page_info_label, status, doc, db)
@@ -204,7 +206,7 @@ class DocumentWindow(QWidget):
         else:
             self.__current_page_no = None
             self.__total_page_count = None
-            page_info_label.setText("")
+            page_info_label.setText("- / -")
 
     def __get_page_no(self) -> int:
         """Get the page number of the current status, starting with 1."""

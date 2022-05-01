@@ -156,11 +156,11 @@ class DocumentWindowTestCase(unittest.TestCase):
 
     def test_should_display_empty_page_info_when_there_is_no_word_when_starting_up(self):
         self.__use_form_with_all_words_studying()
-        self.assertEqual(self.form._page_info_label.text(), "")
+        self.assertEqual(self.form._page_info_label.text(), "- / -")
 
     def test_should_display_correct_page_info_after_changing_status(self):
         self.__change_status(WordStatus.STUDYING)
-        self.assertEqual(self.form._page_info_label.text(), "")
+        self.assertEqual(self.form._page_info_label.text(), "- / -")
 
     def test_should_display_correct_page_info_after_going_to_next_page(self):
         QTest.mouseClick(self.form._next_page_btn, Qt.LeftButton)
