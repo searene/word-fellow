@@ -19,6 +19,7 @@ from vocab_builder.ui.dialog.DocumentWindow import DocumentWindow
 class DocumentWindowTestCase(unittest.TestCase):
 
     def setUp(self):
+        print("setup")
         self.anki_app: Optional[AnkiApp] = anki_running()
         self.anki_app.__enter__()
         self.__db = get_test_vocab_builder_db()
@@ -151,7 +152,6 @@ class DocumentWindowTestCase(unittest.TestCase):
         self.__change_status(WordStatus.KNOWN)
         self.assertFalse(self.form._know_btn.isEnabled())
 
-    # TODO show 0 / 0 when there is no word when starting up
     def test_should_display_correct_page_info_when_starting_up(self):
         self.assertEqual(self.form._page_info_label.text(), "1 / 2")
 
@@ -159,10 +159,20 @@ class DocumentWindowTestCase(unittest.TestCase):
         self.__use_form_with_all_words_studying()
         self.assertEqual(self.form._page_info_label.text(), "")
 
-    # TODO test when clicking on operating button
+    # TODO test when clicking on operating buttons
     def test_should_display_correct_page_info_after_changing_status(self):
         self.__change_status(WordStatus.STUDYING)
         self.assertEqual(self.form._page_info_label.text(), "")
+
+    def test_should_display_correct_page_info_after_going_to_next_page(self):
+        QTest.mouseClick(self.form._next_page_btn, Qt.LeftButton)
+        self.assertEqual(self.form._page_info_label.text(), "2 / 2")
+
+    def test_should_display_correct_page_info_when_clicking_on_operating_buttons(self):
+        for btn in [self.form._ignore_btn, self.form._know_btn, self.form._add_to_anki_btn, self.form._study_later_btn]:
+            with self.subTest():
+                QTest.mouseClick(btn, Qt.LeftButton)
+                self.assertEqual(self.form._page_info_label.text(), "1 / 1")
 
     def __get_widget_list_htmls(self):
         return [item.short_html for item in get_visible_item_widget(self.form._context_list._list_widget)]
