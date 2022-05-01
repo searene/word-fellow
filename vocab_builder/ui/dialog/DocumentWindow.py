@@ -78,7 +78,6 @@ class DocumentWindow(QWidget):
     def __get_bottom_bar(self, context_list: ContextListWidget) -> QHBoxLayout:
         res = QHBoxLayout()
 
-        # TODO It gives me an illusion that I'm operating on the selected item in the list
         # Maybe we shouldn't let the user select in the list, we only let the user click
         # TODO Add button tips
         self._add_to_anki_btn = self.__get_add_to_anki_btn(context_list.is_word_available())
