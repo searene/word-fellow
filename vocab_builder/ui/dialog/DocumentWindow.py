@@ -54,6 +54,13 @@ class DocumentWindow(QWidget):
         hbox.addWidget(self._status_combo_box)
         return hbox
 
+    def __get_page_info_label(self) -> QLabel:
+        # TODO change it dynamically
+        page_info_label = QLabel("1 / 105")
+        page_info_label.setSizePolicy(QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Preferred))
+        page_info_label.setToolTip("Current / Total")
+        return page_info_label
+
     def __get_status_combo_box(self) -> QComboBox:
         status_combo_box = QComboBox()
         for status in WordStatus:
@@ -89,8 +96,10 @@ class DocumentWindow(QWidget):
         res.addItem(QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum))
 
         self._prev_page_btn = self.__get_prev_page_btn()
+        self._page_info_label = self.__get_page_info_label()
         self._next_page_btn = self.__get_next_page_btn(context_list)
         res.addWidget(self._prev_page_btn)
+        res.addWidget(self._page_info_label)
         res.addWidget(self._next_page_btn)
 
         return res
