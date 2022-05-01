@@ -156,7 +156,8 @@ class DocumentWindowTestCase(unittest.TestCase):
         self.assertEqual(self.form._page_info_label.text(), "1 / 2")
 
     def test_should_display_empty_page_info_when_there_is_no_word_when_starting_up(self):
-        pass
+        self.__use_form_with_all_words_studying()
+        self.assertEqual(self.form._page_info_label.text(), "")
 
     # TODO test when clicking on operating button
     def test_should_display_correct_page_info_after_changing_status(self):
