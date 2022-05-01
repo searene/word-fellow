@@ -33,8 +33,8 @@ class GlobalWordStatus:
         db.execute("""
         CREATE TABLE IF NOT EXISTS global_word_status (
             id INTEGER PRIMARY KEY,
-            word TEXT,
-            status TEXT
+            word TEXT NOT NULL UNIQUE,
+            status TEXT NOT NULL
         )
         """)
 
