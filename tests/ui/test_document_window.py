@@ -182,6 +182,17 @@ class DocumentWindowTestCase(unittest.TestCase):
         QTest.mouseClick(self.form._study_later_btn, Qt.LeftButton)
         self.assertEqual(self.form._page_info_label.text(), "1 / 1")
 
+    def test_should_show_correct_word_label_when_starting_up(self):
+        self.assertEqual(self.form._word_label.text(), "this")
+
+    def test_should_show_dashes_when_there_are_no_words(self):
+        self.__change_status(WordStatus.STUDYING)
+        self.assertEqual(self.form._word_label.text(), "--")
+
+    def test_should_change_word_label_when_clicking_on_next_page(self):
+        QTest.mouseClick(self.form._next_page_btn, Qt.LeftButton)
+        self.assertEqual(self.form._word_label.text(), "is")
+
     def __get_widget_list_htmls(self):
         return [item.short_html for item in get_visible_item_widget(self.form._context_list._list_widget)]
 

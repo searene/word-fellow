@@ -1,6 +1,7 @@
 from typing import Callable, Dict, Optional
 
-from PyQt5.QtGui import QCloseEvent
+from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QCloseEvent, QFont
 from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QComboBox, QLabel, QPushButton, QApplication, QWidget, \
     QSizePolicy, QSpacerItem
 from anki.notes import Note
@@ -26,8 +27,9 @@ class DocumentWindow(QWidget):
         self._status_combo_box = self.__get_status_combo_box()
         self.__status = WordStatus(self._status_combo_box.currentText())
         self.__word = self.__get_word(doc, self.__status, self.__status_to_offset_dict, db)
+        self._word_label = self.__get_word_label(self.__word)
         self._context_list = self.__get_context_list(self.__word, self.__doc, self.__status, db, self.__status_to_offset_dict)
-        self.__dialog_layout = self.__get_dialog_layout(self._context_list, doc, self.__status, self.__db)
+        self.__dialog_layout = self.__get_dialog_layout(self._word_label, self._context_list, doc, self.__status, self.__db)
         self.__init_ui(self.__dialog_layout)
         aqt.gui_hooks.add_cards_did_add_note.append(self.__raise)
         self.showMaximized()
@@ -38,8 +40,9 @@ class DocumentWindow(QWidget):
     def __raise(self, note: Note):
         self.raise_()
 
-    def __get_dialog_layout(self, context_list: ContextListWidget, doc: Document, status: WordStatus, db: VocabBuilderDB) -> QVBoxLayout:
+    def __get_dialog_layout(self, word_label: QLabel, context_list: ContextListWidget, doc: Document, status: WordStatus, db: VocabBuilderDB) -> QVBoxLayout:
         vbox = QVBoxLayout()
+        vbox.addWidget(word_label)
         vbox.addLayout(self.__get_top_bar())
         vbox.addWidget(context_list)
         vbox.addLayout(self.__get_bottom_bar(context_list, doc, status, db))
@@ -179,7 +182,9 @@ class DocumentWindow(QWidget):
         self.__update_ui()
 
     def __update_ui(self) -> None:
+        # TODO Go to previous page if pageNo > 1 and we have no word in the current page
         self.__word = self.__get_word(self.__doc, self.__status, self.__status_to_offset_dict, self.__db)
+        self._word_label.setText(self.__get_word_label_text(self.__word))
         self._context_list.set_word(self.__word)
         self._context_list.update_data()
         self._prev_page_btn.setDisabled(self.__get_page_no() == 1)
@@ -225,4 +230,17 @@ class DocumentWindow(QWidget):
     
     def __is_word_available(self) -> bool:
         return self.__word is not None
+
+    def __get_word_label(self, word: Optional[Word]) -> QLabel:
+        res = QLabel(self)
+        font = QFont()
+        font.setPointSize(24)
+        res.setFont(font)
+        res.setAlignment(Qt.AlignCenter)
+        res.setMargin(20)
+        res.setText(self.__get_word_label_text(word))
+        return res
+
+    def __get_word_label_text(self, word: Optional[Word]) -> str:
+        return word.text if word is not None else "--"
 
