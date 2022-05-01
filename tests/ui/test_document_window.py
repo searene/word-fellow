@@ -167,10 +167,20 @@ class DocumentWindowTestCase(unittest.TestCase):
         QTest.mouseClick(self.form._next_page_btn, Qt.LeftButton)
         self.assertEqual(self.form._page_info_label.text(), "2 / 2")
 
-    # TODO Check other buttons, too
-    # TODO Use self.subTests with setUp() and tearDown()?
     def test_should_display_correct_page_info_when_clicking_on_add_to_anki_btn(self):
         QTest.mouseClick(self.form._add_to_anki_btn, Qt.LeftButton)
+        self.assertEqual(self.form._page_info_label.text(), "1 / 1")
+
+    def test_should_display_correct_page_info_when_clicking_on_ignore_btn(self):
+        QTest.mouseClick(self.form._ignore_btn, Qt.LeftButton)
+        self.assertEqual(self.form._page_info_label.text(), "1 / 1")
+
+    def test_should_display_correct_page_info_when_clicking_on_know_btn(self):
+        QTest.mouseClick(self.form._know_btn, Qt.LeftButton)
+        self.assertEqual(self.form._page_info_label.text(), "1 / 1")
+
+    def test_should_display_correct_page_info_when_clicking_on_study_later_btn(self):
+        QTest.mouseClick(self.form._study_later_btn, Qt.LeftButton)
         self.assertEqual(self.form._page_info_label.text(), "1 / 1")
 
     def __get_widget_list_htmls(self):
