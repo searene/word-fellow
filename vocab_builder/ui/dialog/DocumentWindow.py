@@ -237,7 +237,7 @@ class DocumentWindow(QWidget):
         font.setPointSize(24)
         res.setFont(font)
         res.setAlignment(Qt.AlignCenter)
-        res.setMargin(20)
+        res.setFixedHeight(100)
         res.setText(self.__get_word_label_text(word))
         return res
 

@@ -70,7 +70,7 @@ class ContextListWidget(QtWidgets.QWidget):
         self._list_widget.itemClicked.connect(self.__on_item_clicked)
         vbox.addWidget(self._list_widget)
 
-        self.__no_word_available_label = QLabel("No word is available")
+        self.__no_word_available_label = self.__get_no_word_available_label()
         vbox.addWidget(self.__no_word_available_label)
 
         self.__list_items: [ContextItemWidget] = []
@@ -99,4 +99,4 @@ class ContextListWidget(QtWidgets.QWidget):
         return context_item
 
     def __get_no_word_available_label(self) -> QLabel:
-        return QLabel("No word is available")
+        return QLabel("No word is available.")
