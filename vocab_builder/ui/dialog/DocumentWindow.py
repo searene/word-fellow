@@ -78,8 +78,6 @@ class DocumentWindow(QWidget):
     def __get_bottom_bar(self, context_list: ContextListWidget) -> QHBoxLayout:
         res = QHBoxLayout()
 
-        # Maybe we shouldn't let the user select in the list, we only let the user click
-        # TODO Add button tips
         self._add_to_anki_btn = self.__get_add_to_anki_btn(context_list.is_word_available())
         self._ignore_btn = self.__get_ignore_btn(context_list.is_word_available())
         self._know_btn = self.__get_know_btn(context_list.is_word_available())
@@ -101,12 +99,14 @@ class DocumentWindow(QWidget):
         btn = QPushButton("<")
         btn.setDisabled(True)
         btn.clicked.connect(self.__on_prev_page_clicked)
+        btn.setToolTip("Previous word")
         return btn
 
     def __get_next_page_btn(self, context_list: ContextListWidget) -> QPushButton:
         btn = QPushButton(">")
         btn.clicked.connect(self.__on_next_page_clicked)
         btn.setEnabled(context_list.is_word_available())
+        btn.setToolTip("Next word")
         return btn
 
     def __on_prev_page_clicked(self) -> None:
@@ -124,24 +124,28 @@ class DocumentWindow(QWidget):
         res = QPushButton("Add to anki")
         res.setEnabled(is_word_available)
         res.clicked.connect(lambda: self.__on_add_to_anki())
+        res.setToolTip("Add the word to your anki deck")
         return res
 
     def __get_ignore_btn(self, is_word_available: bool) -> QPushButton:
         res = QPushButton("Ignore")
         res.setEnabled(is_word_available)
         res.clicked.connect(lambda: self.__on_ignore())
+        res.setToolTip("Ignore the word. You don't need to learn it.")
         return res
 
     def __get_know_btn(self, is_word_available: bool) -> QPushButton:
         res = QPushButton("I Know It")
         res.setEnabled(is_word_available)
         res.clicked.connect(lambda: self.__on_know())
+        res.setToolTip("Click it if you know the word, thus you don't need to add it to Anki.")
         return res
 
     def __get_study_later_btn(self, is_word_available: bool) -> QPushButton:
         res = QPushButton("Study Later")
         res.setEnabled(is_word_available)
         res.clicked.connect(lambda: self.__on_study_later())
+        res.setToolTip("Click it if you don't know the word, and you don't want to add it to anki now, you want to do it later.")
         return res
 
     def __on_study_later(self) -> None:
