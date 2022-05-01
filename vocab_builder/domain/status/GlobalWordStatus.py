@@ -29,7 +29,6 @@ class GlobalWordStatus:
 
     @staticmethod
     def init_database(db: VocabBuilderDB):
-        # TODO unique key
         db.execute("""
         CREATE TABLE IF NOT EXISTS global_word_status (
             id INTEGER PRIMARY KEY,
