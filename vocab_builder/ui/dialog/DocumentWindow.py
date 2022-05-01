@@ -163,14 +163,17 @@ class DocumentWindow(QWidget):
 
     def __on_study_later(self) -> None:
         upsert_word_status(self.__word.text, Status.STUDY_LATER, self.__db)
+        self.__adjust_page_no(self.__status_to_offset_dict, self.__status, self.__total_page)
         self.__update_ui()
 
     def __on_know(self) -> None:
         upsert_word_status(self.__word.text, Status.KNOWN, self.__db)
+        self.__adjust_page_no(self.__status_to_offset_dict, self.__status, self.__total_page)
         self.__update_ui()
 
     def __on_ignore(self) -> None:
         upsert_word_status(self.__word.text, Status.IGNORED, self.__db)
+        self.__adjust_page_no(self.__status_to_offset_dict, self.__status, self.__total_page)
         self.__update_ui()
 
     def __on_add_to_anki(self) -> None:
@@ -181,10 +184,18 @@ class DocumentWindow(QWidget):
         # Set the word status to STUDYING
         upsert_word_status(self.__word.text, Status.STUDYING, self.__db)
 
+        self.__adjust_page_no(self.__status_to_offset_dict, self.__status, self.__total_page)
         self.__update_ui()
 
+    def __at_last_page(self, current_page: int, total_page: int) -> bool:
+        return current_page == total_page
+
+    def __adjust_page_no(self, status_to_offset_dict: Dict[WordStatus, int], status: WordStatus, total_page: int) -> None:
+        current_page = status_to_offset_dict[status] + 1
+        if self.__at_last_page(current_page, total_page) and current_page > 1:
+            status_to_offset_dict[status] -= 1
+
     def __update_ui(self) -> None:
-        # TODO Go to previous page if pageNo > 1 and we have no word in the current page
         self.__word = self.__get_word(self.__doc, self.__status, self.__status_to_offset_dict, self.__db)
         self._word_label.setText(self.__get_word_label_text(self.__word))
         self._context_list.set_word(self.__word)
@@ -200,8 +211,8 @@ class DocumentWindow(QWidget):
     def __update_page_info_label(self, page_info_label: QLabel, status: WordStatus, doc: Document, db: VocabBuilderDB) -> None:
         if self.__is_word_available():
             current_page = self.__get_page_no()
-            total_page = self.__get_total_page_count(status, doc, db)
-            page_info_label.setText(f"{current_page} / {total_page}")
+            self.__total_page = self.__get_total_page_count(status, doc, db)
+            page_info_label.setText(f"{current_page} / {self.__total_page}")
         else:
             page_info_label.setText("- / -")
 

@@ -197,6 +197,11 @@ class DocumentWindowTestCase(unittest.TestCase):
         QTest.mouseClick(self.form._next_page_btn, Qt.LeftButton)
         self.assertEqual(self.form._word_label.text(), "is")
 
+    def test_should_go_to_last_page_if_there_is_no_word_at_current_page_after_clicking_on_operating_buttons(self):
+        QTest.mouseClick(self.form._next_page_btn, Qt.LeftButton)
+        QTest.mouseClick(self.form._ignore_btn, Qt.LeftButton)
+        self.assertEqual(self.form._word_label.text(), "this")
+
     def __get_widget_list_htmls(self):
         return [item.short_html for item in get_visible_item_widget(self.form._context_list._list_widget)]
 
