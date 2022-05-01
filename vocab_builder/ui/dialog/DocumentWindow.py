@@ -60,7 +60,7 @@ class DocumentWindow(QWidget):
         page_info_label = QLabel()
         page_info_label.setSizePolicy(QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Preferred))
         page_info_label.setToolTip("Current / Total")
-        self.__update_page_info_label(page_info_label, context_list, status, doc, db)
+        self.__update_page_info_label(page_info_label, status, doc, db)
         return page_info_label
 
     def __get_total_page_count(self, status: WordStatus, doc: Document, db: VocabBuilderDB) -> int:
@@ -179,15 +179,15 @@ class DocumentWindow(QWidget):
     def __update_ui(self) -> None:
         self._context_list.update_data()
         self._prev_page_btn.setDisabled(self.__get_page_no() == 1)
+        # TODO Just disable the next page button when we are at the last page.
         self._next_page_btn.setEnabled(self._context_list.is_word_available())
         self._add_to_anki_btn.setDisabled(self.__status == WordStatus.STUDYING or (not self._context_list.is_word_available()))
         self._ignore_btn.setDisabled(self.__status == WordStatus.IGNORED or (not self._context_list.is_word_available()))
         self._know_btn.setDisabled(self.__status == WordStatus.KNOWN or (not self._context_list.is_word_available()))
         self._study_later_btn.setDisabled(self.__status == WordStatus.STUDY_LATER or (not self._context_list.is_word_available()))
-        self.__update_page_info_label(self._page_info_label, self._context_list, self.__status, self.__doc, self.__db)
+        self.__update_page_info_label(self._page_info_label, self.__status, self.__doc, self.__db)
 
-    def __update_page_info_label(self, page_info_label: QLabel, context_list: ContextListWidget,
-                                 status: WordStatus, doc: Document, db: VocabBuilderDB) -> None:
+    def __update_page_info_label(self, page_info_label: QLabel, status: WordStatus, doc: Document, db: VocabBuilderDB) -> None:
         if self._context_list.is_word_available():
             self.__current_page_no = self.__get_page_no()
             self.__total_page_count = self.__get_total_page_count(status, doc, db)
