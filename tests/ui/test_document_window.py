@@ -14,19 +14,17 @@ from vocab_builder.domain.status import GlobalWordStatus
 from vocab_builder.domain.status.GlobalWordStatus import Status
 from vocab_builder.domain.word.WordStatus import WordStatus
 from vocab_builder.ui.dialog.DocumentWindow import DocumentWindow
-import aqt
 
 
 class DocumentWindowTestCase(unittest.TestCase):
 
     def setUp(self):
-        print("setup")
         self.anki_app: Optional[AnkiApp] = anki_running()
         self.anki_app.__enter__()
         self.__db = get_test_vocab_builder_db()
         document_service = DocumentService(self.__db)
         self.__doc = document_service.import_document("test doc", "this is this", DefaultDocumentAnalyzer(self.__db))
-        self.form = DocumentWindow(self.__doc, self.__db)
+        self.form = DocumentWindow(self.__doc, self.__db, lambda: None)
 
     def tearDown(self):
         self.anki_app.__exit__(None, None, None)
@@ -187,4 +185,4 @@ class DocumentWindowTestCase(unittest.TestCase):
         self.__doc = document_service.import_document("test doc", "this is this", DefaultDocumentAnalyzer(self.__db))
         GlobalWordStatus.upsert_word_status("this", Status.STUDYING, self.__db)
         GlobalWordStatus.upsert_word_status("is", Status.STUDYING, self.__db)
-        self.form = DocumentWindow(self.__doc, self.__db)
+        self.form = DocumentWindow(self.__doc, self.__db, lambda: None)

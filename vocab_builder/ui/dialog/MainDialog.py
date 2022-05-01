@@ -1,6 +1,7 @@
 import sys
 from pathlib import Path
 
+import aqt
 from PyQt5 import QtCore
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import (QPushButton, QApplication, QHBoxLayout, QVBoxLayout, QLabel, QDialog, QFileDialog,
@@ -87,7 +88,7 @@ class MainDialog(QDialog):
         self.__open_document_dialog(doc)
 
     def __open_document_dialog(self, doc: Document):
-        doc_dialog = DocumentWindow(doc, self.__db)
+        doc_dialog = DocumentWindow(doc, self.__db, aqt.mw.onAddCard)
         doc_dialog.show()
         self.close()
 

@@ -1,3 +1,5 @@
+from typing import Callable
+
 from PyQt5.QtGui import QCloseEvent
 from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QComboBox, QLabel, QPushButton, QApplication, QWidget, \
     QSizePolicy, QSpacerItem
@@ -13,8 +15,9 @@ import aqt
 
 class DocumentWindow(QWidget):
 
-    def __init__(self, doc: Document, db: VocabBuilderDB):
+    def __init__(self, doc: Document, db: VocabBuilderDB, anki_add_card_handler: Callable[[], None]):
         super(DocumentWindow, self).__init__()
+        self.__anki_add_card_handler = anki_add_card_handler
         self.__db = db
         self.__doc = doc
         self.__offset = 0
@@ -175,14 +178,13 @@ class DocumentWindow(QWidget):
         self.__update_ui()
 
     def __on_add_to_anki(self) -> None:
-        aqt.mw.onAddCard()
+        self.__anki_add_card_handler()
         QApplication.clipboard().setText(self._context_list.word.text)
         aqt.utils.tooltip("The word has been copied into the clipboard.", 3000)
 
         # Set the word status to STUDYING
         upsert_word_status(self._context_list.word.text, Status.STUDYING, self.__db)
 
-        self._context_list.next_page()
         self.__update_ui()
 
     def __update_ui(self) -> None:
