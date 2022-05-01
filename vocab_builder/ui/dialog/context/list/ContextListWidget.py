@@ -15,32 +15,31 @@ from vocab_builder.ui.dialog.context.list.ClickableListWidget import ClickableLi
 
 class ContextListWidget(QtWidgets.QWidget):
 
-    def __init__(self, doc: Document, status: WordStatus, db: VocabBuilderDB, status_to_offset_dict: Dict[WordStatus, int]):
+    def __init__(self, word: Optional[Word], doc: Document, status: WordStatus, db: VocabBuilderDB, status_to_offset_dict: Dict[WordStatus, int]):
         super(ContextListWidget, self).__init__()
         self.__doc = doc
         self.__status = status
         self.__db = db
         self.__status_to_offset_dict = status_to_offset_dict
-        self.word = self.__get_word(doc, status, self.__status_to_offset_dict, db)
-        self.__layout = self.__init_ui(self.word, doc)
+        self.__word = word
+        self.__layout = self.__init_ui(self.__word, doc)
 
-    def update_status(self, status: WordStatus):
+    def set_word(self, word: Optional[Word]):
+        self.__word = word
+
+    def set_status(self, status: WordStatus):
         self.__status = status
-
-    def is_word_available(self) -> bool:
-        return self.word is not None
 
     def get_item_htmls(self) -> [str]:
         return [item.short_html for item in self.__list_items]
 
     def update_data(self):
-        self.word = self.__get_word(self.__doc, self.__status, self.__status_to_offset_dict, self.__db)
         self.__clear_list_widget(self._list_widget, self.__list_items)
-        if self.word is None:
+        if self.__word is None:
             self._list_widget.hide()
             self.__no_word_available_label.show()
         else:
-            short_and_long_contexts = self.word.get_short_and_long_contexts(self.__doc)
+            short_and_long_contexts = self.__word.get_short_and_long_contexts(self.__doc)
             self.__no_word_available_label.hide()
             self._list_widget.show()
             for i in range(len(short_and_long_contexts)):

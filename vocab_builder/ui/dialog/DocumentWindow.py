@@ -1,4 +1,4 @@
-from typing import Callable, Dict
+from typing import Callable, Dict, Optional
 
 from PyQt5.QtGui import QCloseEvent
 from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QComboBox, QLabel, QPushButton, QApplication, QWidget, \
@@ -7,6 +7,7 @@ from anki.notes import Note
 
 from vocab_builder.domain.document.Document import Document
 from vocab_builder.domain.status.GlobalWordStatus import upsert_word_status, Status
+from vocab_builder.domain.word.Word import Word
 from vocab_builder.domain.word.WordStatus import WordStatus
 from vocab_builder.infrastructure import VocabBuilderDB
 from vocab_builder.ui.dialog.context.list.ContextListWidget import ContextListWidget
@@ -24,7 +25,8 @@ class DocumentWindow(QWidget):
         self.__offset = 0
         self._status_combo_box = self.__get_status_combo_box()
         self.__status = WordStatus(self._status_combo_box.currentText())
-        self._context_list = self.__get_context_list(self.__doc, self.__status, db, self.__status_to_offset_dict)
+        self.__word = self.__get_word(doc, self.__status, self.__status_to_offset_dict, db)
+        self._context_list = self.__get_context_list(self.__word, self.__doc, self.__status, db, self.__status_to_offset_dict)
         self.__dialog_layout = self.__get_dialog_layout(self._context_list, doc, self.__status, self.__db)
         self.__init_ui(self.__dialog_layout)
         aqt.gui_hooks.add_cards_did_add_note.append(self.__raise)
@@ -75,11 +77,11 @@ class DocumentWindow(QWidget):
 
     def __on_status_selected(self, status_value: str) -> None:
         self.__status = WordStatus(status_value)
-        self._context_list.update_status(self.__status)
+        self._context_list.set_status(self.__status)
         self.__update_ui()
 
-    def __get_context_list(self, doc: Document, status: WordStatus, db: VocabBuilderDB, status_to_offset_dict: Dict[WordStatus, int]) -> ContextListWidget:
-        context_list = ContextListWidget(doc, status, db, status_to_offset_dict)
+    def __get_context_list(self, word: Optional[Word], doc: Document, status: WordStatus, db: VocabBuilderDB, status_to_offset_dict: Dict[WordStatus, int]) -> ContextListWidget:
+        context_list = ContextListWidget(word, doc, status, db, status_to_offset_dict)
         return context_list
 
     def __get_middle_area(self, context_list: ContextListWidget) -> QHBoxLayout:
@@ -90,10 +92,10 @@ class DocumentWindow(QWidget):
     def __get_bottom_bar(self, context_list: ContextListWidget, doc: Document, status: WordStatus, db: VocabBuilderDB) -> QHBoxLayout:
         res = QHBoxLayout()
 
-        self._add_to_anki_btn = self.__get_add_to_anki_btn(context_list.is_word_available())
-        self._ignore_btn = self.__get_ignore_btn(context_list.is_word_available())
-        self._know_btn = self.__get_know_btn(context_list.is_word_available())
-        self._study_later_btn = self.__get_study_later_btn(context_list.is_word_available())
+        self._add_to_anki_btn = self.__get_add_to_anki_btn(self.__is_word_available())
+        self._ignore_btn = self.__get_ignore_btn(self.__is_word_available())
+        self._know_btn = self.__get_know_btn(self.__is_word_available())
+        self._study_later_btn = self.__get_study_later_btn(self.__is_word_available())
         res.addWidget(self._add_to_anki_btn)
         res.addWidget(self._ignore_btn)
         res.addWidget(self._know_btn)
@@ -119,7 +121,7 @@ class DocumentWindow(QWidget):
     def __get_next_page_btn(self, context_list: ContextListWidget) -> QPushButton:
         btn = QPushButton(">")
         btn.clicked.connect(self.__next_page)
-        btn.setEnabled(context_list.is_word_available())
+        btn.setEnabled(self.__is_word_available())
         btn.setToolTip("Next word")
         return btn
 
@@ -155,40 +157,42 @@ class DocumentWindow(QWidget):
         return res
 
     def __on_study_later(self) -> None:
-        upsert_word_status(self._context_list.word.text, Status.STUDY_LATER, self.__db)
+        upsert_word_status(self.__word.text, Status.STUDY_LATER, self.__db)
         self.__update_ui()
 
     def __on_know(self) -> None:
-        upsert_word_status(self._context_list.word.text, Status.KNOWN, self.__db)
+        upsert_word_status(self.__word.text, Status.KNOWN, self.__db)
         self.__update_ui()
 
     def __on_ignore(self) -> None:
-        upsert_word_status(self._context_list.word.text, Status.IGNORED, self.__db)
+        upsert_word_status(self.__word.text, Status.IGNORED, self.__db)
         self.__update_ui()
 
     def __on_add_to_anki(self) -> None:
         self.__anki_add_card_handler()
-        QApplication.clipboard().setText(self._context_list.word.text)
+        QApplication.clipboard().setText(self.__word.text)
         aqt.utils.tooltip("The word has been copied into the clipboard.", 3000)
 
         # Set the word status to STUDYING
-        upsert_word_status(self._context_list.word.text, Status.STUDYING, self.__db)
+        upsert_word_status(self.__word.text, Status.STUDYING, self.__db)
 
         self.__update_ui()
 
     def __update_ui(self) -> None:
+        self.__word = self.__get_word(self.__doc, self.__status, self.__status_to_offset_dict, self.__db)
+        self._context_list.set_word(self.__word)
         self._context_list.update_data()
         self._prev_page_btn.setDisabled(self.__get_page_no() == 1)
         # TODO Just disable the next page button when we are at the last page.
-        self._next_page_btn.setEnabled(self._context_list.is_word_available())
-        self._add_to_anki_btn.setDisabled(self.__status == WordStatus.STUDYING or (not self._context_list.is_word_available()))
-        self._ignore_btn.setDisabled(self.__status == WordStatus.IGNORED or (not self._context_list.is_word_available()))
-        self._know_btn.setDisabled(self.__status == WordStatus.KNOWN or (not self._context_list.is_word_available()))
-        self._study_later_btn.setDisabled(self.__status == WordStatus.STUDY_LATER or (not self._context_list.is_word_available()))
+        self._next_page_btn.setEnabled(self.__is_word_available())
+        self._add_to_anki_btn.setDisabled(self.__status == WordStatus.STUDYING or (not self.__is_word_available()))
+        self._ignore_btn.setDisabled(self.__status == WordStatus.IGNORED or (not self.__is_word_available()))
+        self._know_btn.setDisabled(self.__status == WordStatus.KNOWN or (not self.__is_word_available()))
+        self._study_later_btn.setDisabled(self.__status == WordStatus.STUDY_LATER or (not self.__is_word_available()))
         self.__update_page_info_label(self._page_info_label, self.__status, self.__doc, self.__db)
 
     def __update_page_info_label(self, page_info_label: QLabel, status: WordStatus, doc: Document, db: VocabBuilderDB) -> None:
-        if self._context_list.is_word_available():
+        if self.__is_word_available():
             self.__current_page_no = self.__get_page_no()
             self.__total_page_count = self.__get_total_page_count(status, doc, db)
             page_info_label.setText(f"{self.__current_page_no} / {self.__total_page_count}")
@@ -208,4 +212,17 @@ class DocumentWindow(QWidget):
     def __next_page(self):
         self.__status_to_offset_dict[self.__status] = self.__status_to_offset_dict[self.__status] + 1
         self.__update_ui()
+
+    def __get_word(self, doc: Document, status: WordStatus, status_to_offset_dict: Dict[WordStatus, int],
+                   db: VocabBuilderDB) -> Optional[Word]:
+        offset = self.__get_offset(status, status_to_offset_dict)
+        return doc.get_next_word(offset, status, db)
+
+    def __get_offset(self, status: WordStatus, status_to_offset_dict: Dict[WordStatus, int]) -> int:
+        if status not in status_to_offset_dict:
+            status_to_offset_dict[status] = 0
+        return status_to_offset_dict[status]
+    
+    def __is_word_available(self) -> bool:
+        return self.__word is not None
 
