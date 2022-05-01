@@ -15,25 +15,14 @@ from vocab_builder.ui.dialog.context.list.ClickableListWidget import ClickableLi
 
 class ContextListWidget(QtWidgets.QWidget):
 
-    def __init__(self, doc: Document, status: WordStatus, db: VocabBuilderDB):
+    def __init__(self, doc: Document, status: WordStatus, db: VocabBuilderDB, status_to_offset_dict: Dict[WordStatus, int]):
         super(ContextListWidget, self).__init__()
         self.__doc = doc
         self.__status = status
         self.__db = db
-        self.__status_to_offset_dict: Dict[WordStatus, int] = {}
+        self.__status_to_offset_dict = status_to_offset_dict
         self.word = self.__get_word(doc, status, self.__status_to_offset_dict, db)
         self.__layout = self.__init_ui(self.word, doc)
-
-    def get_page_no(self) -> int:
-        """Get the page number of the current status, starting with 1."""
-        return self.__status_to_offset_dict[self.__status] + 1
-
-    def prev_page(self):
-        self.__status_to_offset_dict[self.__status] = self.__status_to_offset_dict[self.__status] - 1
-        self.update_data()
-
-    def next_page(self):
-        self.__status_to_offset_dict[self.__status] = self.__status_to_offset_dict[self.__status] + 1
 
     def update_status(self, status: WordStatus):
         self.__status = status

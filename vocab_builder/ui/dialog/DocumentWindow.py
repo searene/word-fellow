@@ -1,4 +1,4 @@
-from typing import Callable
+from typing import Callable, Dict
 
 from PyQt5.QtGui import QCloseEvent
 from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QComboBox, QLabel, QPushButton, QApplication, QWidget, \
@@ -18,12 +18,13 @@ class DocumentWindow(QWidget):
     def __init__(self, doc: Document, db: VocabBuilderDB, anki_add_card_handler: Callable[[], None]):
         super(DocumentWindow, self).__init__()
         self.__anki_add_card_handler = anki_add_card_handler
+        self.__status_to_offset_dict: Dict[WordStatus, int] = {}
         self.__db = db
         self.__doc = doc
         self.__offset = 0
         self._status_combo_box = self.__get_status_combo_box()
         self.__status = WordStatus(self._status_combo_box.currentText())
-        self._context_list = self.__get_context_list(self.__doc, self.__status, db)
+        self._context_list = self.__get_context_list(self.__doc, self.__status, db, self.__status_to_offset_dict)
         self.__dialog_layout = self.__get_dialog_layout(self._context_list, doc, self.__status, self.__db)
         self.__init_ui(self.__dialog_layout)
         aqt.gui_hooks.add_cards_did_add_note.append(self.__raise)
@@ -62,10 +63,6 @@ class DocumentWindow(QWidget):
         self.__update_page_info_label(page_info_label, context_list, status, doc, db)
         return page_info_label
 
-    def __get_current_page_no(self, context_list: ContextListWidget) -> int:
-        # TODO Page number should be managed by DocumentWindow instead of context list
-        return context_list.get_page_no()
-
     def __get_total_page_count(self, status: WordStatus, doc: Document, db: VocabBuilderDB) -> int:
         return doc.get_word_count(status, db)
 
@@ -81,8 +78,8 @@ class DocumentWindow(QWidget):
         self._context_list.update_status(self.__status)
         self.__update_ui()
 
-    def __get_context_list(self, doc: Document, status: WordStatus, db: VocabBuilderDB) -> ContextListWidget:
-        context_list = ContextListWidget(doc, status, db)
+    def __get_context_list(self, doc: Document, status: WordStatus, db: VocabBuilderDB, status_to_offset_dict: Dict[WordStatus, int]) -> ContextListWidget:
+        context_list = ContextListWidget(doc, status, db, status_to_offset_dict)
         return context_list
 
     def __get_middle_area(self, context_list: ContextListWidget) -> QHBoxLayout:
@@ -115,24 +112,16 @@ class DocumentWindow(QWidget):
     def __get_prev_page_btn(self) -> QPushButton:
         btn = QPushButton("<")
         btn.setDisabled(True)
-        btn.clicked.connect(self.__on_prev_page_clicked)
+        btn.clicked.connect(self.__prev_page)
         btn.setToolTip("Previous word")
         return btn
 
     def __get_next_page_btn(self, context_list: ContextListWidget) -> QPushButton:
         btn = QPushButton(">")
-        btn.clicked.connect(self.__on_next_page_clicked)
+        btn.clicked.connect(self.__next_page)
         btn.setEnabled(context_list.is_word_available())
         btn.setToolTip("Next word")
         return btn
-
-    def __on_prev_page_clicked(self) -> None:
-        self._context_list.prev_page()
-        self.__update_ui()
-
-    def __on_next_page_clicked(self) -> None:
-        self._context_list.next_page()
-        self.__update_ui()
 
     def __close_window(self) -> None:
         self.close()
@@ -189,7 +178,7 @@ class DocumentWindow(QWidget):
 
     def __update_ui(self) -> None:
         self._context_list.update_data()
-        self._prev_page_btn.setDisabled(self._context_list.get_page_no() == 1)
+        self._prev_page_btn.setDisabled(self.__get_page_no() == 1)
         self._next_page_btn.setEnabled(self._context_list.is_word_available())
         self._add_to_anki_btn.setDisabled(self.__status == WordStatus.STUDYING or (not self._context_list.is_word_available()))
         self._ignore_btn.setDisabled(self.__status == WordStatus.IGNORED or (not self._context_list.is_word_available()))
@@ -200,10 +189,23 @@ class DocumentWindow(QWidget):
     def __update_page_info_label(self, page_info_label: QLabel, context_list: ContextListWidget,
                                  status: WordStatus, doc: Document, db: VocabBuilderDB) -> None:
         if self._context_list.is_word_available():
-            self.__current_page_no = self.__get_current_page_no(context_list)
+            self.__current_page_no = self.__get_page_no()
             self.__total_page_count = self.__get_total_page_count(status, doc, db)
             page_info_label.setText(f"{self.__current_page_no} / {self.__total_page_count}")
         else:
             self.__current_page_no = None
             self.__total_page_count = None
             page_info_label.setText("")
+
+    def __get_page_no(self) -> int:
+        """Get the page number of the current status, starting with 1."""
+        return self.__status_to_offset_dict[self.__status] + 1
+
+    def __prev_page(self):
+        self.__status_to_offset_dict[self.__status] = self.__status_to_offset_dict[self.__status] - 1
+        self.__update_ui()
+
+    def __next_page(self):
+        self.__status_to_offset_dict[self.__status] = self.__status_to_offset_dict[self.__status] + 1
+        self.__update_ui()
+
