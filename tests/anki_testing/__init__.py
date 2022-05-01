@@ -55,6 +55,7 @@ def temporary_dir(name):
     # create a true unique temporary directory at every startup
     tempdir = tempfile.TemporaryDirectory(suffix='anki')
     yield tempdir.name
+    tempdir.cleanup()
 
 
 @contextmanager
