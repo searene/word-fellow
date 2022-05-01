@@ -191,7 +191,7 @@ class DocumentWindow(QWidget):
         self._context_list.update_data()
         self._prev_page_btn.setDisabled(self.__get_page_no() == 1)
         # TODO Just disable the next page button when we are at the last page.
-        self._next_page_btn.setEnabled(self.__is_word_available())
+        self._next_page_btn.setEnabled(self.__get_page_no() < self.__get_total_page_count(self.__status, self.__doc, self.__db))
         self._add_to_anki_btn.setDisabled(self.__status == WordStatus.STUDYING or (not self.__is_word_available()))
         self._ignore_btn.setDisabled(self.__status == WordStatus.IGNORED or (not self.__is_word_available()))
         self._know_btn.setDisabled(self.__status == WordStatus.KNOWN or (not self.__is_word_available()))
@@ -200,12 +200,10 @@ class DocumentWindow(QWidget):
 
     def __update_page_info_label(self, page_info_label: QLabel, status: WordStatus, doc: Document, db: VocabBuilderDB) -> None:
         if self.__is_word_available():
-            self.__current_page_no = self.__get_page_no()
-            self.__total_page_count = self.__get_total_page_count(status, doc, db)
-            page_info_label.setText(f"{self.__current_page_no} / {self.__total_page_count}")
+            current_page = self.__get_page_no()
+            total_page = self.__get_total_page_count(status, doc, db)
+            page_info_label.setText(f"{current_page} / {total_page}")
         else:
-            self.__current_page_no = None
-            self.__total_page_count = None
             page_info_label.setText("- / -")
 
     def __get_page_no(self) -> int:

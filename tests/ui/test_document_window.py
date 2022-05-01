@@ -182,6 +182,10 @@ class DocumentWindowTestCase(unittest.TestCase):
         QTest.mouseClick(self.form._study_later_btn, Qt.LeftButton)
         self.assertEqual(self.form._page_info_label.text(), "1 / 1")
 
+    def test_should_disable_next_page_btn_when_we_are_at_last_page(self):
+        QTest.mouseClick(self.form._next_page_btn, Qt.LeftButton)
+        self.assertFalse(self.form._next_page_btn.isEnabled())
+
     def test_should_show_correct_word_label_when_starting_up(self):
         self.assertEqual(self.form._word_label.text(), "this")
 
