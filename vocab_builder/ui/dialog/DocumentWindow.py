@@ -190,7 +190,6 @@ class DocumentWindow(QWidget):
         self._context_list.set_word(self.__word)
         self._context_list.update_data()
         self._prev_page_btn.setDisabled(self.__get_page_no() == 1)
-        # TODO Just disable the next page button when we are at the last page.
         self._next_page_btn.setEnabled(self.__get_page_no() < self.__get_total_page_count(self.__status, self.__doc, self.__db))
         self._add_to_anki_btn.setDisabled(self.__status == WordStatus.STUDYING or (not self.__is_word_available()))
         self._ignore_btn.setDisabled(self.__status == WordStatus.IGNORED or (not self.__is_word_available()))
