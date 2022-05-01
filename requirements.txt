@@ -1,5 +1,3 @@
 anki==2.1.49
 aqt==2.1.49
-pytest==7.0.1
 PyQt5==5.15.6
-pytest-qt==4.0.2

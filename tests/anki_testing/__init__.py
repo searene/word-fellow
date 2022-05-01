@@ -76,15 +76,16 @@ def anki_running():
             # Anki sets its own error handler, which will prevent us from
             # obtaining error messages, unload it to use the original one
             aqt.mw.errorHandler.unload()
+
+            # Anki sets sys.excepthook to None in cleanUpAndExit(),
+            # which causes the next test to throw exceptions,
+            # let's set it back
+            sys.excepthook = origin_sys_excepthook
+
             yield app
 
     # clean up what was spoiled
     aqt.mw.cleanupAndExit()
-
-    # Anki sets sys.excepthook to None in cleanUpAndExit(),
-    # which causes the next test to throw exceptions,
-    # let's set it back
-    sys.excepthook = origin_sys_excepthook
 
     # remove hooks added during app initialization
     from anki import hooks
