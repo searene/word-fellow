@@ -8,9 +8,7 @@ from vocab_builder.domain.status.GlobalWordStatus import upsert_word_status, Sta
 from vocab_builder.domain.word.WordStatus import WordStatus
 from vocab_builder.infrastructure import VocabBuilderDB
 from vocab_builder.ui.dialog.context.list.ContextListWidget import ContextListWidget
-from aqt import mw
-from aqt.utils import tooltip
-from aqt import gui_hooks
+import aqt
 
 
 class DocumentWindow(QWidget):
@@ -25,11 +23,11 @@ class DocumentWindow(QWidget):
         self._context_list = self.__get_context_list(self.__doc, self.__status, db)
         self.__dialog_layout = self.__get_dialog_layout(self._context_list, doc, self.__status, self.__db)
         self.__init_ui(self.__dialog_layout)
-        gui_hooks.add_cards_did_add_note.append(self.__raise)
+        aqt.gui_hooks.add_cards_did_add_note.append(self.__raise)
         self.showMaximized()
 
     def closeEvent(self, event: QCloseEvent) -> None:
-        gui_hooks.add_cards_did_add_note.remove(self.__raise)
+        aqt.gui_hooks.add_cards_did_add_note.remove(self.__raise)
 
     def __raise(self, note: Note):
         self.raise_()
@@ -177,9 +175,9 @@ class DocumentWindow(QWidget):
         self.__update_ui()
 
     def __on_add_to_anki(self) -> None:
-        mw.onAddCard()
+        aqt.mw.onAddCard()
         QApplication.clipboard().setText(self._context_list.word.text)
-        tooltip("The word has been copied into the clipboard.", 3000)
+        aqt.utils.tooltip("The word has been copied into the clipboard.", 3000)
 
         # Set the word status to STUDYING
         upsert_word_status(self._context_list.word.text, Status.STUDYING, self.__db)

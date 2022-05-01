@@ -14,6 +14,7 @@ from vocab_builder.domain.status import GlobalWordStatus
 from vocab_builder.domain.status.GlobalWordStatus import Status
 from vocab_builder.domain.word.WordStatus import WordStatus
 from vocab_builder.ui.dialog.DocumentWindow import DocumentWindow
+import aqt
 
 
 class DocumentWindowTestCase(unittest.TestCase):
@@ -168,11 +169,11 @@ class DocumentWindowTestCase(unittest.TestCase):
         QTest.mouseClick(self.form._next_page_btn, Qt.LeftButton)
         self.assertEqual(self.form._page_info_label.text(), "2 / 2")
 
-    def test_should_display_correct_page_info_when_clicking_on_operating_buttons(self):
-        for btn in [self.form._ignore_btn, self.form._know_btn, self.form._add_to_anki_btn, self.form._study_later_btn]:
-            with self.subTest():
-                QTest.mouseClick(btn, Qt.LeftButton)
-                self.assertEqual(self.form._page_info_label.text(), "1 / 1")
+    # TODO Check other buttons, too
+    # TODO Use self.subTests with setUp() and tearDown()?
+    def test_should_display_correct_page_info_when_clicking_on_add_to_anki_btn(self):
+        QTest.mouseClick(self.form._add_to_anki_btn, Qt.LeftButton)
+        self.assertEqual(self.form._page_info_label.text(), "1 / 1")
 
     def __get_widget_list_htmls(self):
         return [item.short_html for item in get_visible_item_widget(self.form._context_list._list_widget)]
