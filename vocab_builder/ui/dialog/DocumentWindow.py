@@ -54,12 +54,16 @@ class DocumentWindow(QWidget):
         hbox.addWidget(self._status_combo_box)
         return hbox
 
-    def __get_page_info_label(self, status: WordStatus, doc: Document, db: VocabBuilderDB) -> QLabel:
-        self.__total_page_count = self.__get_total_page_count(status, doc, db)
-        page_info_label = QLabel(f"1 / {self.__total_page_count}")
+    def __get_page_info_label(self, status: WordStatus, doc: Document, db: VocabBuilderDB, context_list: ContextListWidget) -> QLabel:
+        page_info_label = QLabel()
         page_info_label.setSizePolicy(QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Preferred))
         page_info_label.setToolTip("Current / Total")
+        self.__update_page_info_label(page_info_label, context_list, status, doc, db)
         return page_info_label
+
+    def __get_current_page_no(self, context_list: ContextListWidget) -> int:
+        # TODO Page number should be managed by DocumentWindow instead of context list
+        return context_list.get_page_no()
 
     def __get_total_page_count(self, status: WordStatus, doc: Document, db: VocabBuilderDB) -> int:
         return doc.get_word_count(status, db)
@@ -99,7 +103,7 @@ class DocumentWindow(QWidget):
         res.addItem(QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum))
 
         self._prev_page_btn = self.__get_prev_page_btn()
-        self._page_info_label = self.__get_page_info_label(status, doc, db)
+        self._page_info_label = self.__get_page_info_label(status, doc, db, context_list)
         self._next_page_btn = self.__get_next_page_btn(context_list)
         res.addWidget(self._prev_page_btn)
         res.addWidget(self._page_info_label)
@@ -191,3 +195,15 @@ class DocumentWindow(QWidget):
         self._ignore_btn.setDisabled(self.__status == WordStatus.IGNORED or (not self._context_list.is_word_available()))
         self._know_btn.setDisabled(self.__status == WordStatus.KNOWN or (not self._context_list.is_word_available()))
         self._study_later_btn.setDisabled(self.__status == WordStatus.STUDY_LATER or (not self._context_list.is_word_available()))
+        self.__update_page_info_label(self._page_info_label, self._context_list, self.__status, self.__doc, self.__db)
+
+    def __update_page_info_label(self, page_info_label: QLabel, context_list: ContextListWidget,
+                                 status: WordStatus, doc: Document, db: VocabBuilderDB) -> None:
+        if self._context_list.is_word_available():
+            self.__current_page_no = self.__get_current_page_no(context_list)
+            self.__total_page_count = self.__get_total_page_count(status, doc, db)
+            page_info_label.setText(f"{self.__current_page_no} / {self.__total_page_count}")
+        else:
+            self.__current_page_no = None
+            self.__total_page_count = None
+            page_info_label.setText("")

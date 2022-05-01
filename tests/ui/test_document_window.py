@@ -39,17 +39,12 @@ class DocumentWindowTestCase(unittest.TestCase):
         self.assertEqual(short_html1, short_html2)
 
     def test_should_disable_all_operate_buttons_when_no_word_is_available_at_first(self):
-        document_service = DocumentService(self.__db)
-        document_service.remove_all()
-        doc = document_service.import_document("test doc", "this is this", DefaultDocumentAnalyzer(self.__db))
-        GlobalWordStatus.upsert_word_status("this", Status.STUDYING, self.__db)
-        GlobalWordStatus.upsert_word_status("is", Status.STUDYING, self.__db)
-        form = DocumentWindow(doc, self.__db)
+        self.__use_form_with_all_words_studying()
 
-        self.assertFalse(form._ignore_btn.isEnabled())
-        self.assertFalse(form._add_to_anki_btn.isEnabled())
-        self.assertFalse(form._know_btn.isEnabled())
-        self.assertFalse(form._study_later_btn.isEnabled())
+        self.assertFalse(self.form._ignore_btn.isEnabled())
+        self.assertFalse(self.form._add_to_anki_btn.isEnabled())
+        self.assertFalse(self.form._know_btn.isEnabled())
+        self.assertFalse(self.form._study_later_btn.isEnabled())
 
     def test_should_disable_all_operate_buttons_when_no_word_is_available_after_changing_status(self):
         self.__change_status(WordStatus.IGNORED)
@@ -106,13 +101,8 @@ class DocumentWindowTestCase(unittest.TestCase):
         self.assertFalse(self.form._prev_page_btn.isEnabled())
 
     def test_should_disable_next_btn_if_no_word_is_available_in_the_beginning(self):
-        document_service = DocumentService(self.__db)
-        document_service.remove_all()
-        doc = document_service.import_document("test doc", "this is this", DefaultDocumentAnalyzer(self.__db))
-        GlobalWordStatus.upsert_word_status("this", Status.STUDYING, self.__db)
-        GlobalWordStatus.upsert_word_status("is", Status.STUDYING, self.__db)
-        form = DocumentWindow(doc, self.__db)
-        self.assertFalse(form._next_page_btn.isEnabled())
+        self.__use_form_with_all_words_studying()
+        self.assertFalse(self.form._next_page_btn.isEnabled())
 
     def test_should_enable_next_btn_if_there_is_next_page_at_first(self):
         self.assertTrue(self.form._next_page_btn.isEnabled())
@@ -161,12 +151,28 @@ class DocumentWindowTestCase(unittest.TestCase):
         self.__change_status(WordStatus.KNOWN)
         self.assertFalse(self.form._know_btn.isEnabled())
 
-    # TODO test when change status
+    # TODO show 0 / 0 when there is no word when starting up
     def test_should_display_correct_page_info_when_starting_up(self):
         self.assertEqual(self.form._page_info_label.text(), "1 / 2")
+
+    def test_should_display_empty_page_info_when_there_is_no_word_when_starting_up(self):
+        pass
+
+    # TODO test when clicking on operating button
+    def test_should_display_correct_page_info_after_changing_status(self):
+        self.__change_status(WordStatus.STUDYING)
+        self.assertEqual(self.form._page_info_label.text(), "")
 
     def __get_widget_list_htmls(self):
         return [item.short_html for item in get_visible_item_widget(self.form._context_list._list_widget)]
 
     def __change_status(self, status: WordStatus) -> None:
         self.form._status_combo_box.currentTextChanged.emit(status.value)
+
+    def __use_form_with_all_words_studying(self) -> None:
+        document_service = DocumentService(self.__db)
+        document_service.remove_all()
+        self.__doc = document_service.import_document("test doc", "this is this", DefaultDocumentAnalyzer(self.__db))
+        GlobalWordStatus.upsert_word_status("this", Status.STUDYING, self.__db)
+        GlobalWordStatus.upsert_word_status("is", Status.STUDYING, self.__db)
+        self.form = DocumentWindow(self.__doc, self.__db)
