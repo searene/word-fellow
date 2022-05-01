@@ -2,7 +2,7 @@ import unittest
 from typing import Optional
 
 from PyQt5.QtCore import Qt
-from PyQt5.QtTest import QSignalSpy, QTest
+from PyQt5.QtTest import QTest
 from aqt import AnkiApp
 
 from tests.anki_testing import anki_running
@@ -160,6 +160,10 @@ class DocumentWindowTestCase(unittest.TestCase):
     def test_should_disable_know_button_when_current_status_is_known(self):
         self.__change_status(WordStatus.KNOWN)
         self.assertFalse(self.form._know_btn.isEnabled())
+
+    # TODO test when change status
+    def test_should_display_correct_page_info_when_starting_up(self):
+        self.assertEqual(self.form._page_info_label.text(), "1 / 2")
 
     def __get_widget_list_htmls(self):
         return [item.short_html for item in get_visible_item_widget(self.form._context_list._list_widget)]

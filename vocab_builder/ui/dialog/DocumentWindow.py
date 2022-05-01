@@ -23,7 +23,7 @@ class DocumentWindow(QWidget):
         self._status_combo_box = self.__get_status_combo_box()
         self.__status = WordStatus(self._status_combo_box.currentText())
         self._context_list = self.__get_context_list(self.__doc, self.__status, db)
-        self.__dialog_layout = self.__get_dialog_layout(self._context_list)
+        self.__dialog_layout = self.__get_dialog_layout(self._context_list, doc, self.__status, self.__db)
         self.__init_ui(self.__dialog_layout)
         gui_hooks.add_cards_did_add_note.append(self.__raise)
         self.showMaximized()
@@ -34,11 +34,11 @@ class DocumentWindow(QWidget):
     def __raise(self, note: Note):
         self.raise_()
 
-    def __get_dialog_layout(self, context_list: ContextListWidget) -> QVBoxLayout:
+    def __get_dialog_layout(self, context_list: ContextListWidget, doc: Document, status: WordStatus, db: VocabBuilderDB) -> QVBoxLayout:
         vbox = QVBoxLayout()
         vbox.addLayout(self.__get_top_bar())
         vbox.addWidget(context_list)
-        vbox.addLayout(self.__get_bottom_bar(context_list))
+        vbox.addLayout(self.__get_bottom_bar(context_list, doc, status, db))
         return vbox
 
     def __init_ui(self, dialog_layout: QVBoxLayout):
@@ -54,12 +54,15 @@ class DocumentWindow(QWidget):
         hbox.addWidget(self._status_combo_box)
         return hbox
 
-    def __get_page_info_label(self) -> QLabel:
-        # TODO change it dynamically
-        page_info_label = QLabel("1 / 105")
+    def __get_page_info_label(self, status: WordStatus, doc: Document, db: VocabBuilderDB) -> QLabel:
+        self.__total_page_count = self.__get_total_page_count(status, doc, db)
+        page_info_label = QLabel(f"1 / {self.__total_page_count}")
         page_info_label.setSizePolicy(QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Preferred))
         page_info_label.setToolTip("Current / Total")
         return page_info_label
+
+    def __get_total_page_count(self, status: WordStatus, doc: Document, db: VocabBuilderDB) -> int:
+        return doc.get_word_count(status, db)
 
     def __get_status_combo_box(self) -> QComboBox:
         status_combo_box = QComboBox()
@@ -82,7 +85,7 @@ class DocumentWindow(QWidget):
         hbox.addWidget(context_list)
         return hbox
 
-    def __get_bottom_bar(self, context_list: ContextListWidget) -> QHBoxLayout:
+    def __get_bottom_bar(self, context_list: ContextListWidget, doc: Document, status: WordStatus, db: VocabBuilderDB) -> QHBoxLayout:
         res = QHBoxLayout()
 
         self._add_to_anki_btn = self.__get_add_to_anki_btn(context_list.is_word_available())
@@ -96,7 +99,7 @@ class DocumentWindow(QWidget):
         res.addItem(QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum))
 
         self._prev_page_btn = self.__get_prev_page_btn()
-        self._page_info_label = self.__get_page_info_label()
+        self._page_info_label = self.__get_page_info_label(status, doc, db)
         self._next_page_btn = self.__get_next_page_btn(context_list)
         res.addWidget(self._prev_page_btn)
         res.addWidget(self._page_info_label)

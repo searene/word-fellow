@@ -72,6 +72,10 @@ def anki_running():
             argv=["anki", "-p", user_name, "-b", dir_name]
             print(f'running anki with argv={argv}')
             app = _run(argv=argv, exec=False)
+
+            # Anki sets its own error handler, which will prevent us from
+            # obtaining error messages, unload it to use the original one
+            aqt.mw.errorHandler.unload()
             yield app
 
     # clean up what was spoiled

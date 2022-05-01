@@ -52,3 +52,21 @@ def get_next_word(doc_id: int, offset: int, word_status: WordStatus, db: VocabBu
         return __get_next_global_word(doc_id, offset, word_status, db)
     else:
         raise ValueError("Unknown word status: " + word_status.name)
+
+
+def get_word_count(doc_id: int, word_status: WordStatus, db: VocabBuilderDB) -> int:
+    if word_status == WordStatus.UNREVIEWED:
+        return db.fetch_one(f"""
+        select count(*)
+        from words w
+          left join global_word_status g on w.text = g.word
+        where g.word is null
+          and w.document_id = {doc_id}
+        """)[0]
+    return db.fetch_one(f"""
+    select count(*) as cnt
+    from words w
+      join global_word_status g on w.text = g.word
+    where g.status = ?
+        and w.document_id = ?
+    """, (word_status.name, doc_id))[0]

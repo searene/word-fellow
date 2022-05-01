@@ -19,6 +19,9 @@ class Document:
     def get_words(self, db: VocabBuilderDB) -> [Word]:
         return get_words_by_document_id(self.document_id, db)
 
+    def get_word_count(self, status: WordStatus, db: VocabBuilderDB) -> int:
+        return WordFactory.get_word_count(self.document_id, status, db)
+
     def __eq__(self, other):
         if not isinstance(other, Document):
             return False
