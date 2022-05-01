@@ -8,8 +8,9 @@ from vocab_builder.domain.word.Word import Word
 from vocab_builder.domain.word.WordStatus import WordStatus
 from vocab_builder.domain.word.WordValueObject import ShortAndLongContext, WordContext
 from vocab_builder.infrastructure import VocabBuilderDB
-from vocab_builder.ui.dialog.ContextItemWidget import ContextItemWidget
+from vocab_builder.ui.dialog.context.ContextItemWidget import ContextItemWidget
 from vocab_builder.ui.dialog.LongContextDialog import LongContextDialog
+from vocab_builder.ui.dialog.context.list.ClickableListWidget import ClickableListWidget
 
 
 class ContextListWidget(QtWidgets.QWidget):
@@ -75,7 +76,7 @@ class ContextListWidget(QtWidgets.QWidget):
     def __init_ui(self, word: Optional[Word], doc: Document) -> QVBoxLayout:
         vbox = QVBoxLayout()
 
-        self._list_widget = QListWidget()
+        self._list_widget = ClickableListWidget()
         self._list_widget.setSelectionMode(QAbstractItemView.NoSelection)
         self._list_widget.setStyleSheet("QListWidget::item:hover { border-bottom: 1px solid black; }")
         self._list_widget.itemClicked.connect(self.__on_item_clicked)

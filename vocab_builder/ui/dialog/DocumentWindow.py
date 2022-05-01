@@ -1,14 +1,13 @@
 from PyQt5.QtGui import QCloseEvent
-from PyQt5.QtWidgets import QDialog, QVBoxLayout, QHBoxLayout, QComboBox, QLabel, QPushButton, QApplication, QWidget, \
+from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QComboBox, QLabel, QPushButton, QApplication, QWidget, \
     QSizePolicy, QSpacerItem
 from anki.notes import Note
 
 from vocab_builder.domain.document.Document import Document
 from vocab_builder.domain.status.GlobalWordStatus import upsert_word_status, Status
-from vocab_builder.domain.word.Word import Word
 from vocab_builder.domain.word.WordStatus import WordStatus
 from vocab_builder.infrastructure import VocabBuilderDB
-from vocab_builder.ui.dialog.ContextListWidget import ContextListWidget
+from vocab_builder.ui.dialog.context.list.ContextListWidget import ContextListWidget
 from aqt import mw
 from aqt.utils import tooltip
 from aqt import gui_hooks
