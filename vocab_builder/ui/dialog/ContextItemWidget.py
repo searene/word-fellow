@@ -16,6 +16,7 @@ class ContextItemWidget(QtWidgets.QWidget):
 
     def __get_layout(self, short_html: str) -> QHBoxLayout:
         label = QLabel(short_html)
+        label.setTextInteractionFlags(QtCore.Qt.NoTextInteraction)
         widget_layout = QHBoxLayout()
         widget_layout.addWidget(label)
         widget_layout.setSizeConstraint(QLayout.SetFixedSize)

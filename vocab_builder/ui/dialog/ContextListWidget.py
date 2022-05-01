@@ -1,7 +1,7 @@
 from typing import Dict, Optional
 
 from PyQt5 import QtWidgets, QtCore
-from PyQt5.QtWidgets import QVBoxLayout, QLabel, QListWidget, QListWidgetItem
+from PyQt5.QtWidgets import QVBoxLayout, QLabel, QListWidget, QListWidgetItem, QAbstractItemView
 
 from vocab_builder.domain.document.Document import Document
 from vocab_builder.domain.word.Word import Word
@@ -76,7 +76,9 @@ class ContextListWidget(QtWidgets.QWidget):
         vbox = QVBoxLayout()
 
         self._list_widget = QListWidget()
-        self._list_widget.itemDoubleClicked.connect(self.__on_item_clicked)
+        self._list_widget.setSelectionMode(QAbstractItemView.NoSelection)
+        self._list_widget.setStyleSheet("QListWidget::item:hover { border-bottom: 1px solid black; }")
+        self._list_widget.itemClicked.connect(self.__on_item_clicked)
         vbox.addWidget(self._list_widget)
 
         self.__no_word_available_label = QLabel("No word is available")
