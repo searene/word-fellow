@@ -14,6 +14,7 @@ from vocab_builder.domain.document.analyzer.DefaultDocumentAnalyzer import Defau
 from vocab_builder.infrastructure import VocabBuilderDB
 from vocab_builder.ui.dialog.DocumentWindow import DocumentWindow
 from vocab_builder.ui.dialog.context.list.ClickableListWidget import ClickableListWidget
+from vocab_builder.ui.dialog.settings.SettingsDialog import SettingsDialog
 from vocab_builder.ui.util.DatabaseUtils import get_prod_vocab_builder_db
 from vocab_builder.ui.util.FileUtils import get_base_name_without_ext
 
@@ -48,8 +49,8 @@ class MainDialog(QDialog):
         return btn
 
     def __open_settings_dialog(self):
-        # TODO
-        pass
+        settings_dialog = SettingsDialog()
+        settings_dialog.exec_()
 
     def __get_import_new_document_button(self) -> QPushButton:
         btn = QPushButton("Add")
@@ -115,4 +116,5 @@ class MainDialog(QDialog):
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     ex = MainDialog(get_prod_vocab_builder_db())
+    ex.show()
     sys.exit(app.exec_())
