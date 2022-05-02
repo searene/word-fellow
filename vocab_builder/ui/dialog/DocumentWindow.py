@@ -119,6 +119,7 @@ class DocumentWindow(QWidget):
     def __get_prev_page_btn(self) -> QPushButton:
         btn = QPushButton("<")
         btn.setDisabled(True)
+        btn.setShortcut("Left")
         btn.clicked.connect(self.__prev_page)
         btn.setToolTip("Previous word")
         return btn
@@ -126,6 +127,7 @@ class DocumentWindow(QWidget):
     def __get_next_page_btn(self, context_list: ContextListWidget) -> QPushButton:
         btn = QPushButton(">")
         btn.clicked.connect(self.__next_page)
+        btn.setShortcut("Right")
         btn.setEnabled(self.__is_word_available())
         btn.setToolTip("Next word")
         return btn
@@ -134,28 +136,32 @@ class DocumentWindow(QWidget):
         self.close()
 
     def __get_add_to_anki_btn(self, is_word_available: bool) -> QPushButton:
-        res = QPushButton("Add to anki")
+        res = QPushButton("Add to anki (a)")
         res.setEnabled(is_word_available)
+        res.setShortcut("a")
         res.clicked.connect(lambda: self.__on_add_to_anki())
         res.setToolTip("Add the word to your anki deck")
         return res
 
     def __get_ignore_btn(self, is_word_available: bool) -> QPushButton:
-        res = QPushButton("Ignore")
+        res = QPushButton("Ignore (i)")
+        res.setShortcut("i")
         res.setEnabled(is_word_available)
         res.clicked.connect(lambda: self.__on_ignore())
         res.setToolTip("Ignore the word. You don't need to learn it.")
         return res
 
     def __get_know_btn(self, is_word_available: bool) -> QPushButton:
-        res = QPushButton("I Know It")
+        res = QPushButton("I Know It (k)")
+        res.setShortcut("k")
         res.setEnabled(is_word_available)
         res.clicked.connect(lambda: self.__on_know())
         res.setToolTip("Click it if you know the word, thus you don't need to add it to Anki.")
         return res
 
     def __get_study_later_btn(self, is_word_available: bool) -> QPushButton:
-        res = QPushButton("Study Later")
+        res = QPushButton("Study Later (s)")
+        res.setShortcut("s")
         res.setEnabled(is_word_available)
         res.clicked.connect(lambda: self.__on_study_later())
         res.setToolTip("Click it if you don't know the word, and you don't want to add it to anki now, you want to do it later.")
