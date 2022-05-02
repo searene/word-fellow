@@ -13,6 +13,7 @@ from vocab_builder.domain.document.DocumentService import DocumentService
 from vocab_builder.domain.document.analyzer.DefaultDocumentAnalyzer import DefaultDocumentAnalyzer
 from vocab_builder.infrastructure import VocabBuilderDB
 from vocab_builder.ui.dialog.DocumentWindow import DocumentWindow
+from vocab_builder.ui.dialog.context.list.ClickableListWidget import ClickableListWidget
 from vocab_builder.ui.util.DatabaseUtils import get_prod_vocab_builder_db
 from vocab_builder.ui.util.FileUtils import get_base_name_without_ext
 
@@ -73,8 +74,8 @@ class MainDialog(QDialog):
 
     def __add_document_list(self, parent: QVBoxLayout) -> None:
         self.__no_document_label = QLabel("No document is available.")
-        self.__list_widget = QListWidget()
-        self.__list_widget.itemDoubleClicked.connect(self.on_list_item_clicked)
+        self.__list_widget = ClickableListWidget()
+        self.__list_widget.itemClicked.connect(self.on_list_item_clicked)
         parent.addWidget(self.__no_document_label)
         parent.addWidget(self.__list_widget)
 

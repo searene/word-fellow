@@ -65,8 +65,6 @@ class ContextListWidget(QtWidgets.QWidget):
         vbox = QVBoxLayout()
 
         self._list_widget = ClickableListWidget()
-        self._list_widget.setSelectionMode(QAbstractItemView.NoSelection)
-        self._list_widget.setStyleSheet("QListWidget::item:hover { border-bottom: 1px solid black; }")
         self._list_widget.itemClicked.connect(self.__on_item_clicked)
         vbox.addWidget(self._list_widget)
 
