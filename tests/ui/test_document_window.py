@@ -1,11 +1,10 @@
+import sys
 import unittest
-from typing import Optional
 
 from PyQt5.QtCore import Qt
 from PyQt5.QtTest import QTest
-from aqt import AnkiApp
+from PyQt5.QtWidgets import QApplication
 
-from tests.anki_testing import anki_running
 from tests.utils import get_test_vocab_builder_db
 from tests.utils.UiUtils import get_visible_item_widget
 from vocab_builder.anki.MockedAnkiService import MockedAnkiService
@@ -20,15 +19,11 @@ from vocab_builder.ui.dialog.DocumentWindow import DocumentWindow
 class DocumentWindowTestCase(unittest.TestCase):
 
     def setUp(self):
-        self.anki_app: Optional[AnkiApp] = anki_running()
-        self.anki_app.__enter__()
+        self.app = QApplication(sys.argv)
         self.__db = get_test_vocab_builder_db()
         document_service = DocumentService(self.__db)
         self.__doc = document_service.import_document("test doc", "this is this", DefaultDocumentAnalyzer(self.__db))
         self.form = DocumentWindow(self.__doc, self.__db, MockedAnkiService())
-
-    def tearDown(self):
-        self.anki_app.__exit__(None, None, None)
 
     def test_should_give_the_same_contexts_when_switching_status_back(self):
         """Situation: Change the status from unreviewed to ignored, then to unreviewed again.
