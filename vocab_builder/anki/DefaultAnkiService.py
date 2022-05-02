@@ -1,5 +1,7 @@
 from typing import Callable
 
+from aqt.utils import showInfo
+
 from vocab_builder.anki.IAnkiService import IAnkiService
 import aqt
 from anki.notes import Note
@@ -16,5 +18,8 @@ class DefaultAnkiService(IAnkiService):
     def add_to_did_add_note_hook(self, callback: Callable[[Note], None]) -> None:
         aqt.gui_hooks.add_cards_did_add_note.append(callback)
 
-    def remove_did_add_note_hood(self, callback: Callable[[Note], None]) -> None:
+    def remove_from_did_add_note_hook(self, callback: Callable[[Note], None]) -> None:
         aqt.gui_hooks.add_cards_did_add_note.remove(callback)
+
+    def show_info_dialog(self, info: str) -> None:
+        showInfo(info)

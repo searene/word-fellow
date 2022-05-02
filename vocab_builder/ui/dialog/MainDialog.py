@@ -6,7 +6,9 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import (QPushButton, QApplication, QHBoxLayout, QVBoxLayout, QLabel, QDialog, QFileDialog,
                              QListWidgetItem, QSizePolicy)
 
+from vocab_builder.anki.DefaultAnkiService import DefaultAnkiService
 from vocab_builder.anki.IAnkiService import IAnkiService
+from vocab_builder.anki.MockedAnkiService import MockedAnkiService
 from vocab_builder.domain.document.Document import Document
 from vocab_builder.domain.document.DocumentService import DocumentService
 from vocab_builder.domain.document.analyzer.DefaultDocumentAnalyzer import DefaultDocumentAnalyzer
@@ -71,7 +73,7 @@ class MainDialog(QDialog):
         self.__list_widget.addItem(self.__to_list_item(doc))
         self.__list_widget.show()
         self.__no_document_label.hide()
-        self.__anki_service.show_tooltip("Importing is done")
+        self.__anki_service.show_info_dialog("Importing is done")
 
     def __add_document_list(self, parent: QVBoxLayout) -> None:
         self.__no_document_label = QLabel("No document is available.")
@@ -101,7 +103,7 @@ class MainDialog(QDialog):
         self.__open_document_dialog(doc)
 
     def __open_document_dialog(self, doc: Document):
-        doc_dialog = DocumentWindow(doc, self.__db, self.__anki_service.show_add_card_dialog)
+        doc_dialog = DocumentWindow(doc, self.__db, self.__anki_service)
         doc_dialog.show()
         self.close()
 
@@ -115,6 +117,6 @@ class MainDialog(QDialog):
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    ex = MainDialog(get_prod_vocab_builder_db())
+    ex = MainDialog(get_prod_vocab_builder_db(), MockedAnkiService())
     ex.show()
     sys.exit(app.exec_())

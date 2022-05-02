@@ -8,6 +8,7 @@ from aqt import AnkiApp
 from tests.anki_testing import anki_running
 from tests.utils import get_test_vocab_builder_db
 from tests.utils.UiUtils import get_visible_item_widget
+from vocab_builder.anki.MockedAnkiService import MockedAnkiService
 from vocab_builder.domain.document.DocumentService import DocumentService
 from vocab_builder.domain.document.analyzer.DefaultDocumentAnalyzer import DefaultDocumentAnalyzer
 from vocab_builder.domain.status import GlobalWordStatus
@@ -24,7 +25,7 @@ class DocumentWindowTestCase(unittest.TestCase):
         self.__db = get_test_vocab_builder_db()
         document_service = DocumentService(self.__db)
         self.__doc = document_service.import_document("test doc", "this is this", DefaultDocumentAnalyzer(self.__db))
-        self.form = DocumentWindow(self.__doc, self.__db, lambda: None)
+        self.form = DocumentWindow(self.__doc, self.__db, MockedAnkiService())
 
     def tearDown(self):
         self.anki_app.__exit__(None, None, None)
@@ -214,4 +215,4 @@ class DocumentWindowTestCase(unittest.TestCase):
         self.__doc = document_service.import_document("test doc", "this is this", DefaultDocumentAnalyzer(self.__db))
         GlobalWordStatus.upsert_word_status("this", Status.STUDYING, self.__db)
         GlobalWordStatus.upsert_word_status("is", Status.STUDYING, self.__db)
-        self.form = DocumentWindow(self.__doc, self.__db, lambda: None)
+        self.form = DocumentWindow(self.__doc, self.__db, MockedAnkiService())

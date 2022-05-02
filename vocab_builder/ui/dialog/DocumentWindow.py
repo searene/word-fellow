@@ -1,4 +1,4 @@
-from typing import Callable, Dict, Optional
+from typing import Dict, Optional
 
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QCloseEvent, QFont
@@ -6,21 +6,21 @@ from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QComboBox, QLabel, QPushBu
     QSizePolicy, QSpacerItem
 from anki.notes import Note
 
+from vocab_builder.anki.IAnkiService import IAnkiService
 from vocab_builder.domain.document.Document import Document
 from vocab_builder.domain.status.GlobalWordStatus import upsert_word_status, Status
 from vocab_builder.domain.word.Word import Word
 from vocab_builder.domain.word.WordStatus import WordStatus
 from vocab_builder.infrastructure import VocabBuilderDB
 from vocab_builder.ui.dialog.context.list.ContextListWidget import ContextListWidget
-import aqt
 
 
 class DocumentWindow(QWidget):
 
-    def __init__(self, doc: Document, db: VocabBuilderDB, anki_add_card_handler: Callable[[], None]):
+    def __init__(self, doc: Document, db: VocabBuilderDB, anki_service: IAnkiService):
         super(DocumentWindow, self).__init__()
-        self.__anki_add_card_handler = anki_add_card_handler
         self.__status_to_offset_dict: Dict[WordStatus, int] = {}
+        self.__anki_service = anki_service
         self.__db = db
         self.__doc = doc
         self.__offset = 0
@@ -31,11 +31,11 @@ class DocumentWindow(QWidget):
         self._context_list = self.__get_context_list(self.__word, self.__doc, self.__status, db, self.__status_to_offset_dict)
         self.__dialog_layout = self.__get_dialog_layout(self._word_label, self._context_list, doc, self.__status, self.__db)
         self.__init_ui(self.__dialog_layout)
-        aqt.gui_hooks.add_cards_did_add_note.append(self.__raise)
+        self.__anki_service.add_to_did_add_note_hook(self.__raise)
         self.showMaximized()
 
     def closeEvent(self, event: QCloseEvent) -> None:
-        aqt.gui_hooks.add_cards_did_add_note.remove(self.__raise)
+        self.__anki_service.remove_from_did_add_note_hook(self.__raise)
 
     def __raise(self, note: Note):
         self.raise_()
@@ -183,9 +183,9 @@ class DocumentWindow(QWidget):
         self.__update_ui()
 
     def __on_add_to_anki(self) -> None:
-        self.__anki_add_card_handler()
+        self.__anki_service.show_add_card_dialog()
         QApplication.clipboard().setText(self.__word.text)
-        aqt.utils.tooltip("The word has been copied into the clipboard.", 3000)
+        self.__anki_service.show_tooltip("The word has been copied into the clipboard")
 
         # Set the word status to STUDYING
         upsert_word_status(self.__word.text, Status.STUDYING, self.__db)
