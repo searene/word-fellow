@@ -1,6 +1,7 @@
 from PyQt5.QtWidgets import QDialog, QVBoxLayout, QTabWidget, QWidget
 
 from vocab_builder.ui.dialog.settings.BackupTab import BackupTab
+from vocab_builder.ui.dialog.settings.ResetTab import ResetTab
 
 
 class SettingsDialog(QDialog):
@@ -13,7 +14,7 @@ class SettingsDialog(QDialog):
         vbox = QVBoxLayout()
         tab_widget = QTabWidget()
         tab_widget.addTab(BackupTab(), "Backup")
-        # tab_widget.addTab(self.__get_reset_tab(), "Reset")
+        tab_widget.addTab(ResetTab(), "Reset")
         vbox.addWidget(tab_widget)
         self.setLayout(vbox)
 
