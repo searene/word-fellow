@@ -22,12 +22,3 @@ class Settings:
         if not isinstance(other, Settings):
             return False
         return self.__enable_backup == other.__enable_backup and self.__backup_count == other.__backup_count and self.__backup_folder_path == other.__backup_folder_path
-
-    @staticmethod
-    def init_database(db: VocabBuilderDB) -> None:
-        db.execute("""
-        CREATE TABLE IF NOT EXISTS settings (
-            contents TEXT NOT NULL
-        )
-        """)
-        # TODO insert default settings if there's no settings in the database
