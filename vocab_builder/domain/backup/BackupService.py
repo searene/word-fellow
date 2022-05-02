@@ -25,19 +25,28 @@ class BackupService:
             if not self.is_backup_file(file_name):
                 continue
             file_path = os.path.join(backup_config.backup_folder_path, file_name)
-            res.append(Backup(file_name, file_path))
+            res.append(Backup(file_path))
         return res
 
     def is_backup_file(self, file_name: str) -> bool:
         return file_name.startswith("anki_vocab_builder_backup_")
 
     def run_backup(self, db_path: str) -> Backup:
-        # TODO remove the oldest file if needed
         backup_config = self.get_backup_config()
         backup_file_name = Backup.name_prefix + self.__get_date_time_str() + Backup.name_suffix
         backup_file_path = os.path.join(backup_config.backup_folder_path, backup_file_name)
         shutil.copyfile(db_path, backup_file_path)
+        self.__remove_extra_backups()
         return Backup(backup_file_path)
+
+    def __remove_extra_backups(self) -> None:
+        backups = self.__sort_by_backup_time_desc(self.get_backups())
+        backup_config = self.get_backup_config()
+        for i in range(backup_config.backup_count, len(backups)):
+            os.remove(backups[i].backup_path)
+
+    def __sort_by_backup_time_desc(self, backups: [Backup]) -> [Backup]:
+        return sorted(backups, key=lambda backup: backup.get_backup_time(), reverse=True)
 
     def __get_date_time_str(self) -> str:
         now = datetime.datetime.now()

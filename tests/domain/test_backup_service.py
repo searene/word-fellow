@@ -26,6 +26,9 @@ class BackupTestCase(unittest.TestCase):
         self.__add_backup_files(self.__settings.backup_folder_path, [self.__backup_file_name1, self.__backup_file_name2])
         self.__backup_service = BackupService(self.__settings_service)
 
+    def tearDown(self) -> None:
+        FileUtils.remove_dir_if_exists(self.__settings.backup_folder_path)
+
     def test_get_backups(self):
         # Add an extra file to the backup folder and check that it is not returned
         self.__add_backup_files(self.__settings.backup_folder_path, ["extra_file.db"])
@@ -43,6 +46,16 @@ class BackupTestCase(unittest.TestCase):
         backup = self.__backup_service.run_backup(db_path)
         self.assertTrue(backup.backup_path.startswith(self.__settings.backup_folder_path))
         self.assertTrue(os.path.exists(backup.backup_path))
+
+    def test_should_remove_oldest_backup_file_when_the_number_of_backups_is_equal_to_backup_count(self):
+        db_path = self.__touch_db_file()
+        self.__settings.backup_count = 2
+        self.__settings_service.update_settings(self.__settings)
+        backup = self.__backup_service.run_backup(db_path)
+
+        backups = self.__backup_service.get_backups()
+        self.assertEqual(len(backups), 2)
+        self.assertTrue(backup in backups)
 
     def __add_backup_files(self, backup_folder_path: str, backup_file_names: [str]) -> None:
         for backup_file_name in backup_file_names:
