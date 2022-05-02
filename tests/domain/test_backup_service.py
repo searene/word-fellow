@@ -33,8 +33,8 @@ class BackupTestCase(unittest.TestCase):
         backups = self.__backup_service.get_backups()
 
         self.assertEqual(len(backups), 2)
-        expected_backup1 = Backup(self.__backup_file_name1, self.__get_backup_file_path(self.__backup_file_name1))
-        expected_backup2 = Backup(self.__backup_file_name2, self.__get_backup_file_path(self.__backup_file_name2))
+        expected_backup1 = Backup(self.__get_backup_file_path(self.__backup_file_name1))
+        expected_backup2 = Backup(self.__get_backup_file_path(self.__backup_file_name2))
         self.assertTrue(expected_backup1 in backups)
         self.assertTrue(expected_backup2 in backups)
 
