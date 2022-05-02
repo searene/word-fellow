@@ -61,7 +61,7 @@ class DocumentWindow(QWidget):
         hbox.addWidget(self._status_combo_box)
         return hbox
 
-    def __get_page_info_label(self, status: WordStatus, doc: Document, db: VocabBuilderDB, context_list: ContextListWidget) -> QLabel:
+    def __get_page_info_label(self, status: WordStatus, doc: Document, db: VocabBuilderDB) -> QLabel:
         page_info_label = QLabel()
         page_info_label.setMinimumWidth(50)
         page_info_label.setAlignment(Qt.AlignCenter)
@@ -108,8 +108,8 @@ class DocumentWindow(QWidget):
         res.addItem(QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum))
 
         self._prev_page_btn = self.__get_prev_page_btn()
-        self._page_info_label = self.__get_page_info_label(status, doc, db, context_list)
-        self._next_page_btn = self.__get_next_page_btn(context_list)
+        self._page_info_label = self.__get_page_info_label(status, doc, db)
+        self._next_page_btn = self.__get_next_page_btn()
         res.addWidget(self._prev_page_btn)
         res.addWidget(self._page_info_label)
         res.addWidget(self._next_page_btn)
@@ -124,7 +124,7 @@ class DocumentWindow(QWidget):
         btn.setToolTip("Previous word")
         return btn
 
-    def __get_next_page_btn(self, context_list: ContextListWidget) -> QPushButton:
+    def __get_next_page_btn(self) -> QPushButton:
         btn = QPushButton(">")
         btn.clicked.connect(self.__next_page)
         btn.setShortcut("Right")
