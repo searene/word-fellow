@@ -5,7 +5,7 @@ import aqt
 from PyQt5 import QtCore
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import (QPushButton, QApplication, QHBoxLayout, QVBoxLayout, QLabel, QDialog, QFileDialog,
-                             QListWidget, QListWidgetItem)
+                             QListWidget, QListWidgetItem, QSizePolicy)
 from aqt.utils import showInfo
 
 from vocab_builder.domain.document.Document import Document
@@ -29,6 +29,7 @@ class MainDialog(QDialog):
         vbox.addStretch(1)
         vbox.addLayout(self.__get_top_bar())
         self.__add_document_list(vbox)
+        vbox.addWidget(self.__get_import_new_document_button())
 
         self.setLayout(vbox)
         self.setWindowTitle("Vocab Builder")
@@ -36,8 +37,18 @@ class MainDialog(QDialog):
     def __get_top_bar(self) -> QHBoxLayout:
         hbox = QHBoxLayout()
         hbox.addWidget(QLabel("Documents"))
-        hbox.addWidget(self.__get_import_new_document_button())
+        hbox.addWidget(self.__get_settings_btn())
         return hbox
+
+    def __get_settings_btn(self) -> QPushButton:
+        btn = QPushButton("Settings")
+        btn.setSizePolicy(QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Preferred))
+        btn.clicked.connect(self.__open_settings_dialog)
+        return btn
+
+    def __open_settings_dialog(self):
+        # TODO
+        pass
 
     def __get_import_new_document_button(self) -> QPushButton:
         btn = QPushButton("Add")
