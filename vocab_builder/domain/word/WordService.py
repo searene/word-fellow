@@ -1,7 +1,6 @@
 import json
 from typing import List
 
-from vocab_builder.domain.word.Word import Word
 from vocab_builder.domain.word.WordValueObject import WordValueObject
 from vocab_builder.infrastructure import VocabBuilderDB
 from vocab_builder.infrastructure.utils import DBUtils
