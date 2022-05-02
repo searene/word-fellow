@@ -35,7 +35,7 @@ class SettingsService:
 
     def _get_default_settings(self) -> Settings:
         return Settings(
-            enable_backup=True,
+            backup_enabled=True,
             backup_count=5,
             backup_folder_path=self.__get_default_backup_folder()
         )
