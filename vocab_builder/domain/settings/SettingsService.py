@@ -42,7 +42,7 @@ class SettingsService:
 
     def __convert_dict_to_settings(self, settings_dict: Dict[str, Any]) -> Settings:
         return Settings(
-            settings_dict["enable_backup"],
+            settings_dict["backup_enabled"],
             settings_dict["backup_count"],
             settings_dict["backup_folder_path"],
         )
