@@ -10,7 +10,6 @@ class DocumentServiceTestCase(unittest.TestCase):
 
     def test_should_get_imported_document(self):
         db = get_test_vocab_builder_db()
-        Document.init_database(db)
         document_service = DocumentService(db)
 
         document_name = "test document"
@@ -24,7 +23,6 @@ class DocumentServiceTestCase(unittest.TestCase):
 
     def test_should_get_documents_after_creating_them(self):
         db = get_test_vocab_builder_db()
-        Document.init_database(db)
         document_service = DocumentService(db)
 
         document1 = document_service.create_new_document("test_document_name_1", "test_document_contents_1")
@@ -40,7 +38,6 @@ class DocumentServiceTestCase(unittest.TestCase):
 
         # prepare
         db = get_test_vocab_builder_db()
-        Document.init_database(db)
         document_service = DocumentService(db)
         document1 = document_service.create_new_document("test_document_name_1", "test_document_contents_1")
         document2 = document_service.create_new_document("test_document_name_2", "test_document_contents_2")
