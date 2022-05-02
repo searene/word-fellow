@@ -19,7 +19,6 @@ class SettingsService:
         settings_dict = self.__get_settings_dict_in_db()
         return self.__convert_dict_to_settings(settings_dict)
 
-    # TODO Move other init_database methods to the service class
     def init_database(self) -> None:
         self.__db.execute("""
         CREATE TABLE IF NOT EXISTS settings (
