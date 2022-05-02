@@ -1,12 +1,13 @@
 from datetime import datetime
 from pathlib import Path
 
+
 class Backup:
+    name_prefix = "anki_vocab_builder_backup_"
+    name_suffix = ".db"
 
     def __init__(self, backup_path: str):
         self.backup_path = backup_path
-        self.name_prefix = "anki_vocab_builder_backup_"
-        self.name_suffix = ".db"
 
     def get_backup_name(self) -> str:
         return Path(self.backup_path).name

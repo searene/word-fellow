@@ -38,6 +38,12 @@ class BackupTestCase(unittest.TestCase):
         self.assertTrue(expected_backup1 in backups)
         self.assertTrue(expected_backup2 in backups)
 
+    def test_run_backup(self):
+        db_path = self.__touch_db_file()
+        backup = self.__backup_service.run_backup(db_path)
+        self.assertTrue(backup.backup_path.startswith(self.__settings.backup_folder_path))
+        self.assertTrue(os.path.exists(backup.backup_path))
+
     def __add_backup_files(self, backup_folder_path: str, backup_file_names: [str]) -> None:
         for backup_file_name in backup_file_names:
             backup_file_path = os.path.join(backup_folder_path, backup_file_name)
@@ -45,6 +51,12 @@ class BackupTestCase(unittest.TestCase):
 
     def __get_backup_file_path(self, backup_file_name: str) -> str:
         return os.path.join(self.__settings.backup_folder_path, backup_file_name)
+
+    def __touch_db_file(self) -> str:
+        """Create an empty db file and return its absolute path."""
+        db_file_path = os.path.join(tempfile.gettempdir(), "vocab_builder.db")
+        Path(db_file_path).touch()
+        return db_file_path
 
 
 if __name__ == '__main__':

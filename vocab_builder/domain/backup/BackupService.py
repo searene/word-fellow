@@ -1,4 +1,6 @@
+import datetime
 import os.path
+import shutil
 
 from vocab_builder.domain.backup.Backup import Backup
 from vocab_builder.domain.backup.BackupConfig import BackupConfig
@@ -28,3 +30,15 @@ class BackupService:
 
     def is_backup_file(self, file_name: str) -> bool:
         return file_name.startswith("anki_vocab_builder_backup_")
+
+    def run_backup(self, db_path: str) -> Backup:
+        # TODO remove the oldest file if needed
+        backup_config = self.get_backup_config()
+        backup_file_name = Backup.name_prefix + self.__get_date_time_str() + Backup.name_suffix
+        backup_file_path = os.path.join(backup_config.backup_folder_path, backup_file_name)
+        shutil.copyfile(db_path, backup_file_path)
+        return Backup(backup_file_path)
+
+    def __get_date_time_str(self) -> str:
+        now = datetime.datetime.now()
+        return now.strftime("%Y%m%d%H%M%S")
