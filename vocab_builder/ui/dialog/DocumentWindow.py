@@ -249,7 +249,7 @@ class DocumentWindow(QWidget):
         res.setAlignment(Qt.AlignCenter)
         res.setFixedHeight(100)
         res.setText(self.__get_word_label_text(word))
-        res.setStyleSheet("QLabel { border: 1px dashed black; }")
+        res.setStyleSheet("QLabel { border: 1px solid #B7B7B7; }")
         return res
 
     def __get_word_label_text(self, word: Optional[Word]) -> str:

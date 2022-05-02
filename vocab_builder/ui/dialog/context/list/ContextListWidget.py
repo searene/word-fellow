@@ -99,4 +99,7 @@ class ContextListWidget(QtWidgets.QWidget):
         return context_item
 
     def __get_no_word_available_label(self) -> QLabel:
-        return QLabel("No word is available.")
+        res = QLabel("No word is available.")
+        res.setAlignment(QtCore.Qt.AlignCenter)
+        res.setStyleSheet("QLabel { border: 1px solid #B7B7B7; background: white; }")
+        return res
