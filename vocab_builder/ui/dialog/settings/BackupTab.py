@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QCheckBox, QLabel, QLineEdit, QHBoxLayout, QPushButton
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QCheckBox, QLabel, QLineEdit, QHBoxLayout, QPushButton, QSpinBox
 
 from vocab_builder.ui.dialog.context.list.ClickableListWidget import ClickableListWidget
 
@@ -10,7 +10,6 @@ class BackupTab(QWidget):
 
     def __setup_ui(self) -> None:
         vbox = QVBoxLayout()
-        # self.setStyleSheet("QLabel { margin-top: 10; } * {border: 1px solid black; }")
         vbox.setSpacing(15)
         self.__add_enable_backup_checkbox(vbox)
         self.__add_backup_count(vbox)
@@ -26,9 +25,9 @@ class BackupTab(QWidget):
         count_vbox = QVBoxLayout()
         count_vbox.setSpacing(5)
         backup_count_label = QLabel("Backup Count")
-        self._backup_count_line_edit = QLineEdit()
+        self._backup_count_spin_box = QSpinBox()
         count_vbox.addWidget(backup_count_label)
-        count_vbox.addWidget(self._backup_count_line_edit)
+        count_vbox.addWidget(self._backup_count_spin_box)
         vbox.addLayout(count_vbox)
 
     def __add_backup_path(self, vbox: QVBoxLayout) -> None:
