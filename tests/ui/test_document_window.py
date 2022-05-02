@@ -20,7 +20,7 @@ class DocumentWindowTestCase(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls) -> None:
-        cls.app = QApplication(sys.argv)
+        cls.__app = QApplication(sys.argv)
 
     def setUp(self):
         self.__db = get_test_vocab_builder_db()
