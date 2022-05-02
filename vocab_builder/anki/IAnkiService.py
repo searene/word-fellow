@@ -15,9 +15,9 @@ class IAnkiService(Protocol):
         pass
 
     @abstractmethod
-    def add_to_did_add_note_hook(self, callback: Callable[[Note], None]) -> None:
+    def add_to_did_add_note_hook(self, callback: Callable[['Note'], None]) -> None:
         pass
 
     @abstractmethod
-    def remove_did_add_note_hood(self, callback: Callable[[Note], None]) -> None:
+    def remove_did_add_note_hood(self, callback: Callable[['Note'], None]) -> None:
         pass

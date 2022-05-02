@@ -1,5 +1,6 @@
 import aqt
 
+from vocab_builder.anki.DefaultAnkiService import DefaultAnkiService
 from vocab_builder.domain import utils
 from vocab_builder.domain.document.DocumentService import DocumentService
 from vocab_builder.ui.dialog.MainDialog import MainDialog
@@ -28,7 +29,7 @@ def insert_test_data():
 
 
 def show_main_dialog() -> None:
-    main_dialog = MainDialog(get_prod_vocab_builder_db())
+    main_dialog = MainDialog(get_prod_vocab_builder_db(), DefaultAnkiService())
     main_dialog.show()
     main_dialog.exec_()
 

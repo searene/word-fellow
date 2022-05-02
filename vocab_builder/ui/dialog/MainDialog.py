@@ -1,13 +1,12 @@
 import sys
 from pathlib import Path
 
-import aqt
 from PyQt5 import QtCore
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import (QPushButton, QApplication, QHBoxLayout, QVBoxLayout, QLabel, QDialog, QFileDialog,
-                             QListWidget, QListWidgetItem, QSizePolicy)
-from aqt.utils import showInfo
+                             QListWidgetItem, QSizePolicy)
 
+from vocab_builder.anki.IAnkiService import IAnkiService
 from vocab_builder.domain.document.Document import Document
 from vocab_builder.domain.document.DocumentService import DocumentService
 from vocab_builder.domain.document.analyzer.DefaultDocumentAnalyzer import DefaultDocumentAnalyzer
@@ -21,9 +20,10 @@ from vocab_builder.ui.util.FileUtils import get_base_name_without_ext
 
 class MainDialog(QDialog):
 
-    def __init__(self, db: VocabBuilderDB):
+    def __init__(self, db: VocabBuilderDB, anki_service: IAnkiService):
         super().__init__()
         self.__db = db
+        self.__anki_service = anki_service
         self.__init_ui()
 
     def __init_ui(self):
@@ -71,7 +71,7 @@ class MainDialog(QDialog):
         self.__list_widget.addItem(self.__to_list_item(doc))
         self.__list_widget.show()
         self.__no_document_label.hide()
-        showInfo("Importing is done.")
+        self.__anki_service.show_tooltip("Importing is done")
 
     def __add_document_list(self, parent: QVBoxLayout) -> None:
         self.__no_document_label = QLabel("No document is available.")
@@ -101,7 +101,7 @@ class MainDialog(QDialog):
         self.__open_document_dialog(doc)
 
     def __open_document_dialog(self, doc: Document):
-        doc_dialog = DocumentWindow(doc, self.__db, aqt.mw.onAddCard)
+        doc_dialog = DocumentWindow(doc, self.__db, self.__anki_service.show_add_card_dialog)
         doc_dialog.show()
         self.close()
 
