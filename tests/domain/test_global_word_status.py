@@ -8,7 +8,6 @@ from vocab_builder.domain.status.GlobalWordStatus import GlobalWordStatus, inser
 class GlobalWordStatusTestCase(unittest.TestCase):
     def setUp(self) -> None:
         self.__db = get_test_vocab_builder_db()
-        GlobalWordStatus.init_database(self.__db)
 
     def test_word_should_be_unique(self):
         insert_word_status("test", Status.KNOWN, self.__db)

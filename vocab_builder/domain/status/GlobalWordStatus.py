@@ -27,15 +27,6 @@ class GlobalWordStatus:
         self.word = word
         self.global_status = global_status
 
-    @staticmethod
-    def init_database(db: VocabBuilderDB):
-        db.execute("""
-        CREATE TABLE IF NOT EXISTS global_word_status (
-            id INTEGER PRIMARY KEY,
-            word TEXT NOT NULL UNIQUE,
-            status TEXT NOT NULL
-        )
-        """)
 
 
 def insert_word_status(word: str, status: Status, db: VocabBuilderDB) -> GlobalWordStatus:

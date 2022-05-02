@@ -35,17 +35,6 @@ def get_words_by_document_id(document_id, db: VocabBuilderDB) -> [Word]:
     return convert_word_data_objects_to_words(words_data_objects)
 
 
-def init_database(db: VocabBuilderDB):
-    db.execute("""
-    CREATE TABLE IF NOT EXISTS words (
-        id INTEGER PRIMARY KEY,
-        text TEXT NOT NULL,
-        document_id INTEGER NOT NULL,
-        positions TEXT NOT NULL
-    )
-    """)
-
-
 def convert_word_data_objects_to_words(word_data_objects: List[Tuple]) -> List[Word]:
     return [convert_word_data_object_to_word(word_data_object)
             for word_data_object in word_data_objects]

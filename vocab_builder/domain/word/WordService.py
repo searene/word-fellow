@@ -37,3 +37,14 @@ def __get_insert_script(words: [WordValueObject], start: int, end: int) -> str:
         pos += 1
     script += "COMMIT;"
     return script
+
+
+def init_database(db: VocabBuilderDB):
+    db.execute("""
+    CREATE TABLE IF NOT EXISTS words (
+        id INTEGER PRIMARY KEY,
+        text TEXT NOT NULL,
+        document_id INTEGER NOT NULL,
+        positions TEXT NOT NULL
+    )
+    """)
