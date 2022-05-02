@@ -32,3 +32,12 @@ class DocumentService:
         self.db.execute("delete from documents")
         self.db.execute("delete from words")
         self.db.execute("delete from global_word_status")
+
+    def init_database(self):
+        self.db.execute("""
+        CREATE TABLE IF NOT EXISTS documents (
+            id INTEGER PRIMARY KEY,
+            name TEXT,
+            contents TEXT
+        )
+        """)

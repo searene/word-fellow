@@ -26,13 +26,3 @@ class Document:
         if not isinstance(other, Document):
             return False
         return self.document_id == other.document_id and self.name == other.name and self.contents == other.contents
-
-    @staticmethod
-    def init_database(db: VocabBuilderDB):
-        db.execute("""
-        CREATE TABLE IF NOT EXISTS documents (
-            id INTEGER PRIMARY KEY,
-            name TEXT,
-            contents TEXT
-        )
-        """)
