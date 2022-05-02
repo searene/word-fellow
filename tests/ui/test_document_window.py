@@ -18,8 +18,11 @@ from vocab_builder.ui.dialog.DocumentWindow import DocumentWindow
 
 class DocumentWindowTestCase(unittest.TestCase):
 
+    @classmethod
+    def setUpClass(cls) -> None:
+        cls.app = QApplication(sys.argv)
+
     def setUp(self):
-        self.app = QApplication(sys.argv)
         self.__db = get_test_vocab_builder_db()
         document_service = DocumentService(self.__db)
         self.__doc = document_service.import_document("test doc", "this is this", DefaultDocumentAnalyzer(self.__db))
