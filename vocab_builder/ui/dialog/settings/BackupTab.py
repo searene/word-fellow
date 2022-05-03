@@ -22,6 +22,7 @@ class BackupTab(QWidget):
     def __setup_ui(self) -> None:
         vbox = QVBoxLayout()
         vbox.setSpacing(15)
+        self.__add_tooltip(vbox)
         self.__add_enable_backup_checkbox(vbox)
         self.__add_backup_count(vbox)
         self.__add_backup_path(vbox)
@@ -106,6 +107,10 @@ class BackupTab(QWidget):
         list_vbox.addWidget(backup_list_label)
         list_vbox.addWidget(self._backup_list_widget)
         vbox.addLayout(list_vbox)
+
+    def __add_tooltip(self, vbox):
+        label = QLabel("After enabling backup, your files will be backed up to the selected folder once a day.")
+        vbox.addWidget(label)
 
 
 if __name__ == "__main__":
