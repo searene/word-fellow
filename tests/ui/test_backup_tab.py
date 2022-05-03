@@ -29,7 +29,6 @@ class BackupTabTestCase(unittest.TestCase):
 
         self.form = BackupTab(self.backup_service)
 
-
     def tearDown(self) -> None:
         FileUtils.remove_dir_if_exists(self.backup_service.get_backup_config().backup_folder_path)
 
@@ -66,11 +65,14 @@ class BackupTabTestCase(unittest.TestCase):
 
     def __create_fake_backups(self, backup_service: BackupService):
         backup_folder_path = backup_service.get_backup_config().backup_folder_path
-        backup_file1 = os.path.join(backup_folder_path, f"{Backup.name_prefix}2022050111000300{Backup.name_suffix}")
-        backup_file2 = os.path.join(backup_folder_path, f"{Backup.name_prefix}2022050111000500{Backup.name_suffix}")
-        Path(backup_file1).touch()
-        Path(backup_file2).touch()
+        self.__add_backup_file(backup_folder_path, "2022050111000300")
+        self.__add_backup_file(backup_folder_path, "2022050111000500")
 
     def __update_backup_folder_path_to_temp_folder(self, backup_service: BackupService) -> None:
         tempdir = FileUtils.create_temp_dir("anki_vocab_builder_backup")
         backup_service.update_backup_folder_path(tempdir)
+
+    def __add_backup_file(self, backup_folder_path: str, backup_date_time: str) -> str:
+        backup_file = os.path.join(backup_folder_path, f"{Backup.name_prefix}{backup_date_time}{Backup.name_suffix}")
+        Path(backup_file).touch()
+        return backup_file
