@@ -1,8 +1,8 @@
 import sys
 
+from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QCheckBox, QLabel, QLineEdit, QHBoxLayout, QPushButton, QSpinBox, \
     QApplication, QListWidgetItem
-from PyQt5.uic.properties import QtCore
 
 from tests.utils import get_test_vocab_builder_db
 from vocab_builder.domain.backup.BackupService import BackupService
@@ -40,7 +40,11 @@ class BackupTab(QWidget):
 
     def __add_enable_backup_checkbox(self, vbox: QVBoxLayout) -> None:
         self._enable_backup_checkbox = QCheckBox("Enable Backup")
+        self._enable_backup_checkbox.stateChanged.connect(self.__on_backup_checkbox_changed)
         vbox.addWidget(self._enable_backup_checkbox)
+
+    def __on_backup_checkbox_changed(self, new_state: int) -> None:
+        self.__backup_service.update_backup_enabled(True if new_state == Qt.CheckState.Checked else False)
 
     def __add_backup_count(self, vbox: QVBoxLayout) -> None:
         count_vbox = QVBoxLayout()

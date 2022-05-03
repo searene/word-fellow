@@ -7,7 +7,6 @@ from tests.utils import get_test_vocab_builder_db
 from vocab_builder.domain.backup.BackupService import BackupService
 from vocab_builder.domain.settings.SettingsService import SettingsService
 from vocab_builder.ui.dialog.settings.BackupTab import BackupTab
-from vocab_builder.ui.dialog.settings.SettingsDialog import SettingsDialog
 
 
 class BackupTabTestCase(unittest.TestCase):
@@ -33,3 +32,11 @@ class BackupTabTestCase(unittest.TestCase):
         self.assertEqual(self.form._backup_list_widget.count(), len(backups))
         for i in range(len(backups)):
             self.assertEqual(self.form._backup_list_widget.item(i).text(), backups[i].get_backup_name())
+
+    def test_toggle_enable_backup(self):
+        backup_config = self.backup_service.get_backup_config()
+        self.form._enable_backup_checkbox.setChecked(not backup_config.backup_enabled)
+
+        new_backup_config = self.backup_service.get_backup_config()
+        self.assertEqual(new_backup_config.backup_enabled, not backup_config.backup_enabled)
+
