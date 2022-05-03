@@ -40,3 +40,9 @@ class BackupTabTestCase(unittest.TestCase):
         new_backup_config = self.backup_service.get_backup_config()
         self.assertEqual(new_backup_config.backup_enabled, not backup_config.backup_enabled)
 
+    def test_change_backup_count(self):
+        backup_config = self.backup_service.get_backup_config()
+        self.form._backup_count_spin_box.setValue(backup_config.backup_count + 2)
+
+        new_backup_config = self.backup_service.get_backup_config()
+        self.assertEqual(new_backup_config.backup_count, backup_config.backup_count + 2)

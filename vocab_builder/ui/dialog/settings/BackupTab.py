@@ -1,7 +1,8 @@
 import sys
 
+from PyQt5 import QtCore
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QCheckBox, QLabel, QLineEdit, QHBoxLayout, QPushButton, QSpinBox, \
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QCheckBox, QLabel, QLineEdit, QHBoxLayout, QSpinBox, \
     QApplication, QListWidgetItem
 
 from tests.utils import get_test_vocab_builder_db
@@ -51,9 +52,13 @@ class BackupTab(QWidget):
         count_vbox.setSpacing(5)
         backup_count_label = QLabel("Backup Count")
         self._backup_count_spin_box = QSpinBox()
+        self._backup_count_spin_box.valueChanged.connect(self.__on_backup_count_spin_box_value_changed)
         count_vbox.addWidget(backup_count_label)
         count_vbox.addWidget(self._backup_count_spin_box)
         vbox.addLayout(count_vbox)
+
+    def __on_backup_count_spin_box_value_changed(self, new_value: int) -> None:
+        self.__backup_service.update_backup_count(new_value)
 
     def __add_backup_path(self, vbox: QVBoxLayout) -> None:
 

@@ -18,6 +18,16 @@ class BackupService:
         settings.backup_enabled = backup_enabled
         self.__settings_service.update_settings(settings)
 
+    def update_backup_count(self, backup_count: int) -> None:
+        settings = self.__settings_service.get_settings()
+        settings.backup_count = backup_count
+        self.__settings_service.update_settings(settings)
+
+    def update_backup_folder(self, backup_folder: str) -> None:
+        settings = self.__settings_service.get_settings()
+        settings.backup_folder_path = backup_folder
+        self.__settings_service.update_settings(settings)
+
     def get_backup_config(self) -> BackupConfig:
         return BackupConfig(self.__settings_service.get_settings())
 
