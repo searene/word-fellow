@@ -24,10 +24,11 @@ class BackupTabTestCase(unittest.TestCase):
         self.db = get_test_vocab_builder_db()
         settings_service = SettingsService(self.db)
         self.backup_service = BackupService(settings_service)
-        self.form = BackupTab(self.backup_service)
-
         self.__update_backup_folder_path_to_temp_folder(self.backup_service)
         self.__create_fake_backups(self.backup_service)
+
+        self.form = BackupTab(self.backup_service)
+
 
     def tearDown(self) -> None:
         FileUtils.remove_dir_if_exists(self.backup_service.get_backup_config().backup_folder_path)
@@ -61,7 +62,7 @@ class BackupTabTestCase(unittest.TestCase):
     def test_should_show_backup_list(self):
         backups = self.backup_service.get_backups()
         for i in range(self.form._backup_list_widget.count()):
-            self.assertEqual(self.form._backup_list_widget.item(i).text(), backups[i].get_backup_name())
+            self.assertTrue(self.form._backup_list_widget.item(i).text(), backups[i].get_backup_name())
 
     def __create_fake_backups(self, backup_service: BackupService):
         backup_folder_path = backup_service.get_backup_config().backup_folder_path
