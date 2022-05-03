@@ -34,7 +34,10 @@ class BackupTab(QWidget):
         self._enable_backup_checkbox.setChecked(backup_config.backup_enabled)
         self._backup_count_spin_box.setValue(backup_config.backup_count)
         self._backup_path_line_edit.setText(backup_config.backup_folder_path)
+        self.__update_backup_list()
         
+    def __update_backup_list(self):
+        self._backup_list_widget.clear()
         for backup in self.__backup_service.get_backups():
             item = QListWidgetItem()
             item.setText(backup.get_backup_name())
@@ -73,6 +76,7 @@ class BackupTab(QWidget):
         hbox = QHBoxLayout()
         self._backup_path_line_edit = QLineEdit(self)
         self._backup_path_line_edit.setReadOnly(True)
+        self._backup_path_line_edit.textChanged.connect(self.__on_backup_path_changed)
         self._change_path_btn = QPushButton("Change")
         self._change_path_btn.clicked.connect(self.__on_change_path_btn_clicked)
         hbox.addWidget(self._backup_path_line_edit)
@@ -81,12 +85,15 @@ class BackupTab(QWidget):
 
         vbox.addLayout(back_path_vbox)
 
+    def __on_backup_path_changed(self, new_path: str) -> None:
+        self.__backup_service.update_backup_folder_path(new_path)
+        self.__update_backup_list()
+
     def __on_change_path_btn_clicked(self) -> None:
         path = QFileDialog.getExistingDirectory(self, "Select Backup Folder", self._backup_path_line_edit.text())
-        if path:
-            self._backup_path_line_edit.setText(path)
-            self.__backup_service.update_backup_folder_path(path)
-            # TODO Change backup list
+        if not path:
+            return
+        self._backup_path_line_edit.textChanged.emit(path)
 
     def __on_backup_path_line_edit_text_changed(self, new_text: str) -> None:
         self.__backup_service.update_backup_folder_path(new_text)

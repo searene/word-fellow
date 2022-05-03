@@ -1,6 +1,5 @@
 import os
 import sys
-import tempfile
 import unittest
 from pathlib import Path
 
@@ -62,6 +61,15 @@ class BackupTabTestCase(unittest.TestCase):
         backups = self.backup_service.get_backups()
         for i in range(self.form._backup_list_widget.count()):
             self.assertTrue(self.form._backup_list_widget.item(i).text(), backups[i].get_backup_name())
+
+    def test_should_change_backup_list_when_changing_backup_folder_path(self):
+        tmp_dir = FileUtils.create_temp_dir()
+        backup_file = self.__add_backup_file(tmp_dir, "20220301110000")
+        self.form._backup_path_line_edit.textChanged.emit(tmp_dir)
+        self.assertEqual(self.form._backup_list_widget.count(), 1)
+        self.assertEqual(self.form._backup_list_widget.item(0).text(), Backup(backup_file).get_backup_name())
+
+        FileUtils.remove_dir_if_exists(tmp_dir)
 
     def __create_fake_backups(self, backup_service: BackupService):
         backup_folder_path = backup_service.get_backup_config().backup_folder_path
