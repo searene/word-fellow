@@ -1,7 +1,7 @@
 import sys
 from pathlib import Path
 
-from PyQt5 import QtCore
+from PyQt5 import QtCore, QtGui
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import (QPushButton, QApplication, QHBoxLayout, QVBoxLayout, QLabel, QDialog, QFileDialog,
                              QListWidgetItem, QSizePolicy)
@@ -9,11 +9,15 @@ from PyQt5.QtWidgets import (QPushButton, QApplication, QHBoxLayout, QVBoxLayout
 from vocab_builder.anki.DefaultAnkiService import DefaultAnkiService
 from vocab_builder.anki.IAnkiService import IAnkiService
 from vocab_builder.anki.MockedAnkiService import MockedAnkiService
+from vocab_builder.domain.backup.BackupService import BackupService
 from vocab_builder.domain.document.Document import Document
 from vocab_builder.domain.document.DocumentService import DocumentService
 from vocab_builder.domain.document.analyzer.DefaultDocumentAnalyzer import DefaultDocumentAnalyzer
-from vocab_builder.infrastructure import VocabBuilderDB
+from vocab_builder.domain.settings.SettingsService import SettingsService
+from vocab_builder.infrastructure import VocabBuilderDB, get_db_path
 from vocab_builder.ui.dialog.DocumentWindow import DocumentWindow
+from vocab_builder.ui.dialog.backup import BackupDialog
+from vocab_builder.ui.dialog.backup.BackupDialog import BackupDialog
 from vocab_builder.ui.dialog.context.list.ClickableListWidget import ClickableListWidget
 from vocab_builder.ui.dialog.settings.SettingsDialog import SettingsDialog
 from vocab_builder.ui.util.DatabaseUtils import get_prod_vocab_builder_db
@@ -27,6 +31,21 @@ class MainDialog(QDialog):
         self.__db = db
         self.__anki_service = anki_service
         self.__init_ui()
+
+    def closeEvent(self, event: QtGui.QCloseEvent) -> None:
+        settings_service = SettingsService(self.__db)
+        backup_service = BackupService(settings_service)
+
+        # TODO remove it
+        backup_service.delete_all_backups()
+
+        should_run_backup = backup_service.should_backup_today()
+        if not should_run_backup:
+            return
+        backup_dialog = BackupDialog(backup_service, get_db_path())
+        backup_dialog.show()
+        backup_dialog.raise_()
+        print("here")
 
     def __init_ui(self):
         vbox = QVBoxLayout()

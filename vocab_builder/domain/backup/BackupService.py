@@ -6,6 +6,7 @@ from pathlib import Path
 from vocab_builder.domain.backup.Backup import Backup
 from vocab_builder.domain.backup.BackupConfig import BackupConfig
 from vocab_builder.domain.settings.SettingsService import SettingsService
+from vocab_builder.domain.utils import FileUtils
 
 
 class BackupService:
@@ -56,6 +57,10 @@ class BackupService:
         shutil.copyfile(db_path, backup_file_path)
         self.__remove_extra_backups()
         return Backup(backup_file_path)
+
+    def delete_all_backups(self):
+        backup_config = self.get_backup_config()
+        FileUtils.remove_all_files_in_dir(backup_config.backup_folder_path)
 
     def should_backup_today(self) -> bool:
         """Return True if we haven't backed up today yet."""

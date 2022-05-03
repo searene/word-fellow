@@ -6,7 +6,7 @@ from vocab_builder.domain.settings.SettingsService import SettingsService
 from vocab_builder.infrastructure import get_db_path
 
 
-class Backup(QDialog):
+class BackupDialog(QDialog):
     def __init__(self, backup_service: BackupService, db_path: str):
         super().__init__()
         self.__init_ui()
@@ -46,6 +46,6 @@ if __name__ == "__main__":
     settings_service = SettingsService(db)
     backup_service = BackupService(settings_service)
     db_path = get_db_path()
-    dialog = Backup(backup_service, db_path)
+    dialog = BackupDialog(backup_service, db_path)
     dialog.show()
     app.exec_()
