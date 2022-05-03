@@ -8,6 +8,7 @@ from PyQt5.QtWidgets import QWidget, QVBoxLayout, QCheckBox, QLabel, QLineEdit, 
 from tests.utils import get_test_vocab_builder_db
 from vocab_builder.domain.backup.BackupService import BackupService
 from vocab_builder.domain.settings.SettingsService import SettingsService
+from vocab_builder.infrastructure import get_db_path
 from vocab_builder.ui.dialog.context.list.ClickableListWidget import ClickableListWidget
 from vocab_builder.ui.widget.ClickableLineEdit import ClickableLineEdit
 
@@ -105,6 +106,7 @@ if __name__ == "__main__":
     db = get_test_vocab_builder_db()
     settings_service = SettingsService(db)
     backup_service = BackupService(settings_service)
+    backup_service.run_backup(get_db_path())
     backup_tab = BackupTab(backup_service)
     backup_tab.show()
     sys.exit(app.exec_())

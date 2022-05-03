@@ -1,6 +1,7 @@
 import datetime
 import os.path
 import shutil
+from pathlib import Path
 
 from vocab_builder.domain.backup.Backup import Backup
 from vocab_builder.domain.backup.BackupConfig import BackupConfig
@@ -51,6 +52,8 @@ class BackupService:
         backup_config = self.get_backup_config()
         backup_file_name = Backup.name_prefix + self.__get_date_time_str() + Backup.name_suffix
         backup_file_path = os.path.join(backup_config.backup_folder_path, backup_file_name)
+        if not os.path.exists(Path(backup_file_path).parent):
+            os.makedirs(Path(backup_file_path).parent)
         shutil.copyfile(db_path, backup_file_path)
         self.__remove_extra_backups()
         return Backup(backup_file_path)
