@@ -72,7 +72,5 @@ class BackupTabTestCase(unittest.TestCase):
         Path(backup_file2).touch()
 
     def __update_backup_folder_path_to_temp_folder(self, backup_service: BackupService) -> None:
-        tempdir = tempfile.mkdtemp("anki_vocab_builder_test")
-        FileUtils.remove_dir_if_exists(tempdir)
-        os.mkdir(tempdir)
+        tempdir = FileUtils.create_temp_dir("anki_vocab_builder_backup")
         backup_service.update_backup_folder_path(tempdir)

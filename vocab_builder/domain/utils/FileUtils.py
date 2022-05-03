@@ -1,5 +1,7 @@
 import os
 import shutil
+import tempfile
+from typing import Optional
 
 
 def remove_dir_if_exists(directory: str) -> None:
@@ -16,3 +18,10 @@ def mkdirs(directory: str) -> None:
 def remove_all_files_in_dir(directory: str) -> None:
     shutil.rmtree(directory)
     os.makedirs(directory)
+
+
+def create_temp_dir(suffix: Optional[str] = None) -> str:
+    temp_dir = tempfile.mkdtemp(suffix)
+    remove_dir_if_exists(temp_dir)
+    mkdirs(temp_dir)
+    return temp_dir
