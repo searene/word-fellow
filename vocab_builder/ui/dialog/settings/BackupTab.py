@@ -94,6 +94,7 @@ class BackupTab(QWidget):
         path = QFileDialog.getExistingDirectory(self, "Select Backup Folder", self._backup_path_line_edit.text())
         if not path:
             return
+        self._backup_path_line_edit.setText(path)
         self._backup_path_line_edit.textChanged.emit(path)
 
     def __on_backup_path_line_edit_text_changed(self, new_text: str) -> None:
