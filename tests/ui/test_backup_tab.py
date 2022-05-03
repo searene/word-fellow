@@ -22,8 +22,14 @@ class BackupTabTestCase(unittest.TestCase):
         self.backup_service = BackupService(settings_service)
         self.form = BackupTab(self.backup_service)
 
-    def test_show_backup_settings_in_ui(self):
+    def test_show_backup_config(self):
         backup_config = self.backup_service.get_backup_config()
         self.assertEqual(self.form._enable_backup_checkbox.isChecked(), backup_config.backup_enabled)
         self.assertEqual(self.form._backup_count_spin_box.value(), backup_config.backup_count)
         self.assertEqual(self.form._backup_path_line_edit.text(), backup_config.backup_folder_path)
+
+    def test_show_backups(self):
+        backups = self.backup_service.get_backups()
+        self.assertEqual(self.form._backup_list_widget.count(), len(backups))
+        for i in range(len(backups)):
+            self.assertEqual(self.form._backup_list_widget.item(i).text(), backups[i].get_backup_name())
