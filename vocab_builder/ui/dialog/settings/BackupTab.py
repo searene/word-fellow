@@ -85,6 +85,7 @@ class BackupTab(QWidget):
         if path:
             self._backup_path_line_edit.setText(path)
             self.__backup_service.update_backup_folder_path(path)
+            # TODO Change backup list
 
     def __on_backup_path_line_edit_text_changed(self, new_text: str) -> None:
         self.__backup_service.update_backup_folder_path(new_text)
