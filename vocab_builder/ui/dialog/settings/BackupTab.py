@@ -70,10 +70,14 @@ class BackupTab(QWidget):
 
         hbox = QHBoxLayout()
         self._backup_path_line_edit = QLineEdit()
+        self._backup_path_line_edit.textChanged.connect(self.__on_backup_path_line_edit_text_changed)
         hbox.addWidget(self._backup_path_line_edit)
         back_path_vbox.addLayout(hbox)
 
         vbox.addLayout(back_path_vbox)
+
+    def __on_backup_path_line_edit_text_changed(self, new_text: str) -> None:
+        self.__backup_service.update_backup_folder_path(new_text)
 
     def __add_backup_list(self, vbox: QVBoxLayout) -> None:
         list_vbox = QVBoxLayout()

@@ -46,3 +46,10 @@ class BackupTabTestCase(unittest.TestCase):
 
         new_backup_config = self.backup_service.get_backup_config()
         self.assertEqual(new_backup_config.backup_count, backup_config.backup_count + 2)
+
+    def test_change_backup_folder_path(self):
+        backup_config = self.backup_service.get_backup_config()
+        self.form._backup_path_line_edit.setText(backup_config.backup_folder_path + "/abc")
+
+        new_backup_config = self.backup_service.get_backup_config()
+        self.assertEqual(new_backup_config.backup_folder_path, backup_config.backup_folder_path + "/abc")
