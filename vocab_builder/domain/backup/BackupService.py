@@ -5,6 +5,7 @@ import shutil
 from vocab_builder.domain.backup.Backup import Backup
 from vocab_builder.domain.backup.BackupConfig import BackupConfig
 from vocab_builder.domain.settings.SettingsService import SettingsService
+from vocab_builder.domain.utils import FileUtils
 
 
 class BackupService:
@@ -38,6 +39,13 @@ class BackupService:
         shutil.copyfile(db_path, backup_file_path)
         self.__remove_extra_backups()
         return Backup(backup_file_path)
+
+    def restore(self, backup: Backup, db_path: str) -> None:
+        db_dir = os.path.dirname(db_path)
+        target_backup_path = os.path.join(db_dir, backup.get_backup_file_name())
+        shutil.copyfile(backup.backup_path, target_backup_path)
+        os.remove(db_path)
+        os.rename(target_backup_path, db_path)
 
     def __remove_extra_backups(self) -> None:
         backups = self.__sort_by_backup_time_desc(self.get_backups())

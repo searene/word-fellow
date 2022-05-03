@@ -1,6 +1,7 @@
 import os
 import unittest
 import tempfile
+from datetime import datetime, timedelta
 
 from tests.utils import get_test_vocab_builder_db
 from vocab_builder.domain.backup.Backup import Backup
@@ -41,14 +42,23 @@ class BackupTestCase(unittest.TestCase):
         self.assertTrue(expected_backup1 in backups)
         self.assertTrue(expected_backup2 in backups)
 
+    def test_restore(self):
+        db_path = self.__create_test_db_file("contents1")
+        backup = self.__backup_service.run_backup(db_path)
+        db_path = self.__create_test_db_file("contents2")
+        self.__backup_service.restore(backup, db_path)
+        self.assertTrue(os.path.exists(db_path))
+        with open(db_path, 'r') as f:
+            self.assertEqual(f.read(), "contents1")
+
     def test_should_create_new_backup_file_when_the_number_of_backups_is_less_than_backup_count(self):
-        db_path = self.__touch_db_file()
+        db_path = self.__create_test_db_file("")
         backup = self.__backup_service.run_backup(db_path)
         self.assertTrue(backup.backup_path.startswith(self.__settings.backup_folder_path))
         self.assertTrue(os.path.exists(backup.backup_path))
 
     def test_should_remove_oldest_backup_file_when_the_number_of_backups_is_equal_to_backup_count(self):
-        db_path = self.__touch_db_file()
+        db_path = self.__create_test_db_file("")
         self.__settings.backup_count = 2
         self.__settings_service.update_settings(self.__settings)
         backup = self.__backup_service.run_backup(db_path)
@@ -60,15 +70,17 @@ class BackupTestCase(unittest.TestCase):
     def __add_backup_files(self, backup_folder_path: str, backup_file_names: [str]) -> None:
         for backup_file_name in backup_file_names:
             backup_file_path = os.path.join(backup_folder_path, backup_file_name)
-            Path(backup_file_path).touch()
+            with open(backup_file_path, 'w') as f:
+                f.write(backup_file_name)
 
     def __get_backup_file_path(self, backup_file_name: str) -> str:
         return os.path.join(self.__settings.backup_folder_path, backup_file_name)
 
-    def __touch_db_file(self) -> str:
+    def __create_test_db_file(self, test_file_contents: str) -> str:
         """Create an empty db file and return its absolute path."""
         db_file_path = os.path.join(tempfile.gettempdir(), "vocab_builder.db")
-        Path(db_file_path).touch()
+        with open(db_file_path, 'w') as f:
+            f.write(test_file_contents)
         return db_file_path
 
 

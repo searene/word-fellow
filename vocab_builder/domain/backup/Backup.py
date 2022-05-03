@@ -9,6 +9,9 @@ class Backup:
     def __init__(self, backup_path: str):
         self.backup_path = backup_path
 
+    def get_backup_file_name(self) -> str:
+        return Path(self.backup_path).name
+
     def get_backup_name(self) -> str:
         return Path(self.backup_path).name
 
