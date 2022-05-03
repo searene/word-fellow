@@ -23,10 +23,10 @@ class DocumentWindowTestCase(unittest.TestCase):
         cls.__app = QApplication(sys.argv)
 
     def setUp(self):
-        self.__db = get_test_vocab_builder_db()
-        document_service = DocumentService(self.__db)
-        self.__doc = document_service.import_document("test doc", "this is this", DefaultDocumentAnalyzer(self.__db))
-        self.form = DocumentWindow(self.__doc, self.__db, MockedAnkiService())
+        self.db = get_test_vocab_builder_db()
+        document_service = DocumentService(self.db)
+        self.doc = document_service.import_document("test doc", "this is this", DefaultDocumentAnalyzer(self.db))
+        self.form = DocumentWindow(self.doc, self.db, MockedAnkiService())
 
     def test_should_give_the_same_contexts_when_switching_status_back(self):
         """Situation: Change the status from unreviewed to ignored, then to unreviewed again.
@@ -208,9 +208,9 @@ class DocumentWindowTestCase(unittest.TestCase):
         self.form._status_combo_box.currentTextChanged.emit(status.value)
 
     def __use_form_with_all_words_studying(self) -> None:
-        document_service = DocumentService(self.__db)
+        document_service = DocumentService(self.db)
         document_service.remove_all()
-        self.__doc = document_service.import_document("test doc", "this is this", DefaultDocumentAnalyzer(self.__db))
-        GlobalWordStatus.upsert_word_status("this", Status.STUDYING, self.__db)
-        GlobalWordStatus.upsert_word_status("is", Status.STUDYING, self.__db)
-        self.form = DocumentWindow(self.__doc, self.__db, MockedAnkiService())
+        self.doc = document_service.import_document("test doc", "this is this", DefaultDocumentAnalyzer(self.db))
+        GlobalWordStatus.upsert_word_status("this", Status.STUDYING, self.db)
+        GlobalWordStatus.upsert_word_status("is", Status.STUDYING, self.db)
+        self.form = DocumentWindow(self.doc, self.db, MockedAnkiService())

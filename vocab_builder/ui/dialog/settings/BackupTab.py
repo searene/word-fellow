@@ -1,11 +1,17 @@
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QCheckBox, QLabel, QLineEdit, QHBoxLayout, QPushButton, QSpinBox
+import sys
 
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QCheckBox, QLabel, QLineEdit, QHBoxLayout, QPushButton, QSpinBox, \
+    QApplication
+
+from tests.utils import get_test_vocab_builder_db
+from vocab_builder.infrastructure import VocabBuilderDB
 from vocab_builder.ui.dialog.context.list.ClickableListWidget import ClickableListWidget
 
 
 class BackupTab(QWidget):
-    def __init__(self, parent=None):
-        super(BackupTab, self).__init__(parent)
+    def __init__(self, db: VocabBuilderDB):
+        super(BackupTab, self).__init__()
+        self.__db = db
         self.__setup_ui()
 
     def __setup_ui(self) -> None:
@@ -53,3 +59,10 @@ class BackupTab(QWidget):
         list_vbox.addWidget(backup_list_label)
         list_vbox.addWidget(self._back_list_widget)
         vbox.addLayout(list_vbox)
+
+
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    backup_tab = BackupTab(get_test_vocab_builder_db())
+    backup_tab.show()
+    sys.exit(app.exec_())
