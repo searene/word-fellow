@@ -3,12 +3,13 @@ import sys
 from PyQt5 import QtCore
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QCheckBox, QLabel, QLineEdit, QHBoxLayout, QSpinBox, \
-    QApplication, QListWidgetItem
+    QApplication, QListWidgetItem, QFileDialog, QPushButton
 
 from tests.utils import get_test_vocab_builder_db
 from vocab_builder.domain.backup.BackupService import BackupService
 from vocab_builder.domain.settings.SettingsService import SettingsService
 from vocab_builder.ui.dialog.context.list.ClickableListWidget import ClickableListWidget
+from vocab_builder.ui.widget.ClickableLineEdit import ClickableLineEdit
 
 
 class BackupTab(QWidget):
@@ -69,12 +70,21 @@ class BackupTab(QWidget):
         back_path_vbox.addWidget(backup_path_label)
 
         hbox = QHBoxLayout()
-        self._backup_path_line_edit = QLineEdit()
-        self._backup_path_line_edit.textChanged.connect(self.__on_backup_path_line_edit_text_changed)
+        self._backup_path_line_edit = QLineEdit(self)
+        self._backup_path_line_edit.setReadOnly(True)
+        self._change_path_btn = QPushButton("Change")
+        self._change_path_btn.clicked.connect(self.__on_change_path_btn_clicked)
         hbox.addWidget(self._backup_path_line_edit)
+        hbox.addWidget(self._change_path_btn)
         back_path_vbox.addLayout(hbox)
 
         vbox.addLayout(back_path_vbox)
+
+    def __on_change_path_btn_clicked(self) -> None:
+        path = QFileDialog.getExistingDirectory(self, "Select Backup Folder", self._backup_path_line_edit.text())
+        if path:
+            self._backup_path_line_edit.setText(path)
+            self.__backup_service.update_backup_folder_path(path)
 
     def __on_backup_path_line_edit_text_changed(self, new_text: str) -> None:
         self.__backup_service.update_backup_folder_path(new_text)

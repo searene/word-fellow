@@ -209,7 +209,7 @@ class DocumentWindowTestCase(unittest.TestCase):
 
     def __use_form_with_all_words_studying(self) -> None:
         document_service = DocumentService(self.db)
-        document_service.remove_all()
+        document_service.remove_all_documents_and_words()
         self.doc = document_service.import_document("test doc", "this is this", DefaultDocumentAnalyzer(self.db))
         GlobalWordStatus.upsert_word_status("this", Status.STUDYING, self.db)
         GlobalWordStatus.upsert_word_status("is", Status.STUDYING, self.db)

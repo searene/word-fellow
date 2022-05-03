@@ -43,7 +43,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         document2 = document_service.create_new_document("test_document_name_2", "test_document_contents_2")
 
         # invoke
-        document_service.remove_all()
+        document_service.remove_all_documents_and_words()
 
         # check
         document_list = document_service.get_document_list()

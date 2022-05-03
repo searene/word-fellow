@@ -16,8 +16,11 @@ def __init_database():
 
 
 def insert_test_data():
+    db = get_prod_vocab_builder_db()
+    db.execute("delete from documents")
+    db.execute("delete from words")
+    db.execute("delete from global_word_status")
     document_service = DocumentService(get_prod_vocab_builder_db())
-    document_service.remove_all()
     doc1 = document_service.create_new_document("test name1", "this is this this")
     doc2 = document_service.create_new_document("test name2", "test_contents2")
 

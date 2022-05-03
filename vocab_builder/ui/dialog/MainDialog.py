@@ -51,7 +51,7 @@ class MainDialog(QDialog):
         return btn
 
     def __open_settings_dialog(self):
-        settings_dialog = SettingsDialog()
+        settings_dialog = SettingsDialog(self.__db)
         settings_dialog.exec_()
 
     def __get_import_new_document_button(self) -> QPushButton:
