@@ -67,6 +67,18 @@ class BackupTestCase(unittest.TestCase):
         self.assertEqual(len(backups), 2)
         self.assertTrue(backup in backups)
 
+    def test_should_backup_if_we_have_not_backed_up_today(self):
+        should_backup = self.__backup_service.should_backup_today()
+
+        self.assertTrue(should_backup)
+
+    def test_should_not_backup_if_we_have_backed_up_today(self):
+        self.__add_backup_files(self.__settings.backup_folder_path, [f"{Backup.name_prefix}{datetime.now().strftime('%Y%m%d%H%M%S')}.db"])
+
+        should_backup = self.__backup_service.should_backup_today()
+
+        self.assertFalse(should_backup)
+
     def __add_backup_files(self, backup_folder_path: str, backup_file_names: [str]) -> None:
         for backup_file_name in backup_file_names:
             backup_file_path = os.path.join(backup_folder_path, backup_file_name)
