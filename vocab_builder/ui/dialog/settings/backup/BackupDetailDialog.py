@@ -11,6 +11,7 @@ from vocab_builder.domain.settings.SettingsService import SettingsService
 class BackupDetailDialog(QDialog):
 
     def __init__(self, parent: Optional[QWidget], backup: Backup, backup_service: BackupService):
+        self.__parent = parent
         super(BackupDetailDialog, self).__init__(parent)
         self.__setup_ui(backup, backup_service)
 
@@ -51,9 +52,10 @@ class BackupDetailDialog(QDialog):
         backup_service.restore(backup)
         msg = QMessageBox()
         msg.setIcon(QMessageBox.Information)
-        msg.setText("Restoration finished! Please reopen anki-vocab-builder.")
+        msg.setText("Restoration finished! Please close all anki-vocab-builder's windows and start it again to take effect.")
         msg.setWindowTitle("Restoration finished!")
         msg.buttonClicked.connect(self.__close)
+        msg.buttonClicked.connect(self.__parent.close)
 
     def __add_cancel_button(self, hbox: QHBoxLayout):
         cancel_button = QPushButton("Cancel")

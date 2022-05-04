@@ -24,7 +24,7 @@ class BackupTabTestCase(unittest.TestCase):
     def setUp(self) -> None:
         self.db = get_test_vocab_builder_db()
         settings_service = SettingsService(self.db)
-        self.backup_service = BackupService(settings_service)
+        self.backup_service = BackupService(settings_service, db_path=self.db.db_path)
         self.__update_backup_folder_path_to_temp_folder(self.backup_service)
         self.__create_fake_backups(self.backup_service)
 
@@ -104,7 +104,10 @@ class BackupTabTestCase(unittest.TestCase):
         QTest.mouseClick(self.form._backup_detail_dialog._restore_button, Qt.LeftButton)
 
         # check
-        restored_config = self.backup_service.get_backup_config()
+        new_db = get_test_vocab_builder_db()
+        new_settings_service = SettingsService(new_db)
+        new_backup_service = BackupService(new_settings_service, new_db)
+        restored_config = new_backup_service.get_backup_config()
         self.assertEqual(restored_config.backup_count, original_backup_config.backup_count)
 
     def __create_fake_backups(self, backup_service: BackupService):
