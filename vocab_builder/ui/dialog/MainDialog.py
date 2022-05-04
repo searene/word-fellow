@@ -1,23 +1,18 @@
 import sys
 from pathlib import Path
 
-from PyQt5 import QtCore, QtGui
+from PyQt5 import QtCore
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import (QPushButton, QApplication, QHBoxLayout, QVBoxLayout, QLabel, QDialog, QFileDialog,
                              QListWidgetItem, QSizePolicy)
 
-from vocab_builder.anki.DefaultAnkiService import DefaultAnkiService
 from vocab_builder.anki.IAnkiService import IAnkiService
 from vocab_builder.anki.MockedAnkiService import MockedAnkiService
-from vocab_builder.domain.backup.BackupService import BackupService
 from vocab_builder.domain.document.Document import Document
 from vocab_builder.domain.document.DocumentService import DocumentService
 from vocab_builder.domain.document.analyzer.DefaultDocumentAnalyzer import DefaultDocumentAnalyzer
-from vocab_builder.domain.settings.SettingsService import SettingsService
-from vocab_builder.infrastructure import VocabBuilderDB, get_prod_db_path
+from vocab_builder.infrastructure import VocabBuilderDB
 from vocab_builder.ui.dialog.DocumentWindow import DocumentWindow
-from vocab_builder.ui.dialog.backup import BackupDialog
-from vocab_builder.ui.dialog.backup.BackupDialog import BackupDialog
 from vocab_builder.ui.dialog.context.list.ClickableListWidget import ClickableListWidget
 from vocab_builder.ui.dialog.settings.SettingsDialog import SettingsDialog
 from vocab_builder.ui.util.DatabaseUtils import get_prod_vocab_builder_db
@@ -30,6 +25,7 @@ class MainDialog(QDialog):
         super().__init__()
         self.__db = db
         self.__anki_service = anki_service
+        self.__document_service = DocumentService(self.__db)
         self.__init_ui()
 
     def __init_ui(self):
@@ -70,10 +66,9 @@ class MainDialog(QDialog):
         doc_name = get_base_name_without_ext(document_file_path)
         doc_contents = Path(document_file_path).read_text()
 
-        document_service = DocumentService(self.__db)
         default_document_analyzer = DefaultDocumentAnalyzer(self.__db)
-        doc = document_service.import_document(doc_name, doc_contents, default_document_analyzer)
-        self.__list_widget.addItem(self.__to_list_item(doc))
+        doc = self.__document_service.import_document(doc_name, doc_contents, default_document_analyzer)
+        self.__list_widget.addItem(self.__to_list_item((doc.document_id, doc.name)))
         self.__list_widget.show()
         self.__no_document_label.hide()
         self.__anki_service.show_info_dialog("Importing is done")
@@ -85,27 +80,26 @@ class MainDialog(QDialog):
         parent.addWidget(self.__no_document_label)
         parent.addWidget(self.__list_widget)
 
-        document_service = DocumentService(get_prod_vocab_builder_db())
-        # TODO Store the contents of all the documents may not be a good idea
-        documents = document_service.get_document_list()
-        if len(documents) == 0:
+        doc_id_and_name_list = self.__document_service.get_document_id_and_name_list()
+        if len(doc_id_and_name_list) == 0:
             self.__list_widget.hide()
         else:
             self.__no_document_label.hide()
-            for doc in documents:
-                self.__list_widget.addItem(self.__to_list_item(doc))
+            for doc_id_and_name in doc_id_and_name_list:
+                self.__list_widget.addItem(self.__to_list_item(doc_id_and_name))
 
-    def __to_list_item(self, doc: Document) -> QListWidgetItem:
+    def __to_list_item(self, doc_id_and_name: (int, str)) -> QListWidgetItem:
         res = QListWidgetItem()
-        res.setText(doc.name)
-        res.setData(QtCore.Qt.UserRole, doc)
+        res.setText(doc_id_and_name[1])
+        res.setData(QtCore.Qt.UserRole, doc_id_and_name[0])
         return res
 
     def on_list_item_clicked(self, item: QListWidgetItem) -> None:
-        doc: Document = item.data(QtCore.Qt.UserRole)
-        self.__open_document_dialog(doc)
+        doc_id = item.data(QtCore.Qt.UserRole)
+        self.__open_document_dialog(doc_id)
 
-    def __open_document_dialog(self, doc: Document):
+    def __open_document_dialog(self, doc_id: int):
+        doc = self.__document_service.get_doc_by_id(doc_id)
         doc_dialog = DocumentWindow(doc, self.__db, self.__anki_service)
         doc_dialog.show()
         self.close()
@@ -114,7 +108,7 @@ class MainDialog(QDialog):
         hbox = QHBoxLayout()
         doc_btn = QPushButton(doc.name)
         hbox.addWidget(doc_btn, 0, Qt.AlignLeft)
-        doc_btn.clicked.connect(lambda: self.__open_document_dialog(doc))
+        doc_btn.clicked.connect(lambda: self.__open_document_dialog(doc.document_id))
         return hbox
 
 

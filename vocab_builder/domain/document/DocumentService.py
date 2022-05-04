@@ -34,6 +34,14 @@ class DocumentService:
         """)
         return convert_sql_res_to_document_object(query_res)
 
+    def get_doc_by_id(self, doc_id: int) -> Document:
+        query_res = self.db.fetch_all("""
+            select id, name, contents
+            from documents
+            where id = ?
+        """, (doc_id,))
+        return convert_sql_res_to_document_object(query_res)[0]
+
     def remove_all_documents_and_words(self) -> None:
         self.db.execute("delete from documents")
         self.db.execute("delete from words")
