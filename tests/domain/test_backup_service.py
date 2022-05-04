@@ -44,7 +44,7 @@ class BackupTestCase(unittest.TestCase):
     def test_restore(self):
         backup = self.__backup_service.run_backup()
         db_path = self.__create_test_db_file("contents2")
-        self.__backup_service.restore(backup, db_path)
+        self.__backup_service.restore(backup)
         self.assertTrue(os.path.exists(db_path))
         with open(db_path, 'r') as f:
             self.assertEqual(f.read(), "contents1")

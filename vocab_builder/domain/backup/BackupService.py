@@ -80,12 +80,12 @@ class BackupService:
         today = datetime.datetime.today()
         return last_backup_date.day != today.day or last_backup_date.month != today.month or last_backup_date.year != today.year
 
-    def restore(self, backup: Backup, db_path: str) -> None:
-        db_dir = os.path.dirname(db_path)
+    def restore(self, backup: Backup) -> None:
+        db_dir = os.path.dirname(self.__db_path)
         target_backup_path = os.path.join(db_dir, backup.get_backup_file_name())
         shutil.copyfile(backup.backup_path, target_backup_path)
-        os.remove(db_path)
-        os.rename(target_backup_path, db_path)
+        os.remove(self.__db_path)
+        os.rename(target_backup_path, self.__db_path)
 
     def __remove_extra_backups(self) -> None:
         backups = self.__sort_by_backup_time_desc(self.get_backups())
