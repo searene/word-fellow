@@ -86,7 +86,7 @@ class MainDialog(QDialog):
         parent.addWidget(self.__list_widget)
 
         document_service = DocumentService(get_prod_vocab_builder_db())
-        # Store the contents of all the documents may not be a good idea
+        # TODO Store the contents of all the documents may not be a good idea
         documents = document_service.get_document_list()
         if len(documents) == 0:
             self.__list_widget.hide()

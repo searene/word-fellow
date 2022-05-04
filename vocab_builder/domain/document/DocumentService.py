@@ -21,6 +21,12 @@ class DocumentService:
         document_analyzer.import_words(doc)
         return doc
 
+    def get_document_id_and_name_list(self) -> [(int, str)]:
+        return self.db.fetch_all("""
+            select id, name
+            from documents
+        """)
+
     def get_document_list(self) -> [Document]:
         query_res = self.db.fetch_all("""
             select id, name, contents
