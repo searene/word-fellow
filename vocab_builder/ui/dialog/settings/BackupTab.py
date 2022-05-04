@@ -10,7 +10,6 @@ from vocab_builder.domain.backup.BackupService import BackupService
 from vocab_builder.domain.settings.SettingsService import SettingsService
 from vocab_builder.infrastructure import get_db_path
 from vocab_builder.ui.dialog.context.list.ClickableListWidget import ClickableListWidget
-from vocab_builder.ui.widget.ClickableLineEdit import ClickableLineEdit
 
 
 class BackupTab(QWidget):
