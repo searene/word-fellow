@@ -32,15 +32,6 @@ class MainDialog(QDialog):
         self.__anki_service = anki_service
         self.__init_ui()
 
-    def closeEvent(self, event: QtGui.QCloseEvent) -> None:
-        settings_service = SettingsService(self.__db)
-        backup_service = BackupService(settings_service)
-        should_run_backup = backup_service.should_backup_today()
-        if not should_run_backup:
-            return
-        backup_dialog = BackupDialog(backup_service, get_db_path())
-        backup_dialog.exec_()
-
     def __init_ui(self):
         vbox = QVBoxLayout()
         vbox.addStretch(1)
