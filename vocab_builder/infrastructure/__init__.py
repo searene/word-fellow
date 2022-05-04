@@ -13,5 +13,5 @@ def get_db_path() -> str:
     return os.path.join(config_folder, "vocab_builder.db")
 
 
-def get_vocab_builder_db() -> VocabBuilderDB:
+def create_prod_vocab_builder_db() -> VocabBuilderDB:
     return VocabBuilderDB(get_db_path())
