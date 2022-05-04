@@ -19,6 +19,7 @@ from vocab_builder.ui.dialog.backup.BackupWorker import BackupWorker
 from vocab_builder.ui.dialog.context.list.ContextListWidget import ContextListWidget
 
 
+# TODO Deal with the case where the document contains HTML
 class DocumentWindow(QWidget):
 
     def __init__(self, doc: Document, db: VocabBuilderDB, anki_service: IAnkiService):

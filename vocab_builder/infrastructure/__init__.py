@@ -4,7 +4,6 @@ from vocab_builder.infrastructure.VocabBuilderDB import VocabBuilderDB
 
 
 def get_prod_db_path() -> str:
-    # TODO consider supporting auto-backup and suggesting restore when there's no data
     # TODO Allow user to reset the data
     home_dir = os.path.expanduser("~")
     config_folder = os.path.join(home_dir, ".anki-vocab-builder")
