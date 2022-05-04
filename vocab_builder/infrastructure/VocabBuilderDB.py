@@ -6,7 +6,7 @@ from contextlib import closing
 class VocabBuilderDB:
     def __init__(self, db_path: str):
         self.__conn = connect(db_path)
-        self.__db_path = db_path
+        self.db_path = db_path
 
     def execute(self, sql: str, *params: Tuple) -> None:
         with self.__conn:  # auto-commits
