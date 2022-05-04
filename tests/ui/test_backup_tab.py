@@ -89,28 +89,6 @@ class BackupTabTestCase(unittest.TestCase):
         self.assertTrue(self.form._backup_path_line_edit.isEnabled())
         self.assertTrue(self.form._backup_count_spin_box.isEnabled())
 
-    # TODO Consider moving this test to test_backup_details_dialog
-    def test_restore(self):
-        original_backup_config = self.backup_service.get_backup_config()
-        backup = self.backup_service.run_backup()
-        self.form._update_ui()
-
-        # make some changes
-        self.backup_service.update_backup_count(original_backup_config.backup_count + 1)
-
-        # restore
-        backup_item = self.__get_backup_item(backup)
-        QTest.mouseClick(self.form._backup_list_widget.viewport(), Qt.LeftButton,
-                         pos=self.form._backup_list_widget.visualItemRect(backup_item).center())
-        QTest.mouseClick(self.form._backup_detail_dialog._restore_button, Qt.LeftButton)
-
-        # check
-        new_db = get_test_vocab_builder_db()
-        new_settings_service = SettingsService(new_db)
-        new_backup_service = BackupService(new_settings_service, new_db)
-        restored_config = new_backup_service.get_backup_config()
-        self.assertEqual(restored_config.backup_count, original_backup_config.backup_count)
-
     def __create_fake_backups(self, backup_service: BackupService):
         backup_folder_path = backup_service.get_backup_config().backup_folder_path
         self.__add_backup_file(backup_folder_path, "20220501110003")
