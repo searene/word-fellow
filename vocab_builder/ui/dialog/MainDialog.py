@@ -35,17 +35,11 @@ class MainDialog(QDialog):
     def closeEvent(self, event: QtGui.QCloseEvent) -> None:
         settings_service = SettingsService(self.__db)
         backup_service = BackupService(settings_service)
-
-        # TODO remove it
-        backup_service.delete_all_backups()
-
         should_run_backup = backup_service.should_backup_today()
         if not should_run_backup:
             return
         backup_dialog = BackupDialog(backup_service, get_db_path())
-        backup_dialog.show()
-        backup_dialog.raise_()
-        print("here")
+        backup_dialog.exec_()
 
     def __init_ui(self):
         vbox = QVBoxLayout()
@@ -53,7 +47,6 @@ class MainDialog(QDialog):
         vbox.addLayout(self.__get_top_bar())
         self.__add_document_list(vbox)
         vbox.addWidget(self.__get_import_new_document_button())
-
         self.setLayout(vbox)
         self.setWindowTitle("Vocab Builder")
 
