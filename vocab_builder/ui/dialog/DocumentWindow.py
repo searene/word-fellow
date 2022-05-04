@@ -1,6 +1,6 @@
 from typing import Dict, Optional
 
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QThread
 from PyQt5.QtGui import QCloseEvent, QFont
 from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QComboBox, QLabel, QPushButton, QApplication, QWidget, \
     QSizePolicy, QSpacerItem
@@ -15,6 +15,7 @@ from vocab_builder.domain.word.Word import Word
 from vocab_builder.domain.word.WordStatus import WordStatus
 from vocab_builder.infrastructure import VocabBuilderDB, get_db_path
 from vocab_builder.ui.dialog.backup.BackupDialog import BackupDialog
+from vocab_builder.ui.dialog.backup.BackupWorker import BackupWorker
 from vocab_builder.ui.dialog.context.list.ContextListWidget import ContextListWidget
 
 
@@ -42,9 +43,18 @@ class DocumentWindow(QWidget):
         self.__run_backup()
 
     def __run_backup(self):
-        settings_service = SettingsService(self.__db)
-        backup_service = BackupService(settings_service)
-        backup_service.run_backup()
+
+        self.__thread = QThread()
+
+        self.__backup_worker = BackupWorker(self.__db.db_path)
+        self.__backup_worker.moveToThread(self.__thread)
+        self.__backup_worker.finished.connect(self.__thread.quit)
+        self.__backup_worker.finished.connect(self.__backup_worker.deleteLater)
+
+        self.__thread.started.connect(self.__backup_worker.run)
+        self.__thread.finished.connect(self.__thread.deleteLater)
+
+        self.__thread.start()
 
     def __show_backup_dialog(self, db: VocabBuilderDB) -> None:
         settings_service = SettingsService(db)
