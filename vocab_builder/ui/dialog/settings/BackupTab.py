@@ -42,6 +42,7 @@ class BackupTab(QWidget):
             item = QListWidgetItem()
             item.setText(backup.get_backup_name())
             item.setData(QtCore.Qt.UserRole, backup.backup_path)
+            item.setToolTip("Click to see details.")
             self._backup_list_widget.addItem(item)
 
     def __add_enable_backup_checkbox(self, vbox: QVBoxLayout) -> None:
