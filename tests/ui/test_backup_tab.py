@@ -3,6 +3,7 @@ import sys
 import unittest
 from pathlib import Path
 
+from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QApplication
 
 from tests.utils import get_test_vocab_builder_db
@@ -71,6 +72,23 @@ class BackupTabTestCase(unittest.TestCase):
         self.assertEqual(self.form._backup_list_widget.item(0).text(), Backup(backup_file).get_backup_name())
 
         FileUtils.remove_dir_if_exists(tmp_dir)
+
+    def test_should_disable_backup_widgets_when_its_disabled(self):
+        self.form._enable_backup_checkbox.stateChanged.emit(Qt.Unchecked)
+        self.assertFalse(self.form._backup_path_line_edit.isEnabled())
+        self.assertFalse(self.form._backup_count_spin_box.isEnabled())
+        self.assertFalse(self.form._backup_list_widget.isEnabled())
+
+    def test_should_enable_backup_widgets_when_starting_up(self):
+        self.assertTrue(self.form._backup_path_line_edit.isEnabled())
+        self.assertTrue(self.form._backup_count_spin_box.isEnabled())
+        self.assertTrue(self.form._backup_list_widget.isEnabled())
+
+    def test_should_enable_backup_widgets_when_its_enabled(self):
+        self.form._enable_backup_checkbox.stateChanged.emit(Qt.Checked)
+        self.assertTrue(self.form._backup_path_line_edit.isEnabled())
+        self.assertTrue(self.form._backup_count_spin_box.isEnabled())
+        self.assertTrue(self.form._backup_list_widget.isEnabled())
 
     def __create_fake_backups(self, backup_service: BackupService):
         backup_folder_path = backup_service.get_backup_config().backup_folder_path

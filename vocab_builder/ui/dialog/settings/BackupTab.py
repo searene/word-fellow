@@ -50,7 +50,10 @@ class BackupTab(QWidget):
         vbox.addWidget(self._enable_backup_checkbox)
 
     def __on_backup_checkbox_changed(self, new_state: int) -> None:
-        self.__backup_service.update_backup_enabled(True if new_state == Qt.CheckState.Checked else False)
+        self.__backup_service.update_backup_enabled(new_state == Qt.Checked)
+        self._backup_path_line_edit.setEnabled(new_state == Qt.Checked)
+        self._backup_count_spin_box.setEnabled(new_state == Qt.Checked)
+        self._backup_list_widget.setEnabled(new_state == Qt.Checked)
 
     def __add_backup_count(self, vbox: QVBoxLayout) -> None:
         count_vbox = QVBoxLayout()
