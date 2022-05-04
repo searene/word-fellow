@@ -13,7 +13,7 @@ from vocab_builder.domain.settings.SettingsService import SettingsService
 from vocab_builder.domain.status.GlobalWordStatus import upsert_word_status, Status
 from vocab_builder.domain.word.Word import Word
 from vocab_builder.domain.word.WordStatus import WordStatus
-from vocab_builder.infrastructure import VocabBuilderDB, get_db_path
+from vocab_builder.infrastructure import VocabBuilderDB, get_prod_db_path
 from vocab_builder.ui.dialog.backup.BackupDialog import BackupDialog
 from vocab_builder.ui.dialog.backup.BackupWorker import BackupWorker
 from vocab_builder.ui.dialog.context.list.ContextListWidget import ContextListWidget
@@ -62,7 +62,7 @@ class DocumentWindow(QWidget):
         should_run_backup = backup_service.should_backup_today()
         if not should_run_backup:
             return
-        backup_dialog = BackupDialog(backup_service, get_db_path())
+        backup_dialog = BackupDialog(backup_service, get_prod_db_path())
         backup_dialog.exec_()
 
     def __raise(self, note: Note):

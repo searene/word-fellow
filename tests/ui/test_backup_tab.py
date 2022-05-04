@@ -4,7 +4,8 @@ import unittest
 from pathlib import Path
 
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QApplication
+from PyQt5.QtTest import QTest
+from PyQt5.QtWidgets import QApplication, QListWidgetItem
 
 from tests.utils import get_test_vocab_builder_db
 from vocab_builder.domain.backup.Backup import Backup
@@ -87,12 +88,29 @@ class BackupTabTestCase(unittest.TestCase):
         self.form._enable_backup_checkbox.stateChanged.emit(Qt.Checked)
         self.assertTrue(self.form._backup_path_line_edit.isEnabled())
         self.assertTrue(self.form._backup_count_spin_box.isEnabled())
-        self.assertTrue(self.form._backup_list_widget.isEnabled())
+
+    def test_restore(self):
+        original_backup_config = self.backup_service.get_backup_config()
+        backup = self.backup_service.run_backup()
+        self.form._update_ui()
+
+        # make some changes
+        self.backup_service.update_backup_count(original_backup_config.backup_count + 1)
+
+        # restore
+        backup_item = self.__get_backup_item(backup)
+        QTest.mouseClick(self.form._backup_list_widget.viewport(), Qt.LeftButton,
+                         pos=self.form._backup_list_widget.visualItemRect(backup_item).center())
+        QTest.mouseClick(self.form._backup_detail_dialog._restore_button, Qt.LeftButton)
+
+        # check
+        restored_config = self.backup_service.get_backup_config()
+        self.assertEqual(restored_config.backup_count, original_backup_config.backup_count)
 
     def __create_fake_backups(self, backup_service: BackupService):
         backup_folder_path = backup_service.get_backup_config().backup_folder_path
-        self.__add_backup_file(backup_folder_path, "2022050111000300")
-        self.__add_backup_file(backup_folder_path, "2022050111000500")
+        self.__add_backup_file(backup_folder_path, "20220501110003")
+        self.__add_backup_file(backup_folder_path, "20220501110005")
 
     def __update_backup_folder_path_to_temp_folder(self, backup_service: BackupService) -> None:
         tempdir = FileUtils.create_temp_dir("anki_vocab_builder_backup")
@@ -102,3 +120,16 @@ class BackupTabTestCase(unittest.TestCase):
         backup_file = os.path.join(backup_folder_path, f"{Backup.name_prefix}{backup_date_time}{Backup.name_suffix}")
         Path(backup_file).touch()
         return backup_file
+
+    def __get_backups_item_from_backup_list_widget(self) -> [QListWidgetItem]:
+        res = []
+        for i in range(self.form._backup_list_widget.count()):
+            res.append(self.form._backup_list_widget.item(i))
+        return res
+
+    def __get_backup_item(self, backup: Backup) -> QListWidgetItem:
+        items = self.__get_backups_item_from_backup_list_widget()
+        for item in items:
+            if item.text() == backup.get_backup_name():
+                return item
+        raise Exception(f"Backup {backup.get_backup_name()} not found")

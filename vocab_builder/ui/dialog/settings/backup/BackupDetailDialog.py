@@ -43,9 +43,9 @@ class BackupDetailDialog(QDialog):
         vbox.addLayout(hbox)
 
     def __add_restore_button(self, hbox: QHBoxLayout, backup: Backup, backup_service: BackupService):
-        restore_button = QPushButton("Yes, restore it")
-        restore_button.clicked.connect(lambda: self.__start_restore(backup, backup_service))
-        hbox.addWidget(restore_button)
+        self._restore_button = QPushButton("Yes, restore it")
+        self._restore_button.clicked.connect(lambda: self.__start_restore(backup, backup_service))
+        hbox.addWidget(self._restore_button)
 
     def __start_restore(self, backup: Backup, backup_service: BackupService):
         backup_service.restore(backup)

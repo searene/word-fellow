@@ -6,10 +6,12 @@ from PyQt5.QtWidgets import QWidget, QVBoxLayout, QCheckBox, QLabel, QLineEdit, 
     QApplication, QListWidgetItem, QFileDialog, QPushButton, QMessageBox
 
 from tests.utils import get_test_vocab_builder_db
+from vocab_builder.domain.backup.Backup import Backup
 from vocab_builder.domain.backup.BackupService import BackupService
 from vocab_builder.domain.settings.SettingsService import SettingsService
-from vocab_builder.infrastructure import get_db_path
+from vocab_builder.infrastructure import get_prod_db_path
 from vocab_builder.ui.dialog.context.list.ClickableListWidget import ClickableListWidget
+from vocab_builder.ui.dialog.settings.backup.BackupDetailDialog import BackupDetailDialog
 
 
 class BackupTab(QWidget):
@@ -26,10 +28,10 @@ class BackupTab(QWidget):
         self.__add_backup_count(vbox)
         self.__add_backup_path(vbox)
         self.__add_backup_list(vbox)
-        self.__update_ui()
+        self._update_ui()
         self.setLayout(vbox)
         
-    def __update_ui(self) -> None:
+    def _update_ui(self) -> None:
         backup_config = self.__backup_service.get_backup_config()
         self._enable_backup_checkbox.setChecked(backup_config.backup_enabled)
         self._backup_count_spin_box.setValue(backup_config.backup_count)
@@ -108,9 +110,15 @@ class BackupTab(QWidget):
         list_vbox.setSpacing(5)
         backup_list_label = QLabel("Backup List")
         self._backup_list_widget = ClickableListWidget()
+        self._backup_list_widget.itemClicked.connect(self.__on_backup_list_item_clicked)
         list_vbox.addWidget(backup_list_label)
         list_vbox.addWidget(self._backup_list_widget)
         vbox.addLayout(list_vbox)
+
+    def __on_backup_list_item_clicked(self, item: QListWidgetItem) -> None:
+        backup = Backup(item.data(Qt.UserRole))
+        self._backup_detail_dialog = BackupDetailDialog(self, backup, self.__backup_service)
+        self._backup_detail_dialog.show()
 
     def __add_tooltip(self, vbox):
         label = QLabel("After enabling backup, your files will be backed up to the selected folder once a day.")

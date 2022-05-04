@@ -14,7 +14,7 @@ from vocab_builder.domain.document.Document import Document
 from vocab_builder.domain.document.DocumentService import DocumentService
 from vocab_builder.domain.document.analyzer.DefaultDocumentAnalyzer import DefaultDocumentAnalyzer
 from vocab_builder.domain.settings.SettingsService import SettingsService
-from vocab_builder.infrastructure import VocabBuilderDB, get_db_path
+from vocab_builder.infrastructure import VocabBuilderDB, get_prod_db_path
 from vocab_builder.ui.dialog.DocumentWindow import DocumentWindow
 from vocab_builder.ui.dialog.backup import BackupDialog
 from vocab_builder.ui.dialog.backup.BackupDialog import BackupDialog

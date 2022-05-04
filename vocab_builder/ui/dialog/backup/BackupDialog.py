@@ -3,7 +3,7 @@ from PyQt5.QtWidgets import QDialog, QVBoxLayout, QLabel, QPushButton, QApplicat
 from tests.utils import get_test_vocab_builder_db
 from vocab_builder.domain.backup.BackupService import BackupService
 from vocab_builder.domain.settings.SettingsService import SettingsService
-from vocab_builder.infrastructure import get_db_path
+from vocab_builder.infrastructure import get_prod_db_path
 
 
 class BackupDialog(QDialog):
@@ -38,7 +38,7 @@ if __name__ == "__main__":
     app = QApplication([])
     db = get_test_vocab_builder_db()
     settings_service = SettingsService(db)
-    backup_service = BackupService(settings_service, get_db_path())
+    backup_service = BackupService(settings_service, get_prod_db_path())
     dialog = BackupDialog(backup_service)
     dialog.show()
     app.exec_()

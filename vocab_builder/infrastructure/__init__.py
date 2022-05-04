@@ -3,7 +3,7 @@ import os.path
 from vocab_builder.infrastructure.VocabBuilderDB import VocabBuilderDB
 
 
-def get_db_path() -> str:
+def get_prod_db_path() -> str:
     # TODO consider supporting auto-backup and suggesting restore when there's no data
     # TODO Allow user to reset the data
     home_dir = os.path.expanduser("~")
@@ -14,4 +14,4 @@ def get_db_path() -> str:
 
 
 def create_prod_vocab_builder_db() -> VocabBuilderDB:
-    return VocabBuilderDB(get_db_path())
+    return VocabBuilderDB(get_prod_db_path())

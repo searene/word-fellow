@@ -8,12 +8,12 @@ from vocab_builder.domain.backup.Backup import Backup
 from vocab_builder.domain.backup.BackupConfig import BackupConfig
 from vocab_builder.domain.settings.SettingsService import SettingsService
 from vocab_builder.domain.utils import FileUtils
-from vocab_builder.infrastructure import get_db_path
+from vocab_builder.infrastructure import get_prod_db_path
 
 
 class BackupService:
 
-    def __init__(self, settings_service: SettingsService, db_path = get_db_path()):
+    def __init__(self, settings_service: SettingsService, db_path = get_prod_db_path()):
         self.__settings_service = settings_service
         self.__db_path = db_path
 
