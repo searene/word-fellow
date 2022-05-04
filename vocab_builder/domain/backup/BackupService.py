@@ -50,7 +50,7 @@ class BackupService:
         return res
 
     def is_backup_file(self, file_name: str) -> bool:
-        return file_name.startswith("anki_vocab_builder_backup_")
+        return file_name.startswith(Backup.name_prefix) and file_name.endswith(Backup.name_suffix)
 
     def run_backup(self, force_run=False) -> Optional[Backup]:
         backup_config = self.get_backup_config()
@@ -62,7 +62,8 @@ class BackupService:
         backup_file_path = os.path.join(backup_config.backup_folder_path, backup_file_name)
         if not os.path.exists(Path(backup_file_path).parent):
             os.makedirs(Path(backup_file_path).parent)
-        shutil.copyfile(self.__db_path, backup_file_path)
+        shutil.copyfile(self.__db_path, backup_file_path + ".tmp")
+        os.rename(backup_file_path + ".tmp", backup_file_path)
         self.__remove_extra_backups()
         return Backup(backup_file_path)
 
