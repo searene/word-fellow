@@ -2,6 +2,7 @@ import datetime
 import os.path
 import shutil
 from pathlib import Path
+from typing import Optional
 
 from vocab_builder.domain.backup.Backup import Backup
 from vocab_builder.domain.backup.BackupConfig import BackupConfig
@@ -50,8 +51,12 @@ class BackupService:
     def is_backup_file(self, file_name: str) -> bool:
         return file_name.startswith("anki_vocab_builder_backup_")
 
-    def run_backup(self) -> Backup:
+    def run_backup(self, force_run=False) -> Optional[Backup]:
         backup_config = self.get_backup_config()
+        if force_run or (backup_config.backup_enabled and self.should_backup_today()):
+            return self.__do_run_backup(backup_config)
+
+    def __do_run_backup(self, backup_config: BackupConfig) -> Backup:
         backup_file_name = Backup.name_prefix + self.__get_date_time_str() + Backup.name_suffix
         backup_file_path = os.path.join(backup_config.backup_folder_path, backup_file_name)
         if not os.path.exists(Path(backup_file_path).parent):

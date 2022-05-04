@@ -10,7 +10,7 @@ class BackupDialog(QDialog):
     def __init__(self, backup_service: BackupService, db_path: str):
         super().__init__()
         self.__init_ui()
-        backup_service.run_backup(db_path)
+        backup_service.run_backup()
 
     def __init_ui(self):
         self.__layout_vbox = QVBoxLayout()
