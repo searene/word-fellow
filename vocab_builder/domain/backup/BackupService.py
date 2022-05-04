@@ -7,12 +7,14 @@ from vocab_builder.domain.backup.Backup import Backup
 from vocab_builder.domain.backup.BackupConfig import BackupConfig
 from vocab_builder.domain.settings.SettingsService import SettingsService
 from vocab_builder.domain.utils import FileUtils
+from vocab_builder.infrastructure import get_db_path
 
 
 class BackupService:
 
-    def __init__(self, settings_service: SettingsService):
+    def __init__(self, settings_service: SettingsService, db_path: str = get_db_path()):
         self.__settings_service = settings_service
+        self.__db_path = db_path
 
     def update_backup_enabled(self, backup_enabled: bool) -> None:
         settings = self.__settings_service.get_settings()
@@ -48,13 +50,13 @@ class BackupService:
     def is_backup_file(self, file_name: str) -> bool:
         return file_name.startswith("anki_vocab_builder_backup_")
 
-    def run_backup(self, db_path: str) -> Backup:
+    def run_backup(self) -> Backup:
         backup_config = self.get_backup_config()
         backup_file_name = Backup.name_prefix + self.__get_date_time_str() + Backup.name_suffix
         backup_file_path = os.path.join(backup_config.backup_folder_path, backup_file_name)
         if not os.path.exists(Path(backup_file_path).parent):
             os.makedirs(Path(backup_file_path).parent)
-        shutil.copyfile(db_path, backup_file_path)
+        shutil.copyfile(self.__db_path, backup_file_path)
         self.__remove_extra_backups()
         return Backup(backup_file_path)
 

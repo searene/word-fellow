@@ -3,7 +3,7 @@ from PyQt5.QtWidgets import QDialog, QVBoxLayout, QTabWidget, QWidget
 from tests.utils import get_test_vocab_builder_db
 from vocab_builder.domain.backup.BackupService import BackupService
 from vocab_builder.domain.settings.SettingsService import SettingsService
-from vocab_builder.infrastructure import VocabBuilderDB
+from vocab_builder.infrastructure import VocabBuilderDB, get_db_path
 from vocab_builder.ui.dialog.settings.BackupTab import BackupTab
 from vocab_builder.ui.dialog.settings.ResetTab import ResetTab
 

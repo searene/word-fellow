@@ -10,6 +10,7 @@ from vocab_builder.domain.backup.Backup import Backup
 from vocab_builder.domain.backup.BackupService import BackupService
 from vocab_builder.domain.settings.SettingsService import SettingsService
 from vocab_builder.domain.utils import FileUtils
+from vocab_builder.infrastructure import get_db_path
 from vocab_builder.ui.dialog.settings.BackupTab import BackupTab
 
 

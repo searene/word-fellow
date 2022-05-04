@@ -39,7 +39,7 @@ class DocumentWindow(QWidget):
 
     def closeEvent(self, event: QCloseEvent) -> None:
         self.__anki_service.remove_from_did_add_note_hook(self.__raise)
-        self.__show_backup_dialog(self.__db)
+        # self.__show_backup_dialog(self.__db)
 
     def __show_backup_dialog(self, db: VocabBuilderDB) -> None:
         settings_service = SettingsService(db)

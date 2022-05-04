@@ -118,7 +118,6 @@ if __name__ == "__main__":
     db = get_test_vocab_builder_db()
     settings_service = SettingsService(db)
     backup_service = BackupService(settings_service)
-    backup_service.run_backup(get_db_path())
     backup_tab = BackupTab(backup_service)
     backup_tab.show()
     sys.exit(app.exec_())
