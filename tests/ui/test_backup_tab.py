@@ -89,6 +89,7 @@ class BackupTabTestCase(unittest.TestCase):
         self.assertTrue(self.form._backup_path_line_edit.isEnabled())
         self.assertTrue(self.form._backup_count_spin_box.isEnabled())
 
+    # TODO Consider moving this test to test_backup_details_dialog
     def test_restore(self):
         original_backup_config = self.backup_service.get_backup_config()
         backup = self.backup_service.run_backup()

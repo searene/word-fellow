@@ -32,7 +32,8 @@ def insert_test_data():
 
 
 def show_main_dialog() -> None:
-    main_dialog = MainDialog(get_prod_vocab_builder_db(), DefaultAnkiService())
+    db = get_prod_vocab_builder_db()
+    main_dialog = MainDialog(db, DefaultAnkiService())
     main_dialog.show()
     main_dialog.exec_()
 
