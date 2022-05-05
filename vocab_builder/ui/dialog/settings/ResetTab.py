@@ -38,7 +38,6 @@ class ResetTab(QWidget):
             msg.setIcon(QMessageBox.Information)
             msg.setText("Reset is finished. Please close all of anki-vocab-builder's windows and restart it again to take effect.")
             msg.setWindowTitle("Finished")
-            # TODO should init database when clicking on the addon's menu item, instead of when Anki starts
             msg.buttonClicked.connect(self.__close_parent)
             msg.exec_()
 

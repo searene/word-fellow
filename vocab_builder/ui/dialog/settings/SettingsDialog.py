@@ -14,7 +14,7 @@ class SettingsDialog(QDialog):
         super(SettingsDialog, self).__init__()
         self.__db = db
         self.__settings_service = SettingsService(self.__db)
-        self.__reset_service = ResetService(self.__db.db_path)
+        self.__reset_service = ResetService(self.__db)
         self.__backup_service = BackupService(self.__settings_service)
         self.__setup_ui()
 
