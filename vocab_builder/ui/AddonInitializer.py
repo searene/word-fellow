@@ -12,7 +12,7 @@ from vocab_builder.ui.util.DatabaseUtils import get_prod_vocab_builder_db
 
 def __init_database():
     utils.init_database(get_prod_vocab_builder_db())
-    insert_test_data()
+    # insert_test_data()
 
 
 def insert_test_data():
