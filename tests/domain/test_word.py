@@ -178,9 +178,8 @@ COMMIT;""", ))
         self.assertEqual(short_and_long_contexts, [expected_short_and_long_contexts1, expected_short_and_long_contexts2])
 
     def test_to_html(self):
-        word_context = WordContext("test", "abc test xyz", 4)
+        word_context = WordContext("test", "abc\n< test \nxyz", 6)
 
         html = word_context.to_html()
 
-        self.assertEqual(html, "abc <b>test</b> xyz")
-
+        self.assertEqual(html, "abc<br>&lt; <b>test</b> <br>xyz")

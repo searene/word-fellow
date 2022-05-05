@@ -1,4 +1,5 @@
 from typing import Dict, List, TYPE_CHECKING
+from html import escape
 
 if TYPE_CHECKING:
     from vocab_builder.domain.document.Document import Document
@@ -18,7 +19,10 @@ class WordContext:
         return self.context[self.word_pos_in_context + len(self.word):]
 
     def to_html(self):
-        return f"{self.get_prefix()}<b>{self.word}</b>{self.get_suffix()}"
+        return f"{self.__preprocess(self.get_prefix())}<b>{self.__preprocess(self.word)}</b>{self.__preprocess(self.get_suffix())}"
+
+    def __preprocess(self, text: str):
+        return escape(text).replace("\n", "<br>")
 
     def __eq__(self, other):
         if not isinstance(other, WordContext):
