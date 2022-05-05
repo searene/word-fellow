@@ -11,6 +11,8 @@ from vocab_builder.anki.MockedAnkiService import MockedAnkiService
 from vocab_builder.domain.document.Document import Document
 from vocab_builder.domain.document.DocumentService import DocumentService
 from vocab_builder.domain.document.analyzer.DefaultDocumentAnalyzer import DefaultDocumentAnalyzer
+from vocab_builder.domain.reset.ResetService import ResetService
+from vocab_builder.domain.utils import init_database
 from vocab_builder.infrastructure import VocabBuilderDB
 from vocab_builder.ui.dialog.DocumentWindow import DocumentWindow
 from vocab_builder.ui.dialog.context.list.ClickableListWidget import ClickableListWidget
@@ -30,7 +32,6 @@ class MainDialog(QDialog):
 
     def __init_ui(self):
         vbox = QVBoxLayout()
-        vbox.addStretch(1)
         vbox.addLayout(self.__get_top_bar())
         self.__add_document_list(vbox)
         vbox.addWidget(self.__get_import_new_document_button())
@@ -74,7 +75,12 @@ class MainDialog(QDialog):
         self.__anki_service.show_info_dialog("Importing is done")
 
     def __add_document_list(self, parent: QVBoxLayout) -> None:
-        self.__no_document_label = QLabel("No document is available.")
+        self.__no_document_label = QLabel("No document is available, click the \"Add\" button below to start importing.")
+        self.__no_document_label.setStyleSheet("QLabel { background-color : white; }")
+        self.__no_document_label.setSizePolicy(QSizePolicy(QSizePolicy.MinimumExpanding, QSizePolicy.MinimumExpanding))
+        self.__no_document_label.setMinimumHeight(200)
+        self.__no_document_label.setContentsMargins(20, 20, 20, 20)
+        self.__no_document_label.setAlignment(Qt.AlignCenter)
         self.__list_widget = ClickableListWidget()
         self.__list_widget.itemClicked.connect(self.on_list_item_clicked)
         parent.addWidget(self.__no_document_label)
@@ -114,6 +120,13 @@ class MainDialog(QDialog):
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    ex = MainDialog(get_prod_vocab_builder_db(), MockedAnkiService())
+    db = get_prod_vocab_builder_db()
+
+    init_database(db)
+    db.execute("delete from documents")
+    db.execute("delete from words")
+    db.execute("delete from global_word_status")
+
+    ex = MainDialog(db, MockedAnkiService())
     ex.show()
     sys.exit(app.exec_())

@@ -30,13 +30,9 @@ def insert_test_data():
     ]
     WordService.batch_insert(word_value_objects, get_prod_vocab_builder_db())
 
-    word_value_objects2 = [
-        WordValueObject.WordValueObject("skip", doc2.document_id, {"skip": [0, 8]}),
-    ]
-    WordService.batch_insert(word_value_objects2, get_prod_vocab_builder_db())
-
 
 def show_main_dialog() -> None:
+    __init_database()
     db = get_prod_vocab_builder_db()
     main_dialog = MainDialog(db, DefaultAnkiService())
     main_dialog.show()
@@ -44,10 +40,6 @@ def show_main_dialog() -> None:
 
 
 def init_addon() -> None:
-    __init_database()
-    # create a new menu item, "test"
     action = aqt.qt.QAction("Anki Vocab Builder", aqt.mw)
-    # set it to call testFunction when it's clicked
     aqt.qt.qconnect(action.triggered, show_main_dialog)
-    # and add it to the tools menu
     aqt.mw.form.menuTools.addAction(action)
