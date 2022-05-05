@@ -54,6 +54,11 @@ class DocumentService:
         self.db.execute("delete from words")
         self.db.execute("delete from global_word_status")
 
+    def delete_doc_and_words(self, doc_id: int) -> None:
+        """Delete document and all words in it."""
+        self.db.execute("delete from documents where id = ?", (doc_id,))
+        self.db.execute("delete from words where document_id = ?", (doc_id,))
+
     def init_database(self):
         self.db.execute("""
         CREATE TABLE IF NOT EXISTS documents (
