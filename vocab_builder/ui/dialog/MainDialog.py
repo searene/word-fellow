@@ -13,13 +13,14 @@ from vocab_builder.domain.document.DocumentService import DocumentService
 from vocab_builder.domain.document.analyzer.DefaultDocumentAnalyzer import DefaultDocumentAnalyzer
 from vocab_builder.domain.utils import init_database
 from vocab_builder.infrastructure import VocabBuilderDB
-from vocab_builder.ui.dialog.DocumentWindow import DocumentWindow
+from vocab_builder.ui.dialog.document.DocumentWindow import DocumentWindow
 from vocab_builder.ui.dialog.context.list.ClickableListWidget import ClickableListWidget
 from vocab_builder.ui.dialog.settings.SettingsDialog import SettingsDialog
 from vocab_builder.ui.util.DatabaseUtils import get_prod_vocab_builder_db
 from vocab_builder.ui.util.FileUtils import get_base_name_without_ext
 
 
+# TODO Give the user an option to delete a document
 class MainDialog(QDialog):
 
     def __init__(self, db: VocabBuilderDB, anki_service: IAnkiService):
@@ -59,6 +60,7 @@ class MainDialog(QDialog):
         return btn
 
     def __open_import_new_document_dialog(self):
+        # TODO Limit extensions
         document_file_path, file_filters = QFileDialog.getOpenFileName(self, 'Select document', '', '')
         if len(document_file_path) == 0:
             # The user didn't select any file

@@ -27,6 +27,13 @@ class DocumentService:
             from documents
         """)
 
+    def get_document_name(self, doc_id: int) -> str:
+        return self.db.fetch_one("""
+            select name
+            from documents
+            where id = ?
+        """, (doc_id,))[0]
+
     def get_document_list(self) -> [Document]:
         query_res = self.db.fetch_all("""
             select id, name, contents

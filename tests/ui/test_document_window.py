@@ -12,7 +12,7 @@ from vocab_builder.domain.document.analyzer.DefaultDocumentAnalyzer import Defau
 from vocab_builder.domain.status import GlobalWordStatus
 from vocab_builder.domain.status.GlobalWordStatus import Status
 from vocab_builder.domain.word.WordStatus import WordStatus
-from vocab_builder.ui.dialog.DocumentWindow import DocumentWindow
+from vocab_builder.ui.dialog.document.DocumentWindow import DocumentWindow
 
 
 class DocumentWindowTestCase(BaseTestCase):
