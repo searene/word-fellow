@@ -1,5 +1,3 @@
-import unittest
-
 from base.BaseTestCase import BaseTestCase
 from vocab_builder.domain.document.DocumentService import DocumentService
 from vocab_builder.domain.document.analyzer.DefaultDocumentAnalyzer import DefaultDocumentAnalyzer
