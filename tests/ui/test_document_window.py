@@ -55,46 +55,46 @@ class DocumentWindowTestCase(unittest.TestCase):
     def test_should_go_to_next_page_when_clicking_on_ignore(self):
         QTest.mouseClick(self.form._ignore_btn, Qt.LeftButton)
         short_htmls = self.__get_widget_list_htmls()
-        self.assertEqual(short_htmls, ["this <b>is</b> this"])
+        self.assertEqual(short_htmls, ["this <b><u>is</u></b> this"])
 
     def test_should_show_ignored_contexts_when_a_word_is_ignored(self):
         QTest.mouseClick(self.form._ignore_btn, Qt.LeftButton)
         self.__change_status(WordStatus.IGNORED)
         short_htmls = self.__get_widget_list_htmls()
-        self.assertEqual(short_htmls, ["<b>this</b> is this", "this is <b>this</b>"])
+        self.assertEqual(short_htmls, ["<b><u>this</u></b> is this", "this is <b><u>this</u></b>"])
 
     def test_should_go_to_next_page_when_clicking_on_study_later(self):
         QTest.mouseClick(self.form._study_later_btn, Qt.LeftButton)
         short_htmls = self.__get_widget_list_htmls()
-        self.assertEqual(short_htmls, ["this <b>is</b> this"])
+        self.assertEqual(short_htmls, ["this <b><u>is</u></b> this"])
 
     def test_should_show_study_later_contexts_contexts_when_a_word_is_set_study_later(self):
         QTest.mouseClick(self.form._study_later_btn, Qt.LeftButton)
         self.__change_status(WordStatus.STUDY_LATER)
         short_htmls = self.__get_widget_list_htmls()
-        self.assertEqual(short_htmls, ["<b>this</b> is this", "this is <b>this</b>"])
+        self.assertEqual(short_htmls, ["<b><u>this</u></b> is this", "this is <b><u>this</u></b>"])
 
     def test_should_go_to_next_page_when_clicking_on_know_it(self):
         QTest.mouseClick(self.form._know_btn, Qt.LeftButton)
         short_htmls = self.__get_widget_list_htmls()
-        self.assertEqual(short_htmls, ["this <b>is</b> this"])
+        self.assertEqual(short_htmls, ["this <b><u>is</u></b> this"])
 
     def test_should_show_known_contexts_when_a_word_is_set_known(self):
         QTest.mouseClick(self.form._know_btn, Qt.LeftButton)
         self.__change_status(WordStatus.KNOWN)
         short_htmls = self.__get_widget_list_htmls()
-        self.assertEqual(short_htmls, ["<b>this</b> is this", "this is <b>this</b>"])
+        self.assertEqual(short_htmls, ["<b><u>this</u></b> is this", "this is <b><u>this</u></b>"])
 
     def test_click_on_next_page(self):
         QTest.mouseClick(self.form._next_page_btn, Qt.LeftButton)
         short_htmls = self.__get_widget_list_htmls()
-        self.assertEqual(short_htmls, ["this <b>is</b> this"])
+        self.assertEqual(short_htmls, ["this <b><u>is</u></b> this"])
 
     def test_click_on_prev_page(self):
         QTest.mouseClick(self.form._next_page_btn, Qt.LeftButton)
         QTest.mouseClick(self.form._prev_page_btn, Qt.LeftButton)
         short_htmls = self.__get_widget_list_htmls()
-        self.assertEqual(short_htmls, ["<b>this</b> is this", "this is <b>this</b>"])
+        self.assertEqual(short_htmls, ["<b><u>this</u></b> is this", "this is <b><u>this</u></b>"])
 
     def test_should_disable_prev_btn_if_its_first_page(self):
         self.assertFalse(self.form._prev_page_btn.isEnabled())

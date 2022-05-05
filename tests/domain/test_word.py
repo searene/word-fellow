@@ -180,6 +180,6 @@ COMMIT;""", ))
     def test_to_html(self):
         word_context = WordContext("test", "abc\n< test \nxyz", 6)
 
-        html = word_context.to_html()
+        html = word_context.to_html(allow_multi_line=False)
 
-        self.assertEqual(html, "abc &lt; <b>test</b>  xyz")
+        self.assertEqual(html, "abc &lt; <b><u>test</u></b>  xyz")

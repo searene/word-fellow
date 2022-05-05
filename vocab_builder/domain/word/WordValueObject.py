@@ -18,11 +18,11 @@ class WordContext:
     def get_suffix(self):
         return self.context[self.word_pos_in_context + len(self.word):]
 
-    def to_html(self):
-        return f"{self.__preprocess(self.get_prefix())}<b>{self.__preprocess(self.word)}</b>{self.__preprocess(self.get_suffix())}"
+    def to_html(self, allow_multi_line: bool):
+        return f"{self.__preprocess(self.get_prefix(), allow_multi_line)}<b><u>{self.__preprocess(self.word, allow_multi_line)}</u></b>{self.__preprocess(self.get_suffix(), allow_multi_line)}"
 
-    def __preprocess(self, text: str):
-        return escape(text).replace("\n", " ")
+    def __preprocess(self, text: str, allow_multi_line: bool):
+        return escape(text).replace("\n", "<br>" if allow_multi_line else " ")
 
     def __eq__(self, other):
         if not isinstance(other, WordContext):

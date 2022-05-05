@@ -9,7 +9,7 @@ class ContextItemWidget(QtWidgets.QWidget):
     def __init__(self, short_and_long_context: ShortAndLongContext):
         super(ContextItemWidget, self).__init__()
         self.__short_and_long_context = short_and_long_context
-        self.short_html = short_and_long_context.short.to_html()
+        self.short_html = short_and_long_context.short.to_html(allow_multi_line=False)
         self.__layout = self.__get_layout(self.short_html)
         self.item = self.__get_item(short_and_long_context)
         self.setLayout(self.__layout)

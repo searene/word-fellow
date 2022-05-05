@@ -1,7 +1,6 @@
 from PyQt5.QtWidgets import QDialog, QVBoxLayout, QLabel, QHBoxLayout, QPushButton, QSizePolicy, QTextEdit
 
 from vocab_builder.domain.word.WordValueObject import WordContext
-from vocab_builder.ui.util import WordUtils
 
 
 class LongContextDialog(QDialog):
@@ -26,7 +25,7 @@ class LongContextDialog(QDialog):
 
     def __get_context_area(self, long_context: WordContext) -> QTextEdit:
         text_edit = QTextEdit()
-        text_edit.setHtml(WordUtils.convert_word_context_to_html(long_context))
+        text_edit.setHtml(long_context.to_html(allow_multi_line=True))
         text_edit.setReadOnly(True)
         return text_edit
 
