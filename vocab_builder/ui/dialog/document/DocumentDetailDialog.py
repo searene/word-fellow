@@ -7,22 +7,25 @@ from PyQt5.QtWidgets import QDialog, QWidget, QVBoxLayout, QFormLayout, QHBoxLay
 from vocab_builder.anki.IAnkiService import IAnkiService
 from vocab_builder.domain.document.Document import Document
 from vocab_builder.domain.document.DocumentService import DocumentService
+from vocab_builder.infrastructure import VocabBuilderDB
+from vocab_builder.ui.dialog.document.DocumentWindow import DocumentWindow
 from vocab_builder.ui.util.DatabaseUtils import get_prod_vocab_builder_db
 
 
 class DocumentDetailDialog(QDialog):
 
-    def __init__(self, parent: Optional[QWidget], doc: Document, document_service: DocumentService, anki_service: IAnkiService):
+    def __init__(self, parent: Optional[QWidget], doc: Document, db: VocabBuilderDB, document_service: DocumentService, anki_service: IAnkiService):
         super(DocumentDetailDialog, self).__init__(parent)
         self.__doc = doc
+        self.__db = db
         self.__document_service = document_service
         self.__anki_service = anki_service
-        self.__setup_ui(self.__doc, self.__document_service)
+        self.__setup_ui(self.__doc, self.__document_service, anki_service, db)
 
-    def __setup_ui(self, doc: Document, document_service: DocumentService) -> None:
+    def __setup_ui(self, doc: Document, document_service: DocumentService, anki_service: IAnkiService, db: VocabBuilderDB) -> None:
         vbox = QVBoxLayout()
         self.__add_desc(vbox, doc)
-        self.__add_bottom_buttons(vbox, doc, document_service)
+        self.__add_bottom_buttons(vbox, doc, document_service, anki_service, db)
         self.setLayout(vbox)
         self.setMinimumWidth(300)
         self.setMinimumHeight(200)
@@ -34,16 +37,23 @@ class DocumentDetailDialog(QDialog):
         label.setAlignment(Qt.AlignCenter)
         vbox.addWidget(label)
 
-    def __add_bottom_buttons(self, vbox: QVBoxLayout, doc: Document, document_service: DocumentService) -> None:
+    def __add_bottom_buttons(self, vbox: QVBoxLayout, doc: Document, document_service: DocumentService, anki_service: IAnkiService, db: VocabBuilderDB) -> None:
         hbox = QHBoxLayout()
         self.__add_delete_button(hbox, doc, document_service)
-        self.__add_study_button(hbox, doc, document_service)
+        self.__add_study_button(hbox, doc, anki_service, db)
         vbox.addLayout(hbox)
 
-    def __add_study_button(self, hbox: QHBoxLayout, doc: Document, document_service: DocumentService) -> None:
+    def __add_study_button(self, hbox: QHBoxLayout, doc: Document, anki_service: IAnkiService, db: VocabBuilderDB) -> None:
         self._studyBtn = QPushButton("Study")
         self._studyBtn.setDefault(True)
+
+        self._studyBtn.clicked.connect(lambda: self.__on_study_button_clicked(doc, anki_service, db))
+
         hbox.addWidget(self._studyBtn)
+
+    def __on_study_button_clicked(self, doc: Document, anki_service: IAnkiService, db: VocabBuilderDB) -> None:
+        doc_window = DocumentWindow(doc, db, anki_service)
+        doc_window.show()
 
     def __add_delete_button(self, hbox: QHBoxLayout, doc: Document, document_service: DocumentService) -> None:
         self._deleteBtn = QPushButton("Delete")

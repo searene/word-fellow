@@ -14,7 +14,6 @@ from vocab_builder.domain.document.analyzer.DefaultDocumentAnalyzer import Defau
 from vocab_builder.domain.utils import init_database
 from vocab_builder.infrastructure import VocabBuilderDB
 from vocab_builder.ui.dialog.document.DocumentDetailDialog import DocumentDetailDialog
-from vocab_builder.ui.dialog.document.DocumentWindow import DocumentWindow
 from vocab_builder.ui.dialog.context.list.ClickableListWidget import ClickableListWidget
 from vocab_builder.ui.dialog.settings.SettingsDialog import SettingsDialog
 from vocab_builder.ui.util.DatabaseUtils import get_prod_vocab_builder_db
@@ -29,12 +28,12 @@ class MainDialog(QDialog):
         self.__db = db
         self.__anki_service = anki_service
         self.__document_service = DocumentService(self.__db)
-        self.__init_ui(self.__document_service)
+        self.__init_ui(self.__document_service, self.__db)
 
-    def __init_ui(self, document_service: DocumentService):
+    def __init_ui(self, document_service: DocumentService, db: VocabBuilderDB):
         vbox = QVBoxLayout()
         vbox.addLayout(self.__get_top_bar())
-        self.__add_document_list(vbox, document_service)
+        self.__add_document_list(vbox, document_service, db)
         vbox.addWidget(self.__get_import_new_document_button())
         self.setLayout(vbox)
         self.setWindowTitle("Vocab Builder")
@@ -76,7 +75,7 @@ class MainDialog(QDialog):
         self.__no_document_label.hide()
         self.__anki_service.show_info_dialog("Importing is done")
 
-    def __add_document_list(self, parent: QVBoxLayout, document_service: DocumentService) -> None:
+    def __add_document_list(self, parent: QVBoxLayout, document_service: DocumentService, db: VocabBuilderDB) -> None:
         self.__no_document_label = QLabel("No document is available, click the \"Add\" button below to start importing.")
         self.__no_document_label.setStyleSheet("QLabel { background-color : white; }")
         self.__no_document_label.setSizePolicy(QSizePolicy(QSizePolicy.MinimumExpanding, QSizePolicy.MinimumExpanding))
@@ -84,7 +83,7 @@ class MainDialog(QDialog):
         self.__no_document_label.setContentsMargins(20, 20, 20, 20)
         self.__no_document_label.setAlignment(Qt.AlignCenter)
         self.__list_widget = ClickableListWidget()
-        self.__list_widget.itemClicked.connect(lambda item: self.on_list_item_clicked(item, document_service))
+        self.__list_widget.itemClicked.connect(lambda item: self.on_list_item_clicked(item, document_service, db))
         parent.addWidget(self.__no_document_label)
         parent.addWidget(self.__list_widget)
 
@@ -102,13 +101,13 @@ class MainDialog(QDialog):
         res.setData(QtCore.Qt.UserRole, doc_id_and_name[0])
         return res
 
-    def on_list_item_clicked(self, item: QListWidgetItem, document_service: DocumentService) -> None:
+    def on_list_item_clicked(self, item: QListWidgetItem, document_service: DocumentService, db: VocabBuilderDB) -> None:
         doc_id = item.data(QtCore.Qt.UserRole)
-        self.__open_document_dialog(doc_id, document_service)
+        self.__open_document_dialog(doc_id, document_service, db)
 
-    def __open_document_dialog(self, doc_id: int, document_service: DocumentService):
+    def __open_document_dialog(self, doc_id: int, document_service: DocumentService, db: VocabBuilderDB):
         doc = self.__document_service.get_doc_by_id(doc_id)
-        doc_detail_dialog = DocumentDetailDialog(self, doc, document_service, self.__anki_service)
+        doc_detail_dialog = DocumentDetailDialog(self, doc, db, document_service, self.__anki_service)
         doc_detail_dialog.show()
 
 
