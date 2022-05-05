@@ -1,3 +1,4 @@
+import os
 import sys
 from pathlib import Path
 
@@ -6,6 +7,7 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import (QPushButton, QApplication, QHBoxLayout, QVBoxLayout, QLabel, QDialog, QFileDialog,
                              QListWidgetItem, QSizePolicy)
 
+from tests.utils import get_test_vocab_builder_db
 from vocab_builder.anki.IAnkiService import IAnkiService
 from vocab_builder.anki.MockedAnkiService import MockedAnkiService
 from vocab_builder.domain.document.Document import Document
@@ -16,7 +18,6 @@ from vocab_builder.infrastructure import VocabBuilderDB
 from vocab_builder.ui.dialog.document.DocumentDetailDialog import DocumentDetailDialog
 from vocab_builder.ui.dialog.context.list.ClickableListWidget import ClickableListWidget
 from vocab_builder.ui.dialog.settings.SettingsDialog import SettingsDialog
-from vocab_builder.ui.util.DatabaseUtils import get_prod_vocab_builder_db
 from vocab_builder.ui.util.FileUtils import get_base_name_without_ext
 
 
@@ -113,7 +114,7 @@ class MainDialog(QDialog):
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    db = get_prod_vocab_builder_db()
+    db = get_test_vocab_builder_db()
 
     init_database(db)
     db.execute("delete from documents")
@@ -122,4 +123,5 @@ if __name__ == '__main__':
 
     ex = MainDialog(db, MockedAnkiService())
     ex.show()
-    sys.exit(app.exec_())
+    app.exec_()
+    os.remove(db.db_path)

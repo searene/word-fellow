@@ -1,3 +1,4 @@
+import os
 import sys
 from typing import Optional
 
@@ -5,12 +6,13 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QDialog, QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QApplication, QLabel, \
     QMessageBox
 
+from tests.utils import get_test_vocab_builder_db
 from vocab_builder.anki.IAnkiService import IAnkiService
+from vocab_builder.anki.MockedAnkiService import MockedAnkiService
 from vocab_builder.domain.document.Document import Document
 from vocab_builder.domain.document.DocumentService import DocumentService
 from vocab_builder.infrastructure import VocabBuilderDB
 from vocab_builder.ui.dialog.document.DocumentWindow import DocumentWindow
-from vocab_builder.ui.util.DatabaseUtils import get_prod_vocab_builder_db
 
 
 class DocumentDetailDialog(QDialog):
@@ -85,8 +87,10 @@ class DocumentDetailDialog(QDialog):
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     doc = Document(1, "test", "test contents")
-    db = get_prod_vocab_builder_db()
+    db = get_test_vocab_builder_db()
     document_service = DocumentService(db)
-    dialog = DocumentDetailDialog(None, doc, document_service)
+    dialog = DocumentDetailDialog(None, doc, db, document_service, MockedAnkiService())
     dialog.show()
-    sys.exit(app.exec_())
+    code = app.exec_()
+    os.remove(db.db_path)
+    sys.exit(code)

@@ -1,5 +1,3 @@
-from typing import Optional
-
 from vocab_builder.infrastructure import create_prod_vocab_builder_db, VocabBuilderDB
 
 
