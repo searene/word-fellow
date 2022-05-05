@@ -4,6 +4,7 @@ from typing import Optional
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QDialog, QWidget, QVBoxLayout, QFormLayout, QHBoxLayout, QPushButton, QApplication, QLabel
 
+from vocab_builder.anki.IAnkiService import IAnkiService
 from vocab_builder.domain.document.Document import Document
 from vocab_builder.domain.document.DocumentService import DocumentService
 from vocab_builder.ui.util.DatabaseUtils import get_prod_vocab_builder_db
@@ -11,10 +12,11 @@ from vocab_builder.ui.util.DatabaseUtils import get_prod_vocab_builder_db
 
 class DocumentDetailDialog(QDialog):
 
-    def __init__(self, parent: Optional[QWidget], doc: Document, document_service: DocumentService):
-        super(DocumentDetailDialog, self).__init__()
+    def __init__(self, parent: Optional[QWidget], doc: Document, document_service: DocumentService, anki_service: IAnkiService):
+        super(DocumentDetailDialog, self).__init__(parent)
         self.__doc = doc
         self.__document_service = document_service
+        self.__anki_service = anki_service
         self.__setup_ui(self.__doc, self.__document_service)
 
     def __setup_ui(self, doc: Document, document_service: DocumentService) -> None:
