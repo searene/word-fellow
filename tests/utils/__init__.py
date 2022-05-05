@@ -11,7 +11,6 @@ def get_test_vocab_builder_db() -> VocabBuilderDB:
     return db
 
 
-# TODO remove the test data when tests are finished
 def get_test_db_path() -> str:
     config_folder = tempfile.mkdtemp()
     if not os.path.exists(config_folder):

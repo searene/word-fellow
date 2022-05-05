@@ -1,15 +1,16 @@
-import unittest
-
-from tests.utils import get_test_vocab_builder_db
+from base.BaseTestCase import BaseTestCase
 from vocab_builder.domain.settings.Settings import Settings
 from vocab_builder.domain.settings.SettingsService import SettingsService
 
 
-class SettingsServiceTestCase(unittest.TestCase):
+class SettingsServiceTestCase(BaseTestCase):
 
     def setUp(self) -> None:
-        self.__db = get_test_vocab_builder_db()
-        self.__settings_service = SettingsService(self.__db)
+        super().setUp()
+        self.__settings_service = SettingsService(self.db)
+
+    def tearDown(self) -> None:
+        super().tearDown()
 
     def test_should_update_settings_when_there_is_no_record_before(self):
         settings = Settings(True, 20, "/test/path")

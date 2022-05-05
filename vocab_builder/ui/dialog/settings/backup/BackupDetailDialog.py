@@ -2,10 +2,10 @@ from typing import Optional
 
 from PyQt5.QtWidgets import QDialog, QWidget, QVBoxLayout, QLabel, QHBoxLayout, QPushButton, QApplication, QMessageBox
 
-from tests.utils import get_test_vocab_builder_db
 from vocab_builder.domain.backup.Backup import Backup
 from vocab_builder.domain.backup.BackupService import BackupService
 from vocab_builder.domain.settings.SettingsService import SettingsService
+from vocab_builder.ui.util.DatabaseUtils import get_prod_vocab_builder_db
 
 
 class BackupDetailDialog(QDialog):
@@ -70,7 +70,7 @@ class BackupDetailDialog(QDialog):
 
 if __name__ == "__main__":
     backup = Backup(f"/tmp/{Backup.name_prefix}20220501110000.db")
-    db = get_test_vocab_builder_db()
+    db = get_prod_vocab_builder_db()
     settings_service = SettingsService(db)
     backup_service = BackupService(settings_service)
 

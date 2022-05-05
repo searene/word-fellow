@@ -1,9 +1,9 @@
 from PyQt5.QtWidgets import QDialog, QVBoxLayout, QLabel, QPushButton, QApplication
 
-from tests.utils import get_test_vocab_builder_db
 from vocab_builder.domain.backup.BackupService import BackupService
 from vocab_builder.domain.settings.SettingsService import SettingsService
 from vocab_builder.infrastructure import get_prod_db_path
+from vocab_builder.ui.util.DatabaseUtils import get_prod_vocab_builder_db
 
 
 class BackupDialog(QDialog):
@@ -36,9 +36,9 @@ class BackupDialog(QDialog):
 
 if __name__ == "__main__":
     app = QApplication([])
-    db = get_test_vocab_builder_db()
+    db = get_prod_vocab_builder_db()
     settings_service = SettingsService(db)
     backup_service = BackupService(settings_service, get_prod_db_path())
-    dialog = BackupDialog(backup_service)
+    dialog = BackupDialog(backup_service, db.db_path)
     dialog.show()
     app.exec_()

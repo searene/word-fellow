@@ -3,7 +3,7 @@ import tempfile
 import unittest
 from datetime import datetime
 
-from tests.utils import get_test_vocab_builder_db
+from base.BaseTestCase import BaseTestCase
 from vocab_builder.domain.backup.Backup import Backup
 from vocab_builder.domain.backup.BackupService import BackupService
 from vocab_builder.domain.settings.Settings import Settings
@@ -11,11 +11,11 @@ from vocab_builder.domain.settings.SettingsService import SettingsService
 from vocab_builder.domain.utils import FileUtils
 
 
-class BackupTestCase(unittest.TestCase):
+class BackupTestCase(BaseTestCase):
 
     def setUp(self) -> None:
-        self.__db = get_test_vocab_builder_db()
-        self.__settings_service = SettingsService(self.__db)
+        super().setUp()
+        self.__settings_service = SettingsService(self.db)
         self.__settings = Settings(True, 3, os.path.join(tempfile.gettempdir(), "anki_vocab_builder_backup"))
         self.__settings_service.update_settings(self.__settings)
         FileUtils.remove_dir_if_exists(self.__settings.backup_folder_path)
@@ -27,6 +27,7 @@ class BackupTestCase(unittest.TestCase):
         self.__backup_service = BackupService(self.__settings_service, db_path)
 
     def tearDown(self) -> None:
+        super().setUp()
         FileUtils.remove_dir_if_exists(self.__settings.backup_folder_path)
 
     def test_get_backups(self):

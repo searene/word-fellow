@@ -1,11 +1,10 @@
 import sys
-import unittest
 
 from PyQt5.QtCore import Qt
 from PyQt5.QtTest import QTest
 from PyQt5.QtWidgets import QApplication
 
-from tests.utils import get_test_vocab_builder_db
+from base.BaseTestCase import BaseTestCase
 from tests.utils.UiUtils import get_visible_item_widget
 from vocab_builder.anki.MockedAnkiService import MockedAnkiService
 from vocab_builder.domain.document.DocumentService import DocumentService
@@ -16,14 +15,14 @@ from vocab_builder.domain.word.WordStatus import WordStatus
 from vocab_builder.ui.dialog.DocumentWindow import DocumentWindow
 
 
-class DocumentWindowTestCase(unittest.TestCase):
+class DocumentWindowTestCase(BaseTestCase):
 
     @classmethod
     def setUpClass(cls) -> None:
         cls.__app = QApplication(sys.argv)
 
     def setUp(self):
-        self.db = get_test_vocab_builder_db()
+        super(DocumentWindowTestCase, self).setUp()
         document_service = DocumentService(self.db)
         self.doc = document_service.import_document("test doc", "this is this", DefaultDocumentAnalyzer(self.db))
         self.form = DocumentWindow(self.doc, self.db, MockedAnkiService())

@@ -7,7 +7,7 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtTest import QTest
 from PyQt5.QtWidgets import QApplication, QListWidgetItem
 
-from tests.utils import get_test_vocab_builder_db
+from base.BaseTestCase import BaseTestCase
 from vocab_builder.domain.backup.Backup import Backup
 from vocab_builder.domain.backup.BackupService import BackupService
 from vocab_builder.domain.settings.SettingsService import SettingsService
@@ -15,14 +15,14 @@ from vocab_builder.domain.utils import FileUtils
 from vocab_builder.ui.dialog.settings.backup.BackupTab import BackupTab
 
 
-class BackupTabTestCase(unittest.TestCase):
+class BackupTabTestCase(BaseTestCase):
 
     @classmethod
     def setUpClass(cls) -> None:
         cls.__app = QApplication(sys.argv)
 
     def setUp(self) -> None:
-        self.db = get_test_vocab_builder_db()
+        super(BackupTabTestCase, self).setUp()
         settings_service = SettingsService(self.db)
         self.backup_service = BackupService(settings_service, db_path=self.db.db_path)
         self.__update_backup_folder_path_to_temp_folder(self.backup_service)
@@ -31,6 +31,7 @@ class BackupTabTestCase(unittest.TestCase):
         self.form = BackupTab(self.backup_service)
 
     def tearDown(self) -> None:
+        super(BackupTabTestCase, self).tearDown()
         FileUtils.remove_dir_if_exists(self.backup_service.get_backup_config().backup_folder_path)
 
     def test_show_backup_config(self):

@@ -1,15 +1,13 @@
 import unittest
 from typing import Tuple
 
-from tests.utils import get_test_vocab_builder_db
+from base.BaseTestCase import BaseTestCase
 
 
-class VocabBuilderDBTestCase(unittest.TestCase):
+class VocabBuilderDBTestCase(BaseTestCase):
 
     def test_execute_script_without_params(self):
-        db = get_test_vocab_builder_db()
-
-        db.execute_script("""
+        self.db.execute_script("""
             BEGIN TRANSACTION;
             CREATE TABLE IF NOT EXISTS test_table (
                 id INTEGER PRIMARY KEY,
@@ -20,7 +18,7 @@ class VocabBuilderDBTestCase(unittest.TestCase):
             COMMIT;
         """)
 
-        records = db.fetch_all("""
+        records = self.db.fetch_all("""
         SELECT * FROM test_table
         """)
         self.assertEqual(len(records), 2)

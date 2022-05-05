@@ -1,7 +1,6 @@
-import unittest
 from unittest.mock import Mock
 
-from tests.utils import get_test_vocab_builder_db
+from base.BaseTestCase import BaseTestCase
 from vocab_builder.domain.document.Document import Document
 from vocab_builder.domain.status import GlobalWordStatus
 from vocab_builder.domain.status.GlobalWordStatus import Status
@@ -12,7 +11,7 @@ from vocab_builder.domain.word.WordStatus import WordStatus
 from vocab_builder.domain.word.WordValueObject import WordValueObject, WordContext, ShortAndLongContext
 
 
-class WordTestCase(unittest.TestCase):
+class WordTestCase(BaseTestCase):
     def test_batch_insert_with_one_batch(self):
         word_value_objects = [
             WordValueObject("word1", 1, {"word1": [0]}),
@@ -60,12 +59,11 @@ INSERT INTO words (text, document_id, positions) VALUES
 COMMIT;""", ))
 
     def test_get_words_by_document_id(self):
-        db = get_test_vocab_builder_db()
-        db.insert("""INSERT INTO words (id, text, document_id, positions) VALUES
+        self.db.insert("""INSERT INTO words (id, text, document_id, positions) VALUES
                   (1, 'word1', 1, '{"word1": [0]}'),
                   (2, 'word2', 1, '{"word2": [6, 15]}')""")
 
-        words = get_words_by_document_id(1, db)
+        words = get_words_by_document_id(1, self.db)
 
         expected_word1 = Word(1, "word1", 1, {"word1": [0]})
         expected_word2 = Word(2, "word2", 1, {"word2": [6, 15]})
@@ -73,45 +71,42 @@ COMMIT;""", ))
 
     def test_get_next_unreviewed_word(self):
         # prepare test data
-        db = get_test_vocab_builder_db()
         word_value_object1 = WordValueObject("test1", 1, {"test1": [0]})
         word_value_object2 = WordValueObject("test2", 1, {"test2": [0]})
-        WordService.batch_insert([word_value_object1, word_value_object2], db)
+        WordService.batch_insert([word_value_object1, word_value_object2], self.db)
 
         # invoke the method
-        unreviewed_word = WordFactory.get_next_word(doc_id=1, offset=0, word_status=WordStatus.UNREVIEWED, db=db)
+        unreviewed_word = WordFactory.get_next_word(doc_id=1, offset=0, word_status=WordStatus.UNREVIEWED, db=self.db)
 
         # check result
         self.assertTrue(unreviewed_word.has_same_values(word_value_object1))
 
     def test_get_next_known_word(self):
         # prepare test data
-        db = get_test_vocab_builder_db()
         word_value_object1 = WordValueObject("test1", 1, {"test1": [0]})
         word_value_object2 = WordValueObject("test2", 1, {"test2": [0]})
-        WordService.batch_insert([word_value_object1, word_value_object2], db)
+        WordService.batch_insert([word_value_object1, word_value_object2], self.db)
 
-        GlobalWordStatus.insert_word_status("test2", Status.KNOWN, db)
+        GlobalWordStatus.insert_word_status("test2", Status.KNOWN, self.db)
 
         # invoke the method
-        known_word = WordFactory.get_next_word(doc_id=1, offset=0, word_status=WordStatus.KNOWN, db=db)
+        known_word = WordFactory.get_next_word(doc_id=1, offset=0, word_status=WordStatus.KNOWN, db=self.db)
 
         # check result
         self.assertTrue(known_word.has_same_values(word_value_object2))
 
     def test_upsert_word_status_when_we_should_update(self):
         # prepare test data
-        db = get_test_vocab_builder_db()
         word_value_object1 = WordValueObject("test1", 1, {"test1": [0]})
         word_value_object2 = WordValueObject("test2", 1, {"test2": [0]})
-        WordService.batch_insert([word_value_object1, word_value_object2], db)
+        WordService.batch_insert([word_value_object1, word_value_object2], self.db)
 
-        GlobalWordStatus.insert_word_status("test2", Status.KNOWN, db)
-        GlobalWordStatus.upsert_word_status("test2", Status.STUDYING, db)
+        GlobalWordStatus.insert_word_status("test2", Status.KNOWN, self.db)
+        GlobalWordStatus.upsert_word_status("test2", Status.STUDYING, self.db)
 
         # invoke the method
-        known_word = WordFactory.get_next_word(doc_id=1, offset=0, word_status=WordStatus.KNOWN, db=db)
-        studying_word = WordFactory.get_next_word(doc_id=1, offset=0, word_status=WordStatus.STUDYING, db=db)
+        known_word = WordFactory.get_next_word(doc_id=1, offset=0, word_status=WordStatus.KNOWN, db=self.db)
+        studying_word = WordFactory.get_next_word(doc_id=1, offset=0, word_status=WordStatus.STUDYING, db=self.db)
 
         # check result
         self.assertEqual(known_word, None)
@@ -119,30 +114,28 @@ COMMIT;""", ))
 
     def test_upsert_word_status_when_we_should_insert(self):
         # prepare test data
-        db = get_test_vocab_builder_db()
         word_value_object1 = WordValueObject("test1", 1, {"test1": [0]})
         word_value_object2 = WordValueObject("test2", 1, {"test2": [0]})
-        WordService.batch_insert([word_value_object1, word_value_object2], db)
+        WordService.batch_insert([word_value_object1, word_value_object2], self.db)
 
-        GlobalWordStatus.upsert_word_status("test2", Status.STUDYING, db)
+        GlobalWordStatus.upsert_word_status("test2", Status.STUDYING, self.db)
 
         # invoke the method
-        studying_word = WordFactory.get_next_word(doc_id=1, offset=0, word_status=WordStatus.STUDYING, db=db)
+        studying_word = WordFactory.get_next_word(doc_id=1, offset=0, word_status=WordStatus.STUDYING, db=self.db)
 
         # check result
         self.assertTrue(studying_word.has_same_values(word_value_object2))
 
     def test_get_next_ignored_word(self):
         # prepare test data
-        db = get_test_vocab_builder_db()
         word_value_object1 = WordValueObject("test1", 1, {"test1": [0]})
         word_value_object2 = WordValueObject("test2", 1, {"test2": [0]})
-        WordService.batch_insert([word_value_object1, word_value_object2], db)
+        WordService.batch_insert([word_value_object1, word_value_object2], self.db)
 
-        GlobalWordStatus.insert_word_status("test1", Status.IGNORED, db)
+        GlobalWordStatus.insert_word_status("test1", Status.IGNORED, self.db)
 
         # invoke the method
-        unreviewed_word = WordFactory.get_next_word(doc_id=1, offset=0, word_status=WordStatus.IGNORED, db=db)
+        unreviewed_word = WordFactory.get_next_word(doc_id=1, offset=0, word_status=WordStatus.IGNORED, db=self.db)
 
         # check result
         self.assertTrue(unreviewed_word.has_same_values(word_value_object1))

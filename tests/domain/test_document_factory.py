@@ -1,20 +1,18 @@
 import unittest
 
-from tests.utils import get_test_vocab_builder_db
-from vocab_builder.domain.document.Document import Document
+from base.BaseTestCase import BaseTestCase
 from vocab_builder.domain.document.DocumentService import DocumentService
 from vocab_builder.domain.document.analyzer.DefaultDocumentAnalyzer import DefaultDocumentAnalyzer
 
 
-class DocumentServiceTestCase(unittest.TestCase):
+class DocumentServiceTestCase(BaseTestCase):
 
     def test_should_get_imported_document(self):
-        db = get_test_vocab_builder_db()
-        document_service = DocumentService(db)
+        document_service = DocumentService(self.db)
 
         document_name = "test document"
         document_contents = "test contents"
-        document_service.import_document(document_name, document_contents, DefaultDocumentAnalyzer(db))
+        document_service.import_document(document_name, document_contents, DefaultDocumentAnalyzer(self.db))
 
         documents = document_service.get_document_list()
         self.assertEqual(len(documents), 1)
@@ -22,8 +20,7 @@ class DocumentServiceTestCase(unittest.TestCase):
         self.assertEqual(documents[0].contents, document_contents)
 
     def test_should_get_documents_after_creating_them(self):
-        db = get_test_vocab_builder_db()
-        document_service = DocumentService(db)
+        document_service = DocumentService(self.db)
 
         document1 = document_service.create_new_document("test_document_name_1", "test_document_contents_1")
         document2 = document_service.create_new_document("test_document_name_2", "test_document_contents_2")
@@ -37,8 +34,7 @@ class DocumentServiceTestCase(unittest.TestCase):
     def test_should_remove_all_documents(self):
 
         # prepare
-        db = get_test_vocab_builder_db()
-        document_service = DocumentService(db)
+        document_service = DocumentService(self.db)
         document1 = document_service.create_new_document("test_document_name_1", "test_document_contents_1")
         document2 = document_service.create_new_document("test_document_name_2", "test_document_contents_2")
 

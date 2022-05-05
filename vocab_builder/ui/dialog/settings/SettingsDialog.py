@@ -1,12 +1,12 @@
 from PyQt5.QtWidgets import QDialog, QVBoxLayout, QTabWidget
 
-from tests.utils import get_test_vocab_builder_db
 from vocab_builder.domain.backup.BackupService import BackupService
 from vocab_builder.domain.reset.ResetService import ResetService
 from vocab_builder.domain.settings.SettingsService import SettingsService
 from vocab_builder.infrastructure import VocabBuilderDB
 from vocab_builder.ui.dialog.settings.backup.BackupTab import BackupTab
 from vocab_builder.ui.dialog.settings.ResetTab import ResetTab
+from vocab_builder.ui.util.DatabaseUtils import get_prod_vocab_builder_db
 
 
 class SettingsDialog(QDialog):
@@ -32,6 +32,6 @@ if __name__ == '__main__':
     import sys
     from PyQt5.QtWidgets import QApplication
     app = QApplication(sys.argv)
-    w = SettingsDialog(get_test_vocab_builder_db())
+    w = SettingsDialog(get_prod_vocab_builder_db())
     w.show()
     sys.exit(app.exec_())
