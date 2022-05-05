@@ -11,7 +11,6 @@ from vocab_builder.anki.MockedAnkiService import MockedAnkiService
 from vocab_builder.domain.document.Document import Document
 from vocab_builder.domain.document.DocumentService import DocumentService
 from vocab_builder.domain.document.analyzer.DefaultDocumentAnalyzer import DefaultDocumentAnalyzer
-from vocab_builder.domain.reset.ResetService import ResetService
 from vocab_builder.domain.utils import init_database
 from vocab_builder.infrastructure import VocabBuilderDB
 from vocab_builder.ui.dialog.DocumentWindow import DocumentWindow

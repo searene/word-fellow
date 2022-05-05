@@ -1,4 +1,6 @@
-from PyQt5.QtWidgets import QDialog, QVBoxLayout, QLabel, QHBoxLayout, QPushButton, QSizePolicy, QTextEdit
+import sys
+
+from PyQt5.QtWidgets import QDialog, QVBoxLayout, QHBoxLayout, QPushButton, QTextEdit, QApplication
 
 from vocab_builder.domain.word.WordValueObject import WordContext
 
@@ -7,6 +9,8 @@ class LongContextDialog(QDialog):
 
     def __init__(self, long_context: WordContext):
         super(LongContextDialog, self).__init__()
+        self.setMinimumWidth(600)
+        self.setMinimumHeight(400)
         self.__long_context = long_context
         self.__init_ui(self.__long_context)
 
@@ -37,3 +41,10 @@ class LongContextDialog(QDialog):
         res.addWidget(close_btn)
 
         return res
+
+
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    dialog = LongContextDialog(WordContext("test", "this is a test.", 0))
+    dialog.show()
+    sys.exit(app.exec_())
