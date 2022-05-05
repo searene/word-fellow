@@ -22,7 +22,7 @@ class WordContext:
         return f"{self.__preprocess(self.get_prefix())}<b>{self.__preprocess(self.word)}</b>{self.__preprocess(self.get_suffix())}"
 
     def __preprocess(self, text: str):
-        return escape(text).replace("\n", "<br>")
+        return escape(text).replace("\n", " ")
 
     def __eq__(self, other):
         if not isinstance(other, WordContext):

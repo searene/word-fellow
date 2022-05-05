@@ -182,4 +182,4 @@ COMMIT;""", ))
 
         html = word_context.to_html()
 
-        self.assertEqual(html, "abc<br>&lt; <b>test</b> <br>xyz")
+        self.assertEqual(html, "abc &lt; <b>test</b>  xyz")

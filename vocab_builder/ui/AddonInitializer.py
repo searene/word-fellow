@@ -22,13 +22,18 @@ def insert_test_data():
     db.execute("delete from global_word_status")
     document_service = DocumentService(get_prod_vocab_builder_db())
     doc1 = document_service.create_new_document("test name1", "this is this this")
-    doc2 = document_service.create_new_document("test name2", "test_contents2")
+    doc2 = document_service.create_new_document("test name2", "skip\nto skip\nthis")
 
     word_value_objects = [
         WordValueObject.WordValueObject("this", doc1.document_id, {"this": [0, 8, 13]}),
         WordValueObject.WordValueObject("is", doc1.document_id, {"is": [5]})
     ]
     WordService.batch_insert(word_value_objects, get_prod_vocab_builder_db())
+
+    word_value_objects2 = [
+        WordValueObject.WordValueObject("skip", doc2.document_id, {"skip": [0, 8]}),
+    ]
+    WordService.batch_insert(word_value_objects2, get_prod_vocab_builder_db())
 
 
 def show_main_dialog() -> None:
