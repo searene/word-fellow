@@ -2,7 +2,8 @@ import sys
 from typing import Optional
 
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QDialog, QWidget, QVBoxLayout, QFormLayout, QHBoxLayout, QPushButton, QApplication, QLabel
+from PyQt5.QtWidgets import QDialog, QWidget, QVBoxLayout, QFormLayout, QHBoxLayout, QPushButton, QApplication, QLabel, \
+    QMessageBox
 
 from vocab_builder.anki.IAnkiService import IAnkiService
 from vocab_builder.domain.document.Document import Document
@@ -57,10 +58,24 @@ class DocumentDetailDialog(QDialog):
 
     def __add_delete_button(self, hbox: QHBoxLayout, doc: Document, document_service: DocumentService) -> None:
         self._deleteBtn = QPushButton("Delete")
-        p = self._deleteBtn.palette()
-        p.setColor(self._deleteBtn.backgroundRole(), Qt.red)
-        self._deleteBtn.setPalette(p)
+        self._deleteBtn.clicked.connect(lambda: self.__on_delete_button_clicked(doc, document_service))
         hbox.addWidget(self._deleteBtn)
+
+    def __on_delete_button_clicked(self, doc: Document, document_service: DocumentService) -> None:
+        self._delete_warning_msg_box = QMessageBox()
+        self._delete_warning_msg_box.setIcon(QMessageBox.Warning)
+        self._delete_warning_msg_box.setText("Are you sure you want to delete this document?")
+        self._delete_warning_msg_box.setWindowTitle("Delete")
+        self._delete_warning_msg_box.setStandardButtons(QMessageBox.Ok | QMessageBox.Cancel)
+        self._delete_warning_msg_box.buttonClicked.connect(lambda btn: self.__delete_dialog_btn_handler(btn, self._delete_warning_msg_box))
+        self._delete_warning_msg_box.exec_()
+
+    def __delete_dialog_btn_handler(self, button: QMessageBox.StandardButton, msg_box: QMessageBox) -> None:
+        btn_code = msg_box.standardButton(button)
+        if btn_code == QMessageBox.Ok:
+            # TODO delete the document
+            # TODO remove the document in MainDialog
+            pass
 
 
 if __name__ == "__main__":
