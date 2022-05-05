@@ -33,5 +33,8 @@ class DocumentDetailDialogTestCase(BaseTestCase):
         self.assertEqual(docs, [self.__doc2])
 
     def test_should_not_delete_document_when_clicking_on_cancel(self):
-        # TODO
-        pass
+        QTest.mouseClick(self.__form._deleteBtn, Qt.LeftButton)
+        QTest.mouseClick(self.__form._delete_warning_msg_box.button(QMessageBox.Cancel), Qt.LeftButton)
+
+        docs = self.__document_service.get_document_list()
+        self.assertEqual(docs, [self.__doc1, self.__doc2])
