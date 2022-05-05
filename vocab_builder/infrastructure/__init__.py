@@ -4,7 +4,6 @@ from vocab_builder.infrastructure.VocabBuilderDB import VocabBuilderDB
 
 
 def get_prod_db_path() -> str:
-    # TODO Allow user to reset the data
     home_dir = os.path.expanduser("~")
     config_folder = os.path.join(home_dir, ".anki-vocab-builder")
     if not os.path.exists(config_folder):
