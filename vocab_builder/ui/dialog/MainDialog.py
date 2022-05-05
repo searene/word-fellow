@@ -61,8 +61,7 @@ class MainDialog(QDialog):
         return btn
 
     def __open_import_new_document_dialog(self):
-        # TODO Limit extensions
-        document_file_path, file_filters = QFileDialog.getOpenFileName(self, 'Select document', '', '')
+        document_file_path, file_filters = QFileDialog.getOpenFileName(self, 'Select document', '', 'Text Files (*.txt)')
         if len(document_file_path) == 0:
             # The user didn't select any file
             return
