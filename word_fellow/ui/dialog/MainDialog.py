@@ -5,7 +5,7 @@ from pathlib import Path
 from PyQt5 import QtCore
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import (QPushButton, QApplication, QHBoxLayout, QVBoxLayout, QLabel, QDialog, QFileDialog,
-                             QListWidgetItem, QSizePolicy)
+                             QListWidgetItem, QSizePolicy, QListWidget)
 
 from tests.utils import get_test_word_fellow_db
 from word_fellow.anki.IAnkiService import IAnkiService
@@ -83,7 +83,8 @@ class MainDialog(QDialog):
         self.__no_document_label.setContentsMargins(20, 20, 20, 20)
         self.__no_document_label.setAlignment(Qt.AlignCenter)
         self._list_widget = ClickableListWidget()
-        self._list_widget.itemClicked.connect(lambda item: self.on_list_item_clicked(item, document_service, db, show_dialog))
+        self._list_widget.itemClicked.connect(lambda item: self.on_list_item_clicked(item, document_service, db,
+                                                                                     self._list_widget, show_dialog))
         parent.addWidget(self.__no_document_label)
         parent.addWidget(self._list_widget)
 
@@ -101,15 +102,26 @@ class MainDialog(QDialog):
         res.setData(QtCore.Qt.UserRole, doc_id_and_name[0])
         return res
 
-    def on_list_item_clicked(self, item: QListWidgetItem, document_service: DocumentService, db: WordFellowDB, show_dialog: bool) -> None:
+    def on_list_item_clicked(self, item: QListWidgetItem, document_service: DocumentService, db: WordFellowDB,
+                             doc_list: QListWidget, show_dialog: bool) -> None:
         doc_id = item.data(QtCore.Qt.UserRole)
-        self.__open_document_dialog(doc_id, document_service, db, show_dialog)
+        self.__open_document_dialog(doc_id, document_service, db, doc_list, show_dialog)
 
-    def __open_document_dialog(self, doc_id: int, document_service: DocumentService, db: WordFellowDB, show_dialog: bool) -> None:
+    def __open_document_dialog(self, doc_id: int, document_service: DocumentService, db: WordFellowDB,
+                               doc_list: QListWidget, show_dialog: bool) -> None:
         doc = self.__document_service.get_doc_by_id(doc_id)
-        self._doc_detail_dialog = DocumentDetailDialog(self, doc, db, document_service, self.__anki_service, show_dialog)
+        self._doc_detail_dialog = DocumentDetailDialog(self, doc, db, document_service, self.__anki_service,
+                                                       lambda: self.__delete_doc_from_list(doc_id, self._list_widget),
+                                                       show_dialog)
         if show_dialog:
             self._doc_detail_dialog.show()
+
+    def __delete_doc_from_list(self, doc_id: int, doc_list: QListWidget) -> None:
+        for i in range(doc_list.count()):
+            item = doc_list.item(i)
+            if item.data(QtCore.Qt.UserRole) == doc_id:
+                doc_list.takeItem(i)
+                return
 
 
 if __name__ == '__main__':

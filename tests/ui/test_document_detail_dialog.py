@@ -23,7 +23,8 @@ class DocumentDetailDialogTestCase(BaseTestCase):
         analyzer = DefaultDocumentAnalyzer(self.db)
         self.__doc1 = self.__document_service.import_document("test name1", "test contents1", analyzer)
         self.__doc2 = self.__document_service.import_document("test name2", "test contents2", analyzer)
-        self.__form = DocumentDetailDialog(None, self.__doc1, self.db, self.__document_service, MockedAnkiService(), show_msg_box=False)
+        self.__form = DocumentDetailDialog(None, self.__doc1, self.db, self.__document_service, MockedAnkiService(),
+                                           lambda: None, show_dialog=False)
 
     def test_should_delete_document_when_clicking_on_delete(self):
         QTest.mouseClick(self.__form._delete_btn, Qt.LeftButton)
