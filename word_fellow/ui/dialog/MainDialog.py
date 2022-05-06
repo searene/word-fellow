@@ -5,7 +5,7 @@ from pathlib import Path
 from PyQt5 import QtCore
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import (QPushButton, QApplication, QHBoxLayout, QVBoxLayout, QLabel, QDialog, QFileDialog,
-                             QListWidgetItem, QSizePolicy, QListWidget)
+                             QListWidgetItem, QSizePolicy, QListWidget, QScrollBar)
 
 from tests.utils import get_test_word_fellow_db
 from word_fellow.anki.IAnkiService import IAnkiService
@@ -21,7 +21,6 @@ from word_fellow.ui.dialog.settings.SettingsDialog import SettingsDialog
 from word_fellow.ui.util.FileUtils import get_base_name_without_ext
 
 
-# TODO Add pagination
 class MainDialog(QDialog):
 
     def __init__(self, db: WordFellowDB, anki_service: IAnkiService, show_dialog=True):
@@ -83,7 +82,9 @@ class MainDialog(QDialog):
         self.__no_document_label.setMinimumHeight(200)
         self.__no_document_label.setContentsMargins(20, 20, 20, 20)
         self.__no_document_label.setAlignment(Qt.AlignCenter)
+        scroll_bar = QScrollBar()
         self._list_widget = ClickableListWidget()
+        self._list_widget.setVerticalScrollBar(scroll_bar)
         self._list_widget.itemClicked.connect(lambda item: self.on_list_item_clicked(item, document_service, db,
                                                                                      self._list_widget, show_dialog))
         parent.addWidget(self.__no_document_label)
@@ -130,9 +131,21 @@ if __name__ == '__main__':
     db = get_test_word_fellow_db()
 
     init_database(db)
-    db.execute("delete from documents")
-    db.execute("delete from words")
-    db.execute("delete from global_word_status")
+    document_service = DocumentService(db)
+    document_service.create_new_document("test name1", "test content")
+    document_service.create_new_document("test name2", "test content")
+    document_service.create_new_document("test name3", "test content")
+    document_service.create_new_document("test name4", "test content")
+    document_service.create_new_document("test name5", "test content")
+    document_service.create_new_document("test name6", "test content")
+    document_service.create_new_document("test name7", "test content")
+    document_service.create_new_document("test name8", "test content")
+    document_service.create_new_document("test name9", "test content")
+    document_service.create_new_document("test name10", "test content")
+
+    # db.execute("delete from documents")
+    # db.execute("delete from words")
+    # db.execute("delete from global_word_status")
 
     ex = MainDialog(db, MockedAnkiService())
     ex.show()
