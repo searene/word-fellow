@@ -134,7 +134,4 @@ anki_root
 # PyCharm
 .idea
 
-vocab.db
-vocab.db-journal
-
 .DS_Store
