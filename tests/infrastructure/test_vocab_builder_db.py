@@ -1,7 +1,6 @@
-import unittest
 from typing import Tuple
 
-from base.BaseTestCase import BaseTestCase
+from tests.base.BaseTestCase import BaseTestCase
 
 
 class WordFellowDBTestCase(BaseTestCase):

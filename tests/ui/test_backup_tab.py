@@ -1,13 +1,11 @@
 import os
 import sys
-import unittest
 from pathlib import Path
 
 from PyQt5.QtCore import Qt
-from PyQt5.QtTest import QTest
 from PyQt5.QtWidgets import QApplication, QListWidgetItem
 
-from base.BaseTestCase import BaseTestCase
+from tests.base.BaseTestCase import BaseTestCase
 from word_fellow.domain.backup.Backup import Backup
 from word_fellow.domain.backup.BackupService import BackupService
 from word_fellow.domain.settings.SettingsService import SettingsService

@@ -1,6 +1,6 @@
 from unittest.mock import Mock
 
-from base.BaseTestCase import BaseTestCase
+from tests.base.BaseTestCase import BaseTestCase
 from word_fellow.domain.document.Document import Document
 from word_fellow.domain.status import GlobalWordStatus
 from word_fellow.domain.status.GlobalWordStatus import Status

@@ -1,6 +1,6 @@
 import unittest
 
-from base.BaseTestCase import BaseTestCase
+from tests.base.BaseTestCase import BaseTestCase
 from word_fellow.domain.status.GlobalWordStatus import insert_word_status, Status, \
     upsert_word_status
 

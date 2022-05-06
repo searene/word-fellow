@@ -1,4 +1,4 @@
-from base.BaseTestCase import BaseTestCase
+from tests.base.BaseTestCase import BaseTestCase
 from word_fellow.domain.settings.Settings import Settings
 from word_fellow.domain.settings.SettingsService import SettingsService
 

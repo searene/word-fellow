@@ -3,7 +3,7 @@ import tempfile
 import unittest
 from datetime import datetime
 
-from base.BaseTestCase import BaseTestCase
+from tests.base.BaseTestCase import BaseTestCase
 from word_fellow.domain.backup.Backup import Backup
 from word_fellow.domain.backup.BackupService import BackupService
 from word_fellow.domain.settings.Settings import Settings

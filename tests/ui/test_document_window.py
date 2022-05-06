@@ -4,7 +4,7 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtTest import QTest
 from PyQt5.QtWidgets import QApplication
 
-from base.BaseTestCase import BaseTestCase
+from tests.base.BaseTestCase import BaseTestCase
 from tests.utils.UiUtils import get_visible_item_widget
 from word_fellow.anki.MockedAnkiService import MockedAnkiService
 from word_fellow.domain.document.DocumentService import DocumentService
