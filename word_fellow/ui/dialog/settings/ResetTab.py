@@ -1,5 +1,6 @@
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QPushButton, QLabel, QMessageBox
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QPushButton, QLabel, QMessageBox, QApplication
 
+from tests.utils import get_test_word_fellow_db
 from word_fellow.domain.reset.ResetService import ResetService
 
 
@@ -47,5 +48,13 @@ class ResetTab(QWidget):
     def __add_caution_label(self, vbox: QVBoxLayout) -> None:
         label = QLabel("You will lose all your data in WordFellow, including imported documents, marked words, and so on. Be careful!\n\nAnki decks, cards, notes and everything belonging to Anki won't be deleted.")
         label.setWordWrap(True)
-        label.setMaximumWidth(300)
         vbox.addWidget(label)
+
+
+if __name__ == "__main__":
+    db = get_test_word_fellow_db()
+    reset_service = ResetService(db)
+    app = QApplication([])
+    reset_tab = ResetTab(None, reset_service)
+    reset_tab.show()
+    app.exec_()
