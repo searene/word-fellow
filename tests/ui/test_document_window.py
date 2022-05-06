@@ -205,14 +205,52 @@ class DocumentWindowTestCase(BaseTestCase):
     # TODO Test from ignored to known
     def test_should_undo_ignored_word_when_clicking_on_undo_btn(self):
         QTest.mouseClick(self.form._ignore_btn, Qt.LeftButton)
-        # Simulate clicking Cmd + z
-        # QTest.keySequence(self.form, QKeySequence.Undo)
         self.form._undo_action.trigger()
         self.assertEqual(self.form._word_label.text(), "this")
 
         # Change to the ignored section
         self.__change_status(WordStatus.IGNORED)
         # There should be no word
+        self.assertEqual(self.form._word_label.text(), "--")
+
+    def test_should_undo_known_word_when_clicking_on_undo_btn(self):
+        QTest.mouseClick(self.form._know_btn, Qt.LeftButton)
+        self.form._undo_action.trigger()
+        self.assertEqual(self.form._word_label.text(), "this")
+
+        # Change to the ignored section
+        self.__change_status(WordStatus.KNOWN)
+        # There should be no word
+        self.assertEqual(self.form._word_label.text(), "--")
+
+    def test_should_undo_study_later_word_when_clicking_on_undo_btn(self):
+        QTest.mouseClick(self.form._study_later_btn, Qt.LeftButton)
+        self.form._undo_action.trigger()
+        self.assertEqual(self.form._word_label.text(), "this")
+        self.__change_status(WordStatus.STUDY_LATER)
+        self.assertEqual(self.form._word_label.text(), "--")
+
+    def test_should_undo_added_to_anki_when_clicking_on_undo_btn(self):
+        QTest.mouseClick(self.form._add_to_anki_btn, Qt.LeftButton)
+        self.form._undo_action.trigger()
+        self.assertEqual(self.form._word_label.text(), "this")
+        self.__change_status(WordStatus.STUDYING)
+        self.assertEqual(self.form._word_label.text(), "--")
+
+    def test_should_undo_known_when_clicking_on_undo_btn_and_current_status_is_ignored(self):
+
+        # Ignore the word
+        QTest.mouseClick(self.form._ignore_btn, Qt.LeftButton)
+
+        # Set the word as known
+        self.__change_status(WordStatus.IGNORED)
+        QTest.mouseClick(self.form._know_btn, Qt.LeftButton)
+
+        self.form._undo_action.trigger()
+
+        self.assertEqual(self.form._word_label.text(), "this")
+
+        self.__change_status(WordStatus.KNOWN)
         self.assertEqual(self.form._word_label.text(), "--")
 
     def __get_widget_list_htmls(self):
