@@ -26,14 +26,14 @@ class DocumentDetailDialogTestCase(BaseTestCase):
         self.__form = DocumentDetailDialog(None, self.__doc1, self.db, self.__document_service, MockedAnkiService(), show_msg_box=False)
 
     def test_should_delete_document_when_clicking_on_delete(self):
-        QTest.mouseClick(self.__form._deleteBtn, Qt.LeftButton)
+        QTest.mouseClick(self.__form._delete_btn, Qt.LeftButton)
         QTest.mouseClick(self.__form._delete_warning_msg_box.button(QMessageBox.Ok), Qt.LeftButton)
 
         docs = self.__document_service.get_document_list()
         self.assertEqual(docs, [self.__doc2])
 
     def test_should_not_delete_document_when_clicking_on_cancel(self):
-        QTest.mouseClick(self.__form._deleteBtn, Qt.LeftButton)
+        QTest.mouseClick(self.__form._delete_btn, Qt.LeftButton)
         QTest.mouseClick(self.__form._delete_warning_msg_box.button(QMessageBox.Cancel), Qt.LeftButton)
 
         docs = self.__document_service.get_document_list()

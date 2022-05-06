@@ -23,17 +23,18 @@ from word_fellow.ui.util.FileUtils import get_base_name_without_ext
 
 class MainDialog(QDialog):
 
-    def __init__(self, db: WordFellowDB, anki_service: IAnkiService):
+    def __init__(self, db: WordFellowDB, anki_service: IAnkiService, show_dialog=True):
         super().__init__()
         self.__db = db
         self.__anki_service = anki_service
         self.__document_service = DocumentService(self.__db)
-        self.__init_ui(self.__document_service, self.__db)
+        self.__show_dialog = show_dialog
+        self.__init_ui(self.__document_service, self.__db, self.__show_dialog)
 
-    def __init_ui(self, document_service: DocumentService, db: WordFellowDB):
+    def __init_ui(self, document_service: DocumentService, db: WordFellowDB, show_dialog: bool):
         vbox = QVBoxLayout()
         vbox.addLayout(self.__get_top_bar())
-        self.__add_document_list(vbox, document_service, db)
+        self.__add_document_list(vbox, document_service, db, show_dialog)
         vbox.addWidget(self.__get_import_new_document_button())
         self.setLayout(vbox)
         self.setWindowTitle("WordFellow")
@@ -69,30 +70,30 @@ class MainDialog(QDialog):
 
         default_document_analyzer = DefaultDocumentAnalyzer(self.__db)
         doc = self.__document_service.import_document(doc_name, doc_contents, default_document_analyzer)
-        self.__list_widget.addItem(self.__to_list_item((doc.document_id, doc.name)))
-        self.__list_widget.show()
+        self._list_widget.addItem(self.__to_list_item((doc.document_id, doc.name)))
+        self._list_widget.show()
         self.__no_document_label.hide()
         self.__anki_service.show_info_dialog("Importing is done")
 
-    def __add_document_list(self, parent: QVBoxLayout, document_service: DocumentService, db: WordFellowDB) -> None:
+    def __add_document_list(self, parent: QVBoxLayout, document_service: DocumentService, db: WordFellowDB, show_dialog: bool) -> None:
         self.__no_document_label = QLabel("No document is available, click the \"Add\" button below to start importing.")
         self.__no_document_label.setStyleSheet("QLabel { background-color : white; }")
         self.__no_document_label.setSizePolicy(QSizePolicy(QSizePolicy.MinimumExpanding, QSizePolicy.MinimumExpanding))
         self.__no_document_label.setMinimumHeight(200)
         self.__no_document_label.setContentsMargins(20, 20, 20, 20)
         self.__no_document_label.setAlignment(Qt.AlignCenter)
-        self.__list_widget = ClickableListWidget()
-        self.__list_widget.itemClicked.connect(lambda item: self.on_list_item_clicked(item, document_service, db))
+        self._list_widget = ClickableListWidget()
+        self._list_widget.itemClicked.connect(lambda item: self.on_list_item_clicked(item, document_service, db, show_dialog))
         parent.addWidget(self.__no_document_label)
-        parent.addWidget(self.__list_widget)
+        parent.addWidget(self._list_widget)
 
         doc_id_and_name_list = self.__document_service.get_document_id_and_name_list()
         if len(doc_id_and_name_list) == 0:
-            self.__list_widget.hide()
+            self._list_widget.hide()
         else:
             self.__no_document_label.hide()
             for doc_id_and_name in doc_id_and_name_list:
-                self.__list_widget.addItem(self.__to_list_item(doc_id_and_name))
+                self._list_widget.addItem(self.__to_list_item(doc_id_and_name))
 
     def __to_list_item(self, doc_id_and_name: (int, str)) -> QListWidgetItem:
         res = QListWidgetItem()
@@ -100,14 +101,15 @@ class MainDialog(QDialog):
         res.setData(QtCore.Qt.UserRole, doc_id_and_name[0])
         return res
 
-    def on_list_item_clicked(self, item: QListWidgetItem, document_service: DocumentService, db: WordFellowDB) -> None:
+    def on_list_item_clicked(self, item: QListWidgetItem, document_service: DocumentService, db: WordFellowDB, show_dialog: bool) -> None:
         doc_id = item.data(QtCore.Qt.UserRole)
-        self.__open_document_dialog(doc_id, document_service, db)
+        self.__open_document_dialog(doc_id, document_service, db, show_dialog)
 
-    def __open_document_dialog(self, doc_id: int, document_service: DocumentService, db: WordFellowDB):
+    def __open_document_dialog(self, doc_id: int, document_service: DocumentService, db: WordFellowDB, show_dialog: bool) -> None:
         doc = self.__document_service.get_doc_by_id(doc_id)
-        doc_detail_dialog = DocumentDetailDialog(self, doc, db, document_service, self.__anki_service)
-        doc_detail_dialog.show()
+        self._doc_detail_dialog = DocumentDetailDialog(self, doc, db, document_service, self.__anki_service, show_dialog)
+        if show_dialog:
+            self._doc_detail_dialog.show()
 
 
 if __name__ == '__main__':
