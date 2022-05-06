@@ -307,8 +307,7 @@ class DocumentWindow(QWidget):
         menu = QMenu(self)
         self._undo_action = menu.addAction("Undo")
         self._undo_action.triggered.connect(self.__undo)
-        # Set the shortcut to cmd+z in macOS and ctrl+z in Windows
-        self._undo_action.setShortcut(QKeySequence(Qt.CTRL + Qt.Key_Z))
+        self._undo_action.setShortcut(QKeySequence.Undo)
         more_btn.setMenu(menu)
         return more_btn
 

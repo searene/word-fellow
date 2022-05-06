@@ -1,6 +1,7 @@
 import sys
 
 from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QKeySequence
 from PyQt5.QtTest import QTest
 from PyQt5.QtWidgets import QApplication
 
@@ -199,6 +200,19 @@ class DocumentWindowTestCase(BaseTestCase):
         QTest.mouseClick(self.form._next_page_btn, Qt.LeftButton)
         QTest.mouseClick(self.form._ignore_btn, Qt.LeftButton)
         self.assertEqual(self.form._word_label.text(), "this")
+
+    # TODO Test other buttons, too.
+    def test_should_undo_ignored_word_when_clicking_on_undo_btn(self):
+        QTest.mouseClick(self.form._ignore_btn, Qt.LeftButton)
+        # Simulate clicking Cmd + z
+        # QTest.keySequence(self.form, QKeySequence.Undo)
+        self.form._undo_action.trigger()
+        self.assertEqual(self.form._word_label.text(), "this")
+
+        # Change to the ignored section
+        self.__change_status(WordStatus.IGNORED)
+        # There should be no word
+        self.assertEqual(self.form._word_label.text(), "--")
 
     def __get_widget_list_htmls(self):
         return [item.short_html for item in get_visible_item_widget(self.form._context_list._list_widget)]
