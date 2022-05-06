@@ -21,7 +21,6 @@ from word_fellow.ui.dialog.settings.SettingsDialog import SettingsDialog
 from word_fellow.ui.util.FileUtils import get_base_name_without_ext
 
 
-# TODO Give the user an option to delete a document
 class MainDialog(QDialog):
 
     def __init__(self, db: WordFellowDB, anki_service: IAnkiService):
