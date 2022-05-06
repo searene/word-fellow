@@ -1,14 +1,22 @@
-from typing import Dict, Optional
+import os
+import sys
+from typing import Dict, Optional, TYPE_CHECKING
 
 from PyQt5.QtCore import Qt, QThread
 from PyQt5.QtGui import QCloseEvent, QFont
 from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QComboBox, QLabel, QPushButton, QApplication, QWidget, \
-    QSizePolicy, QSpacerItem
-from anki.notes import Note
+    QSizePolicy, QSpacerItem, QMenu, QToolButton
 
+if TYPE_CHECKING:
+    from anki.notes import Note
+
+from tests.utils import get_test_word_fellow_db
 from word_fellow.anki.IAnkiService import IAnkiService
+from word_fellow.anki.MockedAnkiService import MockedAnkiService
 from word_fellow.domain.backup.BackupService import BackupService
 from word_fellow.domain.document.Document import Document
+from word_fellow.domain.document.DocumentService import DocumentService
+from word_fellow.domain.document.analyzer.DefaultDocumentAnalyzer import DefaultDocumentAnalyzer
 from word_fellow.domain.settings.SettingsService import SettingsService
 from word_fellow.domain.status.GlobalWordStatus import upsert_word_status, Status
 from word_fellow.domain.word.Word import Word
@@ -17,6 +25,7 @@ from word_fellow.infrastructure import WordFellowDB, get_prod_db_path
 from word_fellow.ui.dialog.backup.BackupDialog import BackupDialog
 from word_fellow.ui.dialog.backup.BackupWorker import BackupWorker
 from word_fellow.ui.dialog.context.list.ContextListWidget import ContextListWidget
+from word_fellow.ui.util.PyQtUtils import get_vertical_line
 
 
 class DocumentWindow(QWidget):
@@ -65,7 +74,7 @@ class DocumentWindow(QWidget):
         backup_dialog = BackupDialog(backup_service, get_prod_db_path())
         backup_dialog.exec_()
 
-    def __raise(self, note: Note):
+    def __raise(self, note: 'Note'):
         self.raise_()
 
     def __get_dialog_layout(self, word_label: QLabel, context_list: ContextListWidget, doc: Document, status: WordStatus, db: WordFellowDB) -> QVBoxLayout:
@@ -133,6 +142,8 @@ class DocumentWindow(QWidget):
         res.addWidget(self._ignore_btn)
         res.addWidget(self._know_btn)
         res.addWidget(self._study_later_btn)
+        res.addWidget(get_vertical_line())
+        res.addWidget(self.__get_more_btn())
         res.addItem(QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum))
 
         self._prev_page_btn = self.__get_prev_page_btn()
@@ -289,3 +300,23 @@ class DocumentWindow(QWidget):
     def __get_word_label_text(self, word: Optional[Word]) -> str:
         return word.text if word is not None else "--"
 
+    def __get_more_btn(self) -> QPushButton:
+        more_btn = QPushButton(self)
+        more_btn.setText("More")
+
+        menu = QMenu(self)
+        menu.addAction("Undo")
+        more_btn.setMenu(menu)
+        return more_btn
+
+
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    db = get_test_word_fellow_db()
+    analyzer = DefaultDocumentAnalyzer(db)
+    document_service = DocumentService(db)
+    doc = document_service.import_document("test_name", "test contents", analyzer)
+    window = DocumentWindow(doc, db, MockedAnkiService())
+    window.show()
+    app.exec_()
+    os.remove(db.db_path)
