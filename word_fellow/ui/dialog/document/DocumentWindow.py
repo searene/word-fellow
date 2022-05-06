@@ -3,9 +3,9 @@ import sys
 from typing import Dict, Optional, TYPE_CHECKING
 
 from PyQt5.QtCore import Qt, QThread
-from PyQt5.QtGui import QCloseEvent, QFont
+from PyQt5.QtGui import QCloseEvent, QFont, QKeySequence
 from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QComboBox, QLabel, QPushButton, QApplication, QWidget, \
-    QSizePolicy, QSpacerItem, QMenu, QToolButton
+    QSizePolicy, QSpacerItem, QMenu, QToolButton, QAction
 
 if TYPE_CHECKING:
     from anki.notes import Note
@@ -305,9 +305,15 @@ class DocumentWindow(QWidget):
         more_btn.setText("More")
 
         menu = QMenu(self)
-        menu.addAction("Undo")
+        self._undo_action = menu.addAction("Undo")
+        self._undo_action.triggered.connect(self.__undo)
+        # Set the shortcut to cmd+z in macOS and ctrl+z in Windows
+        self._undo_action.setShortcut(QKeySequence(Qt.CTRL + Qt.Key_Z))
         more_btn.setMenu(menu)
         return more_btn
+
+    def __undo(self, action: QAction):
+        print("undo")
 
 
 if __name__ == "__main__":
