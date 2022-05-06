@@ -84,6 +84,7 @@ class DocumentDetailDialog(QDialog):
         btn_code = msg_box.standardButton(button)
         if btn_code == QMessageBox.Ok:
             document_service.delete_doc_and_words(doc.document_id)
+            # TODO raise the parent window
             self.close()
 
 
