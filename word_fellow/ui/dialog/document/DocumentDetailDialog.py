@@ -77,7 +77,6 @@ class DocumentDetailDialog(QDialog):
     def __delete_dialog_btn_handler(self, button: QMessageBox.StandardButton, doc: Document, document_service: DocumentService, msg_box: QMessageBox) -> None:
         btn_code = msg_box.standardButton(button)
         if btn_code == QMessageBox.Ok:
-            # TODO delete the document
             # TODO remove the document in MainDialog
             # TODO test it
             document_service.delete_doc_and_words(doc.document_id)
