@@ -7,6 +7,8 @@ from PyQt5.QtGui import QCloseEvent, QFont, QKeySequence
 from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QComboBox, QLabel, QPushButton, QApplication, QWidget, \
     QSizePolicy, QSpacerItem, QMenu, QToolButton, QAction
 
+from word_fellow.domain.operation.Operation import Operation
+
 if TYPE_CHECKING:
     from anki.notes import Note
 
@@ -18,7 +20,7 @@ from word_fellow.domain.document.Document import Document
 from word_fellow.domain.document.DocumentService import DocumentService
 from word_fellow.domain.document.analyzer.DefaultDocumentAnalyzer import DefaultDocumentAnalyzer
 from word_fellow.domain.settings.SettingsService import SettingsService
-from word_fellow.domain.status.GlobalWordStatus import upsert_word_status, Status
+from word_fellow.domain.status.GlobalWordStatus import upsert_word_status, Status, delete_word_status, to_status
 from word_fellow.domain.word.Word import Word
 from word_fellow.domain.word.WordStatus import WordStatus
 from word_fellow.infrastructure import WordFellowDB, get_prod_db_path
@@ -45,6 +47,7 @@ class DocumentWindow(QWidget):
         self.__dialog_layout = self.__get_dialog_layout(self._word_label, self._context_list, doc, self.__status, self.__db)
         self.__init_ui(self.__dialog_layout)
         self.__anki_service.add_to_did_add_note_hook(self.__raise)
+        self.__operations: [Operation] = []
         self.showMaximized()
 
     def closeEvent(self, event: QCloseEvent) -> None:
@@ -118,6 +121,7 @@ class DocumentWindow(QWidget):
         return status_combo_box
 
     def __on_status_selected(self, status_value: str) -> None:
+        self.__operations = []
         self.__status = WordStatus(status_value)
         self._context_list.set_status(self.__status)
         self.__update_ui()
@@ -207,21 +211,25 @@ class DocumentWindow(QWidget):
         return res
 
     def __on_study_later(self) -> None:
+        self.__operations.append(Operation(self.__word.text, self.__status, WordStatus.STUDY_LATER))
         upsert_word_status(self.__word.text, Status.STUDY_LATER, self.__db)
         self.__adjust_page_no(self.__status_to_offset_dict, self.__status, self.__total_page)
         self.__update_ui()
 
     def __on_know(self) -> None:
+        self.__operations.append(Operation(self.__word.text, self.__status, WordStatus.KNOWN))
         upsert_word_status(self.__word.text, Status.KNOWN, self.__db)
         self.__adjust_page_no(self.__status_to_offset_dict, self.__status, self.__total_page)
         self.__update_ui()
 
     def __on_ignore(self) -> None:
+        self.__operations.append(Operation(self.__word.text, self.__status, WordStatus.IGNORED))
         upsert_word_status(self.__word.text, Status.IGNORED, self.__db)
         self.__adjust_page_no(self.__status_to_offset_dict, self.__status, self.__total_page)
         self.__update_ui()
 
     def __on_add_to_anki(self) -> None:
+        self.__operations.append(Operation(self.__word.text, self.__status, WordStatus.STUDYING))
         self.__anki_service.show_add_card_dialog()
         QApplication.clipboard().setText(self.__word.text)
         self.__anki_service.show_tooltip("The word has been copied into the clipboard")
@@ -312,7 +320,14 @@ class DocumentWindow(QWidget):
         return more_btn
 
     def __undo(self, action: QAction):
-        print("undo")
+        if len(self.__operations) == 0:
+            return
+        last_op: Operation = self.__operations.pop()
+        if last_op.prev_status == WordStatus.UNREVIEWED:
+            delete_word_status(last_op.word, to_status(word_status=last_op.next_status), self.__db)
+        else:
+            upsert_word_status(last_op.word, to_status(word_status=last_op.prev_status), self.__db)
+        self.__update_ui()
 
 
 if __name__ == "__main__":

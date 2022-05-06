@@ -202,6 +202,7 @@ class DocumentWindowTestCase(BaseTestCase):
         self.assertEqual(self.form._word_label.text(), "this")
 
     # TODO Test other buttons, too.
+    # TODO Test from ignored to known
     def test_should_undo_ignored_word_when_clicking_on_undo_btn(self):
         QTest.mouseClick(self.form._ignore_btn, Qt.LeftButton)
         # Simulate clicking Cmd + z

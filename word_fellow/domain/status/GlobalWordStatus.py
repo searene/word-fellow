@@ -11,6 +11,19 @@ class Status(enum.Enum):
     STUDY_LATER = "STUDY_LATER"
 
 
+def to_status(word_status: WordStatus) -> Status:
+    if word_status == WordStatus.KNOWN:
+        return Status.KNOWN
+    elif word_status == WordStatus.STUDYING:
+        return Status.STUDYING
+    elif word_status == WordStatus.IGNORED:
+        return Status.IGNORED
+    elif word_status == WordStatus.STUDY_LATER:
+        return Status.STUDY_LATER
+    else:
+        raise ValueError("Unknown word status: {}".format(word_status))
+
+
 class GlobalWordStatus:
     """
     A class to record each word's status, regardless which document it belongs to.
@@ -44,3 +57,9 @@ def upsert_word_status(word: str, status: Status, db: WordFellowDB) -> None:
         db.execute("""
         UPDATE global_word_status SET status = ? WHERE word = ?
         """, (status.name, word))
+
+
+def delete_word_status(word: str, status: Status, db: WordFellowDB) -> None:
+    db.execute("""
+    DELETE FROM global_word_status WHERE word = ? AND status = ?
+    """, (word, status.name))
