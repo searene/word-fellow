@@ -7,10 +7,10 @@ from PyQt5.QtTest import QTest
 from PyQt5.QtWidgets import QApplication
 
 from base.BaseTestCase import BaseTestCase
-from tests.utils import get_test_vocab_builder_db
-from vocab_builder.domain.backup.BackupService import BackupService
-from vocab_builder.domain.settings.SettingsService import SettingsService
-from vocab_builder.ui.dialog.settings.backup.BackupDetailDialog import BackupDetailDialog
+from tests.utils import get_test_word_fellow_db
+from word_fellow.domain.backup.BackupService import BackupService
+from word_fellow.domain.settings.SettingsService import SettingsService
+from word_fellow.ui.dialog.settings.backup.BackupDetailDialog import BackupDetailDialog
 
 
 class BackupDetailDialogTestCase(BaseTestCase):
@@ -37,7 +37,7 @@ class BackupDetailDialogTestCase(BaseTestCase):
         QTest.mouseClick(self.__form._restore_button, Qt.LeftButton)
 
         # verify
-        new_db = get_test_vocab_builder_db()
+        new_db = get_test_word_fellow_db()
         new_settings_service = SettingsService(new_db)
         new_backup_service = BackupService(new_settings_service, db_path=self.db.db_path)
         new_backup_config = new_backup_service.get_backup_config()

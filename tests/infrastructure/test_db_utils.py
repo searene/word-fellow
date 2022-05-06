@@ -1,6 +1,6 @@
 import unittest
 
-from vocab_builder.infrastructure.utils import DBUtils
+from word_fellow.infrastructure.utils import DBUtils
 
 
 class DBUtilsTestCase(unittest.TestCase):

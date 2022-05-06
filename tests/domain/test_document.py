@@ -1,7 +1,7 @@
 import unittest
 
 from base.BaseTestCase import BaseTestCase
-from vocab_builder.domain.document.DocumentService import DocumentService
+from word_fellow.domain.document.DocumentService import DocumentService
 
 
 class DocumentTestCase(BaseTestCase):

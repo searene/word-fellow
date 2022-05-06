@@ -4,11 +4,11 @@ import unittest
 from datetime import datetime
 
 from base.BaseTestCase import BaseTestCase
-from vocab_builder.domain.backup.Backup import Backup
-from vocab_builder.domain.backup.BackupService import BackupService
-from vocab_builder.domain.settings.Settings import Settings
-from vocab_builder.domain.settings.SettingsService import SettingsService
-from vocab_builder.domain.utils import FileUtils
+from word_fellow.domain.backup.Backup import Backup
+from word_fellow.domain.backup.BackupService import BackupService
+from word_fellow.domain.settings.Settings import Settings
+from word_fellow.domain.settings.SettingsService import SettingsService
+from word_fellow.domain.utils import FileUtils
 
 
 class BackupTestCase(BaseTestCase):
@@ -16,12 +16,12 @@ class BackupTestCase(BaseTestCase):
     def setUp(self) -> None:
         super().setUp()
         self.__settings_service = SettingsService(self.db)
-        self.__settings = Settings(True, 3, os.path.join(tempfile.gettempdir(), "anki_vocab_builder_backup"))
+        self.__settings = Settings(True, 3, os.path.join(tempfile.gettempdir(), "word_fellow_backup"))
         self.__settings_service.update_settings(self.__settings)
         FileUtils.remove_dir_if_exists(self.__settings.backup_folder_path)
         FileUtils.mkdirs(self.__settings.backup_folder_path)
-        self.__backup_file_name1 = "anki_vocab_builder_backup_20220501214903.db"
-        self.__backup_file_name2 = "anki_vocab_builder_backup_20220502214950.db"
+        self.__backup_file_name1 = "word_fellow_backup_20220501214903.db"
+        self.__backup_file_name2 = "word_fellow_backup_20220502214950.db"
         self.__add_backup_files(self.__settings.backup_folder_path, [self.__backup_file_name1, self.__backup_file_name2])
         db_path = self.__create_test_db_file("contents1")
         self.__backup_service = BackupService(self.__settings_service, db_path)
@@ -87,7 +87,7 @@ class BackupTestCase(BaseTestCase):
 
     def __create_test_db_file(self, test_file_contents: str) -> str:
         """Create an empty db file and return its absolute path."""
-        db_file_path = os.path.join(tempfile.gettempdir(), "vocab_builder.db")
+        db_file_path = os.path.join(tempfile.gettempdir(), "word-fellow.db")
         with open(db_file_path, 'w') as f:
             f.write(test_file_contents)
         return db_file_path

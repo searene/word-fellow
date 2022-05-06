@@ -4,7 +4,7 @@ from typing import Tuple
 from base.BaseTestCase import BaseTestCase
 
 
-class VocabBuilderDBTestCase(BaseTestCase):
+class WordFellowDBTestCase(BaseTestCase):
 
     def test_execute_script_without_params(self):
         self.db.execute_script("""

@@ -8,11 +8,11 @@ from PyQt5.QtTest import QTest
 from PyQt5.QtWidgets import QApplication, QListWidgetItem
 
 from base.BaseTestCase import BaseTestCase
-from vocab_builder.domain.backup.Backup import Backup
-from vocab_builder.domain.backup.BackupService import BackupService
-from vocab_builder.domain.settings.SettingsService import SettingsService
-from vocab_builder.domain.utils import FileUtils
-from vocab_builder.ui.dialog.settings.backup.BackupTab import BackupTab
+from word_fellow.domain.backup.Backup import Backup
+from word_fellow.domain.backup.BackupService import BackupService
+from word_fellow.domain.settings.SettingsService import SettingsService
+from word_fellow.domain.utils import FileUtils
+from word_fellow.ui.dialog.settings.backup.BackupTab import BackupTab
 
 
 class BackupTabTestCase(BaseTestCase):
@@ -96,7 +96,7 @@ class BackupTabTestCase(BaseTestCase):
         self.__add_backup_file(backup_folder_path, "20220501110005")
 
     def __update_backup_folder_path_to_temp_folder(self, backup_service: BackupService) -> None:
-        tempdir = FileUtils.create_temp_dir("anki_vocab_builder_backup")
+        tempdir = FileUtils.create_temp_dir("word_fellow_backup")
         backup_service.update_backup_folder_path(tempdir)
 
     def __add_backup_file(self, backup_folder_path: str, backup_date_time: str) -> str:

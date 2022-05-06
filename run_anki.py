@@ -1,5 +1,5 @@
 from aqt import _run
-from vocab_builder.ui import init_addon
+from word_fellow.ui import init_addon
 
 # Initialize Anki
 

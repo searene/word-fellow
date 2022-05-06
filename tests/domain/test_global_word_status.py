@@ -1,7 +1,7 @@
 import unittest
 
 from base.BaseTestCase import BaseTestCase
-from vocab_builder.domain.status.GlobalWordStatus import insert_word_status, Status, \
+from word_fellow.domain.status.GlobalWordStatus import insert_word_status, Status, \
     upsert_word_status
 
 

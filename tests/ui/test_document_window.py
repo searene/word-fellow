@@ -6,13 +6,13 @@ from PyQt5.QtWidgets import QApplication
 
 from base.BaseTestCase import BaseTestCase
 from tests.utils.UiUtils import get_visible_item_widget
-from vocab_builder.anki.MockedAnkiService import MockedAnkiService
-from vocab_builder.domain.document.DocumentService import DocumentService
-from vocab_builder.domain.document.analyzer.DefaultDocumentAnalyzer import DefaultDocumentAnalyzer
-from vocab_builder.domain.status import GlobalWordStatus
-from vocab_builder.domain.status.GlobalWordStatus import Status
-from vocab_builder.domain.word.WordStatus import WordStatus
-from vocab_builder.ui.dialog.document.DocumentWindow import DocumentWindow
+from word_fellow.anki.MockedAnkiService import MockedAnkiService
+from word_fellow.domain.document.DocumentService import DocumentService
+from word_fellow.domain.document.analyzer.DefaultDocumentAnalyzer import DefaultDocumentAnalyzer
+from word_fellow.domain.status import GlobalWordStatus
+from word_fellow.domain.status.GlobalWordStatus import Status
+from word_fellow.domain.word.WordStatus import WordStatus
+from word_fellow.ui.dialog.document.DocumentWindow import DocumentWindow
 
 
 class DocumentWindowTestCase(BaseTestCase):

@@ -5,10 +5,10 @@ from PyQt5.QtTest import QTest
 from PyQt5.QtWidgets import QMessageBox, QApplication
 
 from base.BaseTestCase import BaseTestCase
-from vocab_builder.anki.MockedAnkiService import MockedAnkiService
-from vocab_builder.domain.document.DocumentService import DocumentService
-from vocab_builder.domain.document.analyzer.DefaultDocumentAnalyzer import DefaultDocumentAnalyzer
-from vocab_builder.ui.dialog.document.DocumentDetailDialog import DocumentDetailDialog
+from word_fellow.anki.MockedAnkiService import MockedAnkiService
+from word_fellow.domain.document.DocumentService import DocumentService
+from word_fellow.domain.document.analyzer.DefaultDocumentAnalyzer import DefaultDocumentAnalyzer
+from word_fellow.ui.dialog.document.DocumentDetailDialog import DocumentDetailDialog
 
 
 class DocumentDetailDialogTestCase(BaseTestCase):

@@ -1,14 +1,14 @@
 from unittest.mock import Mock
 
 from base.BaseTestCase import BaseTestCase
-from vocab_builder.domain.document.Document import Document
-from vocab_builder.domain.status import GlobalWordStatus
-from vocab_builder.domain.status.GlobalWordStatus import Status
-from vocab_builder.domain.word import WordService, WordFactory
-from vocab_builder.domain.word.Word import get_words_by_document_id, Word
-from vocab_builder.domain.word.WordService import batch_insert
-from vocab_builder.domain.word.WordStatus import WordStatus
-from vocab_builder.domain.word.WordValueObject import WordValueObject, WordContext, ShortAndLongContext
+from word_fellow.domain.document.Document import Document
+from word_fellow.domain.status import GlobalWordStatus
+from word_fellow.domain.status.GlobalWordStatus import Status
+from word_fellow.domain.word import WordService, WordFactory
+from word_fellow.domain.word.Word import get_words_by_document_id, Word
+from word_fellow.domain.word.WordService import batch_insert
+from word_fellow.domain.word.WordStatus import WordStatus
+from word_fellow.domain.word.WordValueObject import WordValueObject, WordContext, ShortAndLongContext
 
 
 class WordTestCase(BaseTestCase):

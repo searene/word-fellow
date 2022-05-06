@@ -2,13 +2,13 @@ import os
 import unittest
 from datetime import datetime
 
-from vocab_builder.domain.backup.Backup import Backup
+from word_fellow.domain.backup.Backup import Backup
 
 
 class BackupTestCase(unittest.TestCase):
 
     def setUp(self):
-        self.backup_name = "anki_vocab_builder_backup_20220501110003.db"
+        self.backup_name = "word_fellow_backup_20220501110003.db"
         self.backup = Backup(os.path.join("/tmp", self.backup_name))
 
     def test_get_backup_name(self):

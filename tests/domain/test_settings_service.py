@@ -1,6 +1,6 @@
 from base.BaseTestCase import BaseTestCase
-from vocab_builder.domain.settings.Settings import Settings
-from vocab_builder.domain.settings.SettingsService import SettingsService
+from word_fellow.domain.settings.Settings import Settings
+from word_fellow.domain.settings.SettingsService import SettingsService
 
 
 class SettingsServiceTestCase(BaseTestCase):
