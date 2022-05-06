@@ -17,9 +17,10 @@ from word_fellow.ui.dialog.document.DocumentWindow import DocumentWindow
 
 class DocumentDetailDialog(QDialog):
 
-    def __init__(self, parent: Optional[QWidget], doc: Document, db: WordFellowDB, document_service: DocumentService,
+    def __init__(self, parent: Optional[QDialog], doc: Document, db: WordFellowDB, document_service: DocumentService,
                  anki_service: IAnkiService, on_document_removed: Callable[[], None], show_dialog: bool = True):
         super(DocumentDetailDialog, self).__init__(parent)
+        self.__parent = parent
         self.__doc = doc
         self.__db = db
         self.__document_service = document_service
@@ -84,7 +85,9 @@ class DocumentDetailDialog(QDialog):
         btn_code = msg_box.standardButton(button)
         if btn_code == QMessageBox.Ok:
             document_service.delete_doc_and_words(doc.document_id)
-            # TODO raise the parent window
+            # TODO raise doesn't work
+            if self.__parent is not None:
+                self.__parent.raise_()
             self.close()
 
 
