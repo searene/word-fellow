@@ -21,6 +21,7 @@ from word_fellow.ui.dialog.settings.SettingsDialog import SettingsDialog
 from word_fellow.ui.util.FileUtils import get_base_name_without_ext
 
 
+# TODO Add pagination
 class MainDialog(QDialog):
 
     def __init__(self, db: WordFellowDB, anki_service: IAnkiService, show_dialog=True):

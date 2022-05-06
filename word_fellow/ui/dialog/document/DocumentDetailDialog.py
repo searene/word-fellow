@@ -73,7 +73,7 @@ class DocumentDetailDialog(QDialog):
                                    on_document_removed: Callable[[], None], show_dialog: bool) -> None:
         self._delete_warning_msg_box = QMessageBox()
         self._delete_warning_msg_box.setIcon(QMessageBox.Warning)
-        self._delete_warning_msg_box.setText("Are you sure you want to delete this document?")
+        self._delete_warning_msg_box.setText("Are you sure you want to delete this document?\n\nMarked words (such as known, added to anki, study later, ignored) won't be deleted")
         self._delete_warning_msg_box.setWindowTitle("Delete")
         self._delete_warning_msg_box.setStandardButtons(QMessageBox.Ok | QMessageBox.Cancel)
         self._delete_warning_msg_box.buttonClicked.connect(lambda btn: self.__delete_dialog_btn_handler(btn, doc, document_service, self._delete_warning_msg_box))
@@ -96,7 +96,8 @@ if __name__ == "__main__":
     doc = Document(1, "test", "test contents")
     db = get_test_word_fellow_db()
     document_service = DocumentService(db)
-    dialog = DocumentDetailDialog(None, doc, db, document_service, MockedAnkiService())
+    dialog = DocumentDetailDialog(None, doc, db, document_service, MockedAnkiService(),
+                                  on_document_removed=lambda: None, show_dialog=True)
     dialog.show()
     code = app.exec_()
     os.remove(db.db_path)
