@@ -315,12 +315,12 @@ class DocumentWindow(QWidget):
 
         menu = QMenu(self)
         self._undo_action = menu.addAction("Undo")
-        self._undo_action.triggered.connect(self.__undo)
+        self._undo_action.triggered.connect(lambda action: self.undo())
         self._undo_action.setShortcut(QKeySequence.Undo)
         more_btn.setMenu(menu)
         return more_btn
 
-    def __undo(self, action: QAction):
+    def undo(self):
         if len(self.__operations) == 0:
             return
         last_op: Operation = self.__operations.pop()

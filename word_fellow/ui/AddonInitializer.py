@@ -1,3 +1,5 @@
+from typing import Callable
+
 import aqt
 
 from word_fellow.anki.DefaultAnkiService import DefaultAnkiService
@@ -7,6 +9,7 @@ from word_fellow.ui.dialog.MainDialog import MainDialog
 import word_fellow.domain.word.WordService as WordService
 import word_fellow.domain.word.WordValueObject as WordValueObject
 
+from word_fellow.ui.dialog.document.DocumentWindow import DocumentWindow
 from word_fellow.ui.util.DatabaseUtils import get_prod_word_fellow_db
 
 
@@ -39,7 +42,19 @@ def show_main_dialog() -> None:
     main_dialog.exec_()
 
 
+def new_undo(old_undo: Callable[[], None]) -> None:
+    active_win = aqt.mw.app.activeWindow()
+    if type(active_win) is DocumentWindow:
+        active_win.undo()
+    else:
+        old_undo()
+
+
 def init_addon() -> None:
     action = aqt.qt.QAction("WordFellow", aqt.mw)
     aqt.qt.qconnect(action.triggered, show_main_dialog)
     aqt.mw.form.menuTools.addAction(action)
+
+    old_undo_func = aqt.mw.undo
+    aqt.mw.form.actionUndo.triggered.disconnect()
+    aqt.qt.qconnect(aqt.mw.form.actionUndo.triggered, lambda: new_undo(old_undo_func))
