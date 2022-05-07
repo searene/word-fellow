@@ -316,7 +316,6 @@ class DocumentWindow(QWidget):
         menu = QMenu(self)
         self._undo_action = menu.addAction("Undo")
         self._undo_action.triggered.connect(lambda action: self.undo())
-        self._undo_action.setShortcut(QKeySequence.Undo)
         more_btn.setMenu(menu)
         return more_btn
 
