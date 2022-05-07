@@ -1,5 +1,6 @@
-from typing import Callable
+from typing import Callable, Optional
 
+from PyQt5.QtWidgets import QApplication
 from aqt.utils import showInfo
 
 from word_fellow.anki.IAnkiService import IAnkiService
@@ -23,3 +24,7 @@ class DefaultAnkiService(IAnkiService):
 
     def show_info_dialog(self, info: str) -> None:
         showInfo(info)
+
+    def get_app(self) -> QApplication:
+        return aqt.mw.app
+

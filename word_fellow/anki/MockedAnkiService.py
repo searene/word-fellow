@@ -1,11 +1,17 @@
-from typing import TYPE_CHECKING, Callable
+from typing import TYPE_CHECKING, Callable, Optional
+
+from PyQt5.QtWidgets import QApplication
 
 from word_fellow.anki.IAnkiService import IAnkiService
+
 if TYPE_CHECKING:
     from anki.notes import Note
 
 
 class MockedAnkiService(IAnkiService):
+
+    def __init__(self, app: QApplication):
+        self.__app = app
 
     def show_add_card_dialog(self) -> None:
         pass
@@ -21,3 +27,6 @@ class MockedAnkiService(IAnkiService):
 
     def show_info_dialog(self, info: str) -> None:
         pass
+
+    def get_app(self) -> QApplication:
+        return self.__app

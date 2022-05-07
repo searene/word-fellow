@@ -26,7 +26,7 @@ class DocumentWindowTestCase(BaseTestCase):
         super(DocumentWindowTestCase, self).setUp()
         document_service = DocumentService(self.db)
         self.doc = document_service.import_document("test doc", "this is this", DefaultDocumentAnalyzer(self.db))
-        self.form = DocumentWindow(self.doc, self.db, MockedAnkiService())
+        self.form = DocumentWindow(self.doc, self.db, MockedAnkiService(self.__app))
 
     def test_should_give_the_same_contexts_when_switching_status_back(self):
         """Situation: Change the status from unreviewed to ignored, then to unreviewed again.
@@ -263,4 +263,4 @@ class DocumentWindowTestCase(BaseTestCase):
         self.doc = document_service.import_document("test doc", "this is this", DefaultDocumentAnalyzer(self.db))
         GlobalWordStatus.upsert_word_status("this", Status.STUDYING, self.db)
         GlobalWordStatus.upsert_word_status("is", Status.STUDYING, self.db)
-        self.form = DocumentWindow(self.doc, self.db, MockedAnkiService())
+        self.form = DocumentWindow(self.doc, self.db, MockedAnkiService(self.__app))

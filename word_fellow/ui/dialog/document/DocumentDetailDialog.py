@@ -96,7 +96,7 @@ if __name__ == "__main__":
     doc = Document(1, "test", "test contents")
     db = get_test_word_fellow_db()
     document_service = DocumentService(db)
-    dialog = DocumentDetailDialog(None, doc, db, document_service, MockedAnkiService(),
+    dialog = DocumentDetailDialog(None, doc, db, document_service, MockedAnkiService(app),
                                   on_document_removed=lambda: None, show_dialog=True)
     dialog.show()
     code = app.exec_()

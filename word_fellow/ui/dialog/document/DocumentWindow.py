@@ -337,7 +337,7 @@ if __name__ == "__main__":
     analyzer = DefaultDocumentAnalyzer(db)
     document_service = DocumentService(db)
     doc = document_service.import_document("test_name", "test contents", analyzer)
-    window = DocumentWindow(doc, db, MockedAnkiService())
+    window = DocumentWindow(doc, db, MockedAnkiService(app))
     window.show()
     app.exec_()
     os.remove(db.db_path)

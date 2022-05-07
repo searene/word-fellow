@@ -1,5 +1,8 @@
-from typing import Protocol, Callable, TYPE_CHECKING
+from typing import Protocol, Callable, TYPE_CHECKING, Optional
 from abc import abstractmethod
+
+from PyQt5.QtWidgets import QApplication
+
 if TYPE_CHECKING:
     from anki.notes import Note
 
@@ -24,4 +27,8 @@ class IAnkiService(Protocol):
 
     @abstractmethod
     def show_info_dialog(self, info: str) -> None:
+        pass
+
+    @abstractmethod
+    def get_app(self) -> QApplication:
         pass

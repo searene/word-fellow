@@ -147,7 +147,7 @@ if __name__ == '__main__':
     # db.execute("delete from words")
     # db.execute("delete from global_word_status")
 
-    ex = MainDialog(db, MockedAnkiService())
+    ex = MainDialog(db, MockedAnkiService(app))
     ex.show()
     app.exec_()
     os.remove(db.db_path)
