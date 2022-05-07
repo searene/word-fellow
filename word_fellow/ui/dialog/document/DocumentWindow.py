@@ -79,6 +79,7 @@ class DocumentWindow(QWidget):
 
     def __raise(self, note: 'Note'):
         self.raise_()
+        self.activateWindow()
 
     def __get_dialog_layout(self, word_label: QLabel, context_list: ContextListWidget, doc: Document, status: WordStatus, db: WordFellowDB) -> QVBoxLayout:
         vbox = QVBoxLayout()
