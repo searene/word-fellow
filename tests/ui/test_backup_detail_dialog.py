@@ -7,7 +7,7 @@ from PyQt5.QtTest import QTest
 from PyQt5.QtWidgets import QApplication
 
 from tests.base.BaseTestCase import BaseTestCase
-from tests.utils import get_test_word_fellow_db
+from word_fellow.ui.util.DatabaseUtils import get_test_word_fellow_db
 from word_fellow.domain.backup.BackupService import BackupService
 from word_fellow.domain.settings.SettingsService import SettingsService
 from word_fellow.ui.dialog.settings.backup.BackupDetailDialog import BackupDetailDialog

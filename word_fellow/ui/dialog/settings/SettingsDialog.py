@@ -2,11 +2,11 @@ import os
 
 from PyQt5.QtWidgets import QDialog, QVBoxLayout, QTabWidget
 
-from tests.utils import get_test_word_fellow_db
 from word_fellow.domain.backup.BackupService import BackupService
 from word_fellow.domain.reset.ResetService import ResetService
 from word_fellow.domain.settings.SettingsService import SettingsService
 from word_fellow.infrastructure import WordFellowDB
+from word_fellow.ui.util.DatabaseUtils import get_test_word_fellow_db
 from word_fellow.ui.dialog.settings.backup.BackupTab import BackupTab
 from word_fellow.ui.dialog.settings.ResetTab import ResetTab
 

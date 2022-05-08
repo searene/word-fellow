@@ -7,13 +7,13 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import (QPushButton, QApplication, QHBoxLayout, QVBoxLayout, QLabel, QDialog, QFileDialog,
                              QListWidgetItem, QSizePolicy, QListWidget, QScrollBar)
 
-from tests.utils import get_test_word_fellow_db
 from word_fellow.anki.IAnkiService import IAnkiService
 from word_fellow.anki.MockedAnkiService import MockedAnkiService
 from word_fellow.domain.document.Document import Document
 from word_fellow.domain.document.DocumentService import DocumentService
 from word_fellow.domain.document.analyzer.DefaultDocumentAnalyzer import DefaultDocumentAnalyzer
 from word_fellow.domain.utils import init_database
+from word_fellow.ui.util.DatabaseUtils import get_test_word_fellow_db
 from word_fellow.infrastructure import WordFellowDB
 from word_fellow.ui.dialog.document.DocumentDetailDialog import DocumentDetailDialog
 from word_fellow.ui.dialog.context.list.ClickableListWidget import ClickableListWidget

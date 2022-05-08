@@ -12,7 +12,7 @@ Build your vocabulary in Anki.
 2. Open the Anki addon folder, create a link to the project (you may need to change the source and target directory):
 
    ```shell
-   ln -s ~/PycharmProjects/word-fellow/word-fellow ~/Library/Application Support/Anki2/addons21
+   ln -s ~/PycharmProjects/word-fellow/word_fellow ~/Library/Application\ Support/Anki2/addons21
    ```
 
 3. Run `run_anki.py`:

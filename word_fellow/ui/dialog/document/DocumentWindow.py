@@ -12,7 +12,6 @@ from word_fellow.domain.operation.Operation import Operation
 if TYPE_CHECKING:
     from anki.notes import Note
 
-from tests.utils import get_test_word_fellow_db
 from word_fellow.anki.IAnkiService import IAnkiService
 from word_fellow.anki.MockedAnkiService import MockedAnkiService
 from word_fellow.domain.backup.BackupService import BackupService
@@ -24,6 +23,7 @@ from word_fellow.domain.status.GlobalWordStatus import upsert_word_status, Statu
 from word_fellow.domain.word.Word import Word
 from word_fellow.domain.word.WordStatus import WordStatus
 from word_fellow.infrastructure import WordFellowDB, get_prod_db_path
+from word_fellow.ui.util.DatabaseUtils import get_test_word_fellow_db
 from word_fellow.ui.dialog.backup.BackupDialog import BackupDialog
 from word_fellow.ui.dialog.backup.BackupWorker import BackupWorker
 from word_fellow.ui.dialog.context.list.ContextListWidget import ContextListWidget

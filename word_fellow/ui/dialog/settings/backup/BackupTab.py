@@ -6,7 +6,7 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QCheckBox, QLabel, QLineEdit, QHBoxLayout, QSpinBox, \
     QApplication, QListWidgetItem, QFileDialog, QPushButton
 
-from tests.utils import get_test_word_fellow_db
+from word_fellow.ui.util.DatabaseUtils import get_test_word_fellow_db
 from word_fellow.domain.backup.Backup import Backup
 from word_fellow.domain.backup.BackupService import BackupService
 from word_fellow.domain.settings.SettingsService import SettingsService

@@ -1,4 +1,7 @@
+import os
 import os.path
+
+from word_fellow.infrastructure import WordFellowDB
 
 from word_fellow.infrastructure.WordFellowDB import WordFellowDB
 

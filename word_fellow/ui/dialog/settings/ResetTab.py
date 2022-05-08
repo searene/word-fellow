@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QPushButton, QLabel, QMessageBox, QApplication
 
-from tests.utils import get_test_word_fellow_db
+from word_fellow.ui.util.DatabaseUtils import get_test_word_fellow_db
 from word_fellow.domain.reset.ResetService import ResetService
 
 

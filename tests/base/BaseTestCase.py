@@ -1,7 +1,7 @@
 import os
 import unittest
 
-from tests.utils import get_test_word_fellow_db
+from word_fellow.ui.util.DatabaseUtils import get_test_word_fellow_db
 
 
 class BaseTestCase(unittest.TestCase):

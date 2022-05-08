@@ -11,3 +11,5 @@ def init_database(db: WordFellowDB):
     GlobalWordStatusService(db).init_database()
 
     SettingsService(db).init_database()
+
+
