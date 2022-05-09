@@ -24,7 +24,7 @@ class InputDocumentContentsDialogTestCase(BaseTestCase):
         self.__document_service = DocumentService(self.db)
         analyzer = DefaultDocumentAnalyzer(self.db)
         self.__doc1 = self.__document_service.import_document("test name1", "test contents1", analyzer)
-        self.__form = InputDocumentContentsDialog(self.__document_service, DefaultDocumentAnalyzer(self.db))
+        self.__form = InputDocumentContentsDialog(self.__document_service, DefaultDocumentAnalyzer(self.db), show_ui=False)
 
     def test_should_import_document_when_clicking_on_ok(self):
         QTest.keyClicks(self.__form._name_line_edit, "test name2")
@@ -35,6 +35,20 @@ class InputDocumentContentsDialogTestCase(BaseTestCase):
         self.assertEqual(len(doc_list), 2)
         self.assertEqual(doc_list[1].name, "test name2")
         self.assertEqual(doc_list[1].contents, "test contents2")
+
+    def test_do_not_import_when_name_is_empty(self):
+        QTest.keyClicks(self.__form._contents_text_edit, "test contents2")
+        QTest.mouseClick(self.__form._ok_btn, Qt.LeftButton)
+
+        doc_list = self.__document_service.get_document_list()
+        self.assertEqual(len(doc_list), 1)
+
+    def test_do_not_import_when_contents_is_empty(self):
+        QTest.keyClicks(self.__form._name_line_edit, "test name2")
+        QTest.mouseClick(self.__form._ok_btn, Qt.LeftButton)
+
+        doc_list = self.__document_service.get_document_list()
+        self.assertEqual(len(doc_list), 1)
 
 
 if __name__ == '__main__':
