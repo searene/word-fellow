@@ -31,13 +31,13 @@ class MainDialog(QDialog):
         self.__anki_service = anki_service
         self.__document_service = DocumentService(self.__db)
         self.__show_dialog = show_dialog
-        self.__init_ui(self.__document_service, self.__db, self.__show_dialog, document_analyzer)
+        self.__init_ui(self.__document_service, self.__db, self.__show_dialog, document_analyzer, show_dialog)
 
-    def __init_ui(self, document_service: DocumentService, db: WordFellowDB, show_dialog: bool, document_analyzer: IDocumentAnalyzer):
+    def __init_ui(self, document_service: DocumentService, db: WordFellowDB, show_dialog: bool, document_analyzer: IDocumentAnalyzer, show_ui: bool):
         vbox = QVBoxLayout()
         vbox.addLayout(self.__get_top_bar())
         self.__add_document_list(vbox, document_service, db, show_dialog)
-        vbox.addWidget(self.__get_import_new_document_button(document_service, document_analyzer))
+        vbox.addWidget(self.__get_import_new_document_button(document_service, document_analyzer, show_ui))
         self.setLayout(vbox)
         self.setWindowTitle("WordFellow")
 
@@ -57,21 +57,23 @@ class MainDialog(QDialog):
         settings_dialog = SettingsDialog(self.__db)
         settings_dialog.exec_()
 
-    def __get_import_new_document_button(self, document_service: DocumentService, document_analyzer: IDocumentAnalyzer) -> QPushButton:
+    def __get_import_new_document_button(self, document_service: DocumentService, document_analyzer: IDocumentAnalyzer, show_ui: bool) -> QPushButton:
         btn = QPushButton("Add")
 
         menu = QMenu()
         self._import_by_file_action = menu.addAction("Import File (txt)")
         self._import_by_file_action.triggered.connect(lambda action: self.__open_import_file_dialog())
         self._import_by_text_action = menu.addAction("Input documents contents manually")
-        self._import_by_text_action.triggered.connect(lambda action: self.__open_input_document_contents_dialog(document_service, document_analyzer))
+        self._import_by_text_action.triggered.connect(lambda action: self.__open_input_document_contents_dialog(document_service, document_analyzer, show_ui))
 
         btn.setMenu(menu)
         return btn
 
-    def __open_input_document_contents_dialog(self, document_service: DocumentService, document_analyzer: IDocumentAnalyzer):
-        input_documents_contents = InputDocumentContentsDialog(document_service, document_analyzer)
-        input_documents_contents.exec_()
+    def __open_input_document_contents_dialog(self, document_service: DocumentService, document_analyzer: IDocumentAnalyzer, show_ui: bool):
+        self._input_documents_contents_dialog = InputDocumentContentsDialog(document_service, document_analyzer,
+                                                                            lambda doc: self.__add_doc_to_list(doc), show_ui)
+        if show_ui:
+            self._input_documents_contents_dialog.exec_()
 
     def __open_import_file_dialog(self):
         document_file_path, file_filters = QFileDialog.getOpenFileName(self, 'Select document', '', 'Text Files (*.txt)')
@@ -132,6 +134,9 @@ class MainDialog(QDialog):
                                                        show_dialog)
         if show_dialog:
             self._doc_detail_dialog.show()
+
+    def __add_doc_to_list(self, doc: Document) -> None:
+        self._list_widget.addItem(self.__to_list_item((doc.document_id, doc.name)))
 
     def __delete_doc_from_list(self, doc_id: int, doc_list: QListWidget) -> None:
         for i in range(doc_list.count()):

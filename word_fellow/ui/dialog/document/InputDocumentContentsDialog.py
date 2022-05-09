@@ -1,9 +1,11 @@
 import os
 import sys
+from typing import Callable
 
 from PyQt5.QtWidgets import QDialog, QVBoxLayout, QFormLayout, QLineEdit, QTextEdit, QHBoxLayout, QPushButton, \
     QApplication
 
+from word_fellow.domain.document.Document import Document
 from word_fellow.domain.document.DocumentService import DocumentService
 from word_fellow.domain.document.analyzer import IDocumentAnalyzer
 from word_fellow.domain.document.analyzer.DefaultDocumentAnalyzer import DefaultDocumentAnalyzer
@@ -11,13 +13,16 @@ from word_fellow.ui.util import MsgUtils
 from word_fellow.ui.util.DatabaseUtils import get_test_word_fellow_db
 
 
+# TODO should refresh the main window after contents are added
 class InputDocumentContentsDialog(QDialog):
 
-    def __init__(self, document_service: DocumentService, document_analyzer: IDocumentAnalyzer, show_ui=True):
+    def __init__(self, document_service: DocumentService, document_analyzer: IDocumentAnalyzer,
+                 add_doc_handler: Callable[[Document], None], show_ui=True):
         super(InputDocumentContentsDialog, self).__init__()
         self.__show_ui = show_ui
         self.__document_service = document_service
         self.__document_analyzer = document_analyzer
+        self.__add_doc_handler = add_doc_handler
         self.__setup_ui()
 
     def __setup_ui(self):
@@ -59,7 +64,8 @@ class InputDocumentContentsDialog(QDialog):
             return
         name = self._name_line_edit.text()
         contents = self._contents_text_edit.toPlainText()
-        self.__document_service.import_document(name, contents, self.__document_analyzer)
+        doc = self.__document_service.import_document(name, contents, self.__document_analyzer)
+        self.__add_doc_handler(doc)
         self.close()
 
 

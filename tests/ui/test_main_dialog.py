@@ -38,3 +38,13 @@ class MainDialogTestCase(BaseTestCase):
         items = get_visible_items(self.__form._list_widget)
         self.assertEqual(len(items), 1)
         self.assertEqual(items[0].text(), self.__doc2.name)
+
+    def test_should_add_inputted_document_to_list(self):
+        self.__form._import_by_text_action.trigger()
+        QTest.keyClicks(self.__form._input_documents_contents_dialog._name_line_edit, "test name3")
+        QTest.keyClicks(self.__form._input_documents_contents_dialog._contents_text_edit, "this is this this")
+        QTest.mouseClick(self.__form._input_documents_contents_dialog._ok_btn, Qt.LeftButton)
+
+        items = get_visible_items(self.__form._list_widget)
+        self.assertEqual(len(items), 3)
+        self.assertEqual(items[2].text(), "test name3")

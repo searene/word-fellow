@@ -24,7 +24,8 @@ class InputDocumentContentsDialogTestCase(BaseTestCase):
         self.__document_service = DocumentService(self.db)
         analyzer = DefaultDocumentAnalyzer(self.db)
         self.__doc1 = self.__document_service.import_document("test name1", "test contents1", analyzer)
-        self.__form = InputDocumentContentsDialog(self.__document_service, DefaultDocumentAnalyzer(self.db), show_ui=False)
+        self.__form = InputDocumentContentsDialog(self.__document_service, DefaultDocumentAnalyzer(self.db),
+                                                  lambda _: None, show_ui=False)
 
     def test_should_import_document_when_clicking_on_ok(self):
         QTest.keyClicks(self.__form._name_line_edit, "test name2")
