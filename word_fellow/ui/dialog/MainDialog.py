@@ -5,7 +5,7 @@ from pathlib import Path
 from PyQt5 import QtCore
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import (QPushButton, QApplication, QHBoxLayout, QVBoxLayout, QLabel, QDialog, QFileDialog,
-                             QListWidgetItem, QSizePolicy, QListWidget, QScrollBar)
+                             QListWidgetItem, QSizePolicy, QListWidget, QScrollBar, QMenu)
 
 from word_fellow.anki.IAnkiService import IAnkiService
 from word_fellow.anki.MockedAnkiService import MockedAnkiService
@@ -57,10 +57,15 @@ class MainDialog(QDialog):
 
     def __get_import_new_document_button(self) -> QPushButton:
         btn = QPushButton("Add")
-        btn.clicked.connect(self.__open_import_new_document_dialog)
+
+        menu = QMenu()
+        self._import_by_file_action = menu.addAction("Import File (txt)")
+        self._import_by_file_action.triggered.connect(lambda action: self.__open_import_file_dialog())
+
+        btn.setMenu(menu)
         return btn
 
-    def __open_import_new_document_dialog(self):
+    def __open_import_file_dialog(self):
         document_file_path, file_filters = QFileDialog.getOpenFileName(self, 'Select document', '', 'Text Files (*.txt)')
         if len(document_file_path) == 0:
             # The user didn't select any file
@@ -73,6 +78,8 @@ class MainDialog(QDialog):
         self._list_widget.addItem(self.__to_list_item((doc.document_id, doc.name)))
         self._list_widget.show()
         self.__no_document_label.hide()
+
+        # TODO After clicking on OK, the dialog hides behind Anki, need to fix it
         self.__anki_service.show_info_dialog("Importing is done")
 
     def __add_document_list(self, parent: QVBoxLayout, document_service: DocumentService, db: WordFellowDB, show_dialog: bool) -> None:
