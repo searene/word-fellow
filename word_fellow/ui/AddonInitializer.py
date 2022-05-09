@@ -5,6 +5,7 @@ import aqt
 from word_fellow.anki.DefaultAnkiService import DefaultAnkiService
 from word_fellow.domain import utils
 from word_fellow.domain.document.DocumentService import DocumentService
+from word_fellow.domain.document.analyzer.DefaultDocumentAnalyzer import DefaultDocumentAnalyzer
 from word_fellow.ui.dialog.MainDialog import MainDialog
 import word_fellow.domain.word.WordService as WordService
 import word_fellow.domain.word.WordValueObject as WordValueObject
@@ -37,7 +38,7 @@ def insert_test_data():
 def show_main_dialog() -> None:
     __init_database()
     db = get_prod_word_fellow_db()
-    main_dialog = MainDialog(db, DefaultAnkiService())
+    main_dialog = MainDialog(db, DefaultAnkiService(), DefaultDocumentAnalyzer(db))
     main_dialog.show()
     main_dialog.exec_()
 

@@ -11,6 +11,7 @@ from word_fellow.anki.IAnkiService import IAnkiService
 from word_fellow.anki.MockedAnkiService import MockedAnkiService
 from word_fellow.domain.document.Document import Document
 from word_fellow.domain.document.DocumentService import DocumentService
+from word_fellow.domain.document.analyzer import IDocumentAnalyzer
 from word_fellow.domain.document.analyzer.DefaultDocumentAnalyzer import DefaultDocumentAnalyzer
 from word_fellow.domain.utils import init_database
 from word_fellow.ui.dialog.document.InputDocumentContentsDialog import InputDocumentContentsDialog
@@ -24,19 +25,19 @@ from word_fellow.ui.util.FileUtils import get_base_name_without_ext
 
 class MainDialog(QDialog):
 
-    def __init__(self, db: WordFellowDB, anki_service: IAnkiService, show_dialog=True):
+    def __init__(self, db: WordFellowDB, anki_service: IAnkiService, document_analyzer: IDocumentAnalyzer, show_dialog=True):
         super().__init__()
         self.__db = db
         self.__anki_service = anki_service
         self.__document_service = DocumentService(self.__db)
         self.__show_dialog = show_dialog
-        self.__init_ui(self.__document_service, self.__db, self.__show_dialog)
+        self.__init_ui(self.__document_service, self.__db, self.__show_dialog, document_analyzer)
 
-    def __init_ui(self, document_service: DocumentService, db: WordFellowDB, show_dialog: bool):
+    def __init_ui(self, document_service: DocumentService, db: WordFellowDB, show_dialog: bool, document_analyzer: IDocumentAnalyzer):
         vbox = QVBoxLayout()
         vbox.addLayout(self.__get_top_bar())
         self.__add_document_list(vbox, document_service, db, show_dialog)
-        vbox.addWidget(self.__get_import_new_document_button(document_service))
+        vbox.addWidget(self.__get_import_new_document_button(document_service, document_analyzer))
         self.setLayout(vbox)
         self.setWindowTitle("WordFellow")
 
@@ -56,20 +57,20 @@ class MainDialog(QDialog):
         settings_dialog = SettingsDialog(self.__db)
         settings_dialog.exec_()
 
-    def __get_import_new_document_button(self, document_service: DocumentService) -> QPushButton:
+    def __get_import_new_document_button(self, document_service: DocumentService, document_analyzer: IDocumentAnalyzer) -> QPushButton:
         btn = QPushButton("Add")
 
         menu = QMenu()
         self._import_by_file_action = menu.addAction("Import File (txt)")
         self._import_by_file_action.triggered.connect(lambda action: self.__open_import_file_dialog())
         self._import_by_text_action = menu.addAction("Input documents contents manually")
-        self._import_by_text_action.triggered.connect(lambda action: self.__open_input_document_contents_dialog(document_service))
+        self._import_by_text_action.triggered.connect(lambda action: self.__open_input_document_contents_dialog(document_service, document_analyzer))
 
         btn.setMenu(menu)
         return btn
 
-    def __open_input_document_contents_dialog(self, document_service: DocumentService):
-        input_documents_contents = InputDocumentContentsDialog(document_service)
+    def __open_input_document_contents_dialog(self, document_service: DocumentService, document_analyzer: IDocumentAnalyzer):
+        input_documents_contents = InputDocumentContentsDialog(document_service, document_analyzer)
         input_documents_contents.exec_()
 
     def __open_import_file_dialog(self):
@@ -161,7 +162,7 @@ if __name__ == '__main__':
     # db.execute("delete from words")
     # db.execute("delete from global_word_status")
 
-    ex = MainDialog(db, MockedAnkiService(app))
+    ex = MainDialog(db, MockedAnkiService(app), DefaultDocumentAnalyzer(self.__db))
     ex.show()
     app.exec_()
     os.remove(db.db_path)
