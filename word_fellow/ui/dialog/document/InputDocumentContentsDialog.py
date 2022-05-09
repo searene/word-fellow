@@ -13,7 +13,6 @@ from word_fellow.ui.util import MsgUtils
 from word_fellow.ui.util.DatabaseUtils import get_test_word_fellow_db
 
 
-# TODO should refresh the main window after contents are added
 class InputDocumentContentsDialog(QDialog):
 
     def __init__(self, document_service: DocumentService, document_analyzer: IDocumentAnalyzer,

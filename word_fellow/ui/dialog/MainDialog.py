@@ -15,6 +15,7 @@ from word_fellow.domain.document.analyzer import IDocumentAnalyzer
 from word_fellow.domain.document.analyzer.DefaultDocumentAnalyzer import DefaultDocumentAnalyzer
 from word_fellow.domain.utils import init_database
 from word_fellow.ui.dialog.document.InputDocumentContentsDialog import InputDocumentContentsDialog
+from word_fellow.ui.util import MsgUtils
 from word_fellow.ui.util.DatabaseUtils import get_test_word_fellow_db
 from word_fellow.infrastructure import WordFellowDB
 from word_fellow.ui.dialog.document.DocumentDetailDialog import DocumentDetailDialog
@@ -25,10 +26,9 @@ from word_fellow.ui.util.FileUtils import get_base_name_without_ext
 
 class MainDialog(QDialog):
 
-    def __init__(self, db: WordFellowDB, anki_service: IAnkiService, document_analyzer: IDocumentAnalyzer, show_dialog=True):
+    def __init__(self, db: WordFellowDB, document_analyzer: IDocumentAnalyzer, show_dialog=True):
         super().__init__()
         self.__db = db
-        self.__anki_service = anki_service
         self.__document_service = DocumentService(self.__db)
         self.__show_dialog = show_dialog
         self.__init_ui(self.__document_service, self.__db, self.__show_dialog, document_analyzer, show_dialog)
@@ -62,7 +62,7 @@ class MainDialog(QDialog):
 
         menu = QMenu()
         self._import_by_file_action = menu.addAction("Import File (txt)")
-        self._import_by_file_action.triggered.connect(lambda action: self.__open_import_file_dialog())
+        self._import_by_file_action.triggered.connect(lambda action: self.__open_import_file_dialog(show_ui))
         self._import_by_text_action = menu.addAction("Input documents contents manually")
         self._import_by_text_action.triggered.connect(lambda action: self.__open_input_document_contents_dialog(document_service, document_analyzer, show_ui))
 
@@ -75,7 +75,7 @@ class MainDialog(QDialog):
         if show_ui:
             self._input_documents_contents_dialog.exec_()
 
-    def __open_import_file_dialog(self):
+    def __open_import_file_dialog(self, show_ui: bool):
         document_file_path, file_filters = QFileDialog.getOpenFileName(self, 'Select document', '', 'Text Files (*.txt)')
         if len(document_file_path) == 0:
             # The user didn't select any file
@@ -89,8 +89,7 @@ class MainDialog(QDialog):
         self._list_widget.show()
         self.__no_document_label.hide()
 
-        # TODO After clicking on OK, the dialog hides behind Anki, need to fix it
-        self.__anki_service.show_info_dialog("Importing is done")
+        MsgUtils.show_warning_with_ok_btn("Done", "Importing is done", show_ui)
 
     def __add_document_list(self, parent: QVBoxLayout, document_service: DocumentService, db: WordFellowDB, show_dialog: bool) -> None:
         self.__no_document_label = QLabel("No document is available, click the \"Add\" button below to start importing.")
@@ -167,7 +166,7 @@ if __name__ == '__main__':
     # db.execute("delete from words")
     # db.execute("delete from global_word_status")
 
-    ex = MainDialog(db, MockedAnkiService(app), DefaultDocumentAnalyzer(self.__db))
+    ex = MainDialog(db, DefaultDocumentAnalyzer(self.__db))
     ex.show()
     app.exec_()
     os.remove(db.db_path)
