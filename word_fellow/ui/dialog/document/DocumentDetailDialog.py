@@ -77,9 +77,9 @@ class DocumentDetailDialog(QDialog):
         self._delete_warning_msg_box.setWindowTitle("Delete")
         self._delete_warning_msg_box.setStandardButtons(QMessageBox.Ok | QMessageBox.Cancel)
         self._delete_warning_msg_box.buttonClicked.connect(lambda btn: self.__delete_dialog_btn_handler(btn, doc, document_service, self._delete_warning_msg_box))
-        on_document_removed()
         if show_dialog:
             self._delete_warning_msg_box.exec_()
+        on_document_removed()
 
     def __delete_dialog_btn_handler(self, button: QMessageBox.StandardButton, doc: Document, document_service: DocumentService, msg_box: QMessageBox) -> None:
         btn_code = msg_box.standardButton(button)

@@ -3,7 +3,6 @@ import sys
 from pathlib import Path
 
 from PyQt5 import QtCore
-from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import (QPushButton, QApplication, QHBoxLayout, QVBoxLayout, QLabel, QDialog, QFileDialog,
                              QListWidgetItem, QSizePolicy, QListWidget, QScrollBar, QMenu)
 
@@ -14,13 +13,13 @@ from word_fellow.domain.document.DocumentService import DocumentService
 from word_fellow.domain.document.analyzer import IDocumentAnalyzer
 from word_fellow.domain.document.analyzer.DefaultDocumentAnalyzer import DefaultDocumentAnalyzer
 from word_fellow.domain.utils import init_database
+from word_fellow.infrastructure import WordFellowDB
+from word_fellow.ui.dialog.context.list.ClickableListWidget import ClickableListWidget
+from word_fellow.ui.dialog.document.DocumentDetailDialog import DocumentDetailDialog
 from word_fellow.ui.dialog.document.InputDocumentContentsDialog import InputDocumentContentsDialog
+from word_fellow.ui.dialog.settings.SettingsDialog import SettingsDialog
 from word_fellow.ui.util import MsgUtils
 from word_fellow.ui.util.DatabaseUtils import get_test_word_fellow_db
-from word_fellow.infrastructure import WordFellowDB
-from word_fellow.ui.dialog.document.DocumentDetailDialog import DocumentDetailDialog
-from word_fellow.ui.dialog.context.list.ClickableListWidget import ClickableListWidget
-from word_fellow.ui.dialog.settings.SettingsDialog import SettingsDialog
 from word_fellow.ui.util.FileUtils import get_base_name_without_ext
 
 
@@ -88,32 +87,20 @@ class MainDialog(QDialog):
         doc = self.__document_service.import_document(doc_name, doc_contents, default_document_analyzer)
         self._list_widget.addItem(self.__to_list_item((doc.document_id, doc.name)))
         self._list_widget.show()
-        self.__no_document_label.hide()
 
         MsgUtils.show_warning_with_ok_btn("Done", "Importing is done", show_ui)
 
     def __add_document_list(self, parent: QVBoxLayout, document_service: DocumentService, db: WordFellowDB, show_dialog: bool) -> None:
-        self.__no_document_label = QLabel("No document is available, click the \"Add\" button below to start importing.")
-        self.__no_document_label.setStyleSheet("QLabel { background-color : white; }")
-        self.__no_document_label.setSizePolicy(QSizePolicy(QSizePolicy.MinimumExpanding, QSizePolicy.MinimumExpanding))
-        self.__no_document_label.setMinimumHeight(200)
-        self.__no_document_label.setContentsMargins(20, 20, 20, 20)
-        self.__no_document_label.setAlignment(Qt.AlignCenter)
         scroll_bar = QScrollBar()
         self._list_widget = ClickableListWidget()
         self._list_widget.setVerticalScrollBar(scroll_bar)
         self._list_widget.itemClicked.connect(lambda item: self.on_list_item_clicked(item, document_service, db,
                                                                                      self._list_widget, show_dialog))
-        parent.addWidget(self.__no_document_label)
         parent.addWidget(self._list_widget)
 
         doc_id_and_name_list = self.__document_service.get_document_id_and_name_list()
-        if len(doc_id_and_name_list) == 0:
-            self._list_widget.hide()
-        else:
-            self.__no_document_label.hide()
-            for doc_id_and_name in doc_id_and_name_list:
-                self._list_widget.addItem(self.__to_list_item(doc_id_and_name))
+        for doc_id_and_name in doc_id_and_name_list:
+            self._list_widget.addItem(self.__to_list_item(doc_id_and_name))
 
     def __to_list_item(self, doc_id_and_name: (int, str)) -> QListWidgetItem:
         res = QListWidgetItem()
