@@ -34,11 +34,15 @@ class InputDocumentContentsDialog(QDialog):
     def __add_bottom_buttons(self, vbox: QVBoxLayout):
         hbox = QHBoxLayout()
         self._cancel_btn = QPushButton("Cancel")
+        self._cancel_btn.clicked.connect(self.__close)
         self._ok_btn = QPushButton("OK")
         self._ok_btn.setDefault(True)
         hbox.addWidget(self._cancel_btn)
         hbox.addWidget(self._ok_btn)
         vbox.addLayout(hbox)
+
+    def __close(self):
+        self.close()
 
 
 if __name__ == "__main__":
