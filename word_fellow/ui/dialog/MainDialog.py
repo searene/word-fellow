@@ -13,6 +13,7 @@ from word_fellow.domain.document.Document import Document
 from word_fellow.domain.document.DocumentService import DocumentService
 from word_fellow.domain.document.analyzer.DefaultDocumentAnalyzer import DefaultDocumentAnalyzer
 from word_fellow.domain.utils import init_database
+from word_fellow.ui.dialog.document.InputDocumentContentsDialog import InputDocumentContentsDialog
 from word_fellow.ui.util.DatabaseUtils import get_test_word_fellow_db
 from word_fellow.infrastructure import WordFellowDB
 from word_fellow.ui.dialog.document.DocumentDetailDialog import DocumentDetailDialog
@@ -35,7 +36,7 @@ class MainDialog(QDialog):
         vbox = QVBoxLayout()
         vbox.addLayout(self.__get_top_bar())
         self.__add_document_list(vbox, document_service, db, show_dialog)
-        vbox.addWidget(self.__get_import_new_document_button())
+        vbox.addWidget(self.__get_import_new_document_button(document_service))
         self.setLayout(vbox)
         self.setWindowTitle("WordFellow")
 
@@ -55,15 +56,21 @@ class MainDialog(QDialog):
         settings_dialog = SettingsDialog(self.__db)
         settings_dialog.exec_()
 
-    def __get_import_new_document_button(self) -> QPushButton:
+    def __get_import_new_document_button(self, document_service: DocumentService) -> QPushButton:
         btn = QPushButton("Add")
 
         menu = QMenu()
         self._import_by_file_action = menu.addAction("Import File (txt)")
         self._import_by_file_action.triggered.connect(lambda action: self.__open_import_file_dialog())
+        self._import_by_text_action = menu.addAction("Input documents contents manually")
+        self._import_by_text_action.triggered.connect(lambda action: self.__open_input_document_contents_dialog(document_service))
 
         btn.setMenu(menu)
         return btn
+
+    def __open_input_document_contents_dialog(self, document_service: DocumentService):
+        input_documents_contents = InputDocumentContentsDialog(document_service)
+        input_documents_contents.exec_()
 
     def __open_import_file_dialog(self):
         document_file_path, file_filters = QFileDialog.getOpenFileName(self, 'Select document', '', 'Text Files (*.txt)')
