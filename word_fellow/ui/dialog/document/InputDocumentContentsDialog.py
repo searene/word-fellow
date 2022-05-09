@@ -56,10 +56,10 @@ class InputDocumentContentsDialog(QDialog):
 
     def __import_document(self):
         if self._name_line_edit.text() == "":
-            MsgUtils.show_warning_with_ok_btn("Warning", "Please input document name.", show_ui=self.__show_ui)
+            MsgUtils.show_warning_with_ok_btn(self, "Warning", "Please input document name.", show_ui=self.__show_ui)
             return
         if self._contents_text_edit.toPlainText() == "":
-            MsgUtils.show_warning_with_ok_btn("Warning", "Please input document contents.", show_ui=self.__show_ui)
+            MsgUtils.show_warning_with_ok_btn(self, "Warning", "Please input document contents.", show_ui=self.__show_ui)
             return
         name = self._name_line_edit.text()
         contents = self._contents_text_edit.toPlainText()

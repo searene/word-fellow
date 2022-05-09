@@ -71,14 +71,14 @@ class DocumentDetailDialog(QDialog):
 
     def __on_delete_button_clicked(self, doc: Document, document_service: DocumentService,
                                    on_document_removed: Callable[[], None], show_dialog: bool) -> None:
-        self._delete_warning_msg_box = QMessageBox()
+        self._delete_warning_msg_box = QMessageBox(self)
         self._delete_warning_msg_box.setIcon(QMessageBox.Warning)
         self._delete_warning_msg_box.setText("Are you sure you want to delete this document?\n\nMarked words (such as known, added to anki, study later, ignored) won't be deleted")
         self._delete_warning_msg_box.setWindowTitle("Delete")
         self._delete_warning_msg_box.setStandardButtons(QMessageBox.Ok | QMessageBox.Cancel)
         self._delete_warning_msg_box.buttonClicked.connect(lambda btn: self.__delete_dialog_btn_handler(btn, doc, document_service, self._delete_warning_msg_box))
         if show_dialog:
-            self._delete_warning_msg_box.exec_()
+            self._delete_warning_msg_box.show()
         on_document_removed()
 
     def __delete_dialog_btn_handler(self, button: QMessageBox.StandardButton, doc: Document, document_service: DocumentService, msg_box: QMessageBox) -> None:

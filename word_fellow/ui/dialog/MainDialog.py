@@ -1,10 +1,11 @@
 import os
 import sys
 from pathlib import Path
+from typing import Optional
 
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import (QPushButton, QApplication, QHBoxLayout, QVBoxLayout, QLabel, QDialog, QFileDialog,
-                             QListWidgetItem, QSizePolicy, QListWidget, QScrollBar, QMenu)
+                             QListWidgetItem, QSizePolicy, QListWidget, QScrollBar, QMenu, QWidget)
 
 from word_fellow.anki.IAnkiService import IAnkiService
 from word_fellow.anki.MockedAnkiService import MockedAnkiService
@@ -25,8 +26,8 @@ from word_fellow.ui.util.FileUtils import get_base_name_without_ext
 
 class MainDialog(QDialog):
 
-    def __init__(self, db: WordFellowDB, anki_service: IAnkiService, document_analyzer: IDocumentAnalyzer, show_dialog=True):
-        super().__init__()
+    def __init__(self, parent: Optional[QWidget], db: WordFellowDB, anki_service: IAnkiService, document_analyzer: IDocumentAnalyzer, show_dialog=True):
+        super().__init__(parent)
         self.__db = db
         self.__anki_service = anki_service
         self.__document_service = DocumentService(self.__db)
@@ -58,7 +59,8 @@ class MainDialog(QDialog):
         settings_dialog.exec_()
 
     def __get_import_new_document_button(self, document_service: DocumentService, document_analyzer: IDocumentAnalyzer, show_ui: bool) -> QPushButton:
-        btn = QPushButton("Add")
+        btn = QPushButton(self)
+        btn.setText("Add")
 
         menu = QMenu()
         self._import_by_file_action = menu.addAction("Import File (txt)")
@@ -88,7 +90,7 @@ class MainDialog(QDialog):
         self._list_widget.addItem(self.__to_list_item((doc.document_id, doc.name)))
         self._list_widget.show()
 
-        MsgUtils.show_warning_with_ok_btn("Done", "Importing is done", show_ui)
+        MsgUtils.show_warning_with_ok_btn(self, "Done", "Importing is done", show_ui)
 
     def __add_document_list(self, parent: QVBoxLayout, document_service: DocumentService, db: WordFellowDB, show_dialog: bool) -> None:
         scroll_bar = QScrollBar()
@@ -154,7 +156,7 @@ if __name__ == '__main__':
     # db.execute("delete from words")
     # db.execute("delete from global_word_status")
 
-    ex = MainDialog(db, MockedAnkiService(app), DefaultDocumentAnalyzer(db))
+    ex = MainDialog(None, db, MockedAnkiService(app), DefaultDocumentAnalyzer(db))
     ex.show()
     app.exec_()
     os.remove(db.db_path)

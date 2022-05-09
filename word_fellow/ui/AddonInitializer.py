@@ -38,8 +38,8 @@ def insert_test_data():
 def show_main_dialog() -> None:
     __init_database()
     db = get_prod_word_fellow_db()
-    main_dialog = MainDialog(db, DefaultAnkiService(), DefaultDocumentAnalyzer(db))
-    main_dialog.exec_()
+    main_dialog = MainDialog(aqt.mw, db, DefaultAnkiService(), DefaultDocumentAnalyzer(db))
+    main_dialog.show()
 
 
 def new_undo(old_undo: Callable[[], None]) -> None:
