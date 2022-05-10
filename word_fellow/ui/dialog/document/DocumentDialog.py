@@ -32,8 +32,8 @@ from word_fellow.ui.util.PyQtUtils import get_vertical_line
 
 class DocumentDialog(QDialog):
 
-    def __init__(self, doc: Document, db: WordFellowDB, anki_service: IAnkiService):
-        super(DocumentDialog, self).__init__()
+    def __init__(self, parent: Optional[QDialog], doc: Document, db: WordFellowDB, anki_service: IAnkiService):
+        super(DocumentDialog, self).__init__(parent)
         self.__status_to_offset_dict: Dict[WordStatus, int] = {}
         self.__anki_service = anki_service
         self.__db = db
@@ -337,7 +337,7 @@ if __name__ == "__main__":
     analyzer = DefaultDocumentAnalyzer(db)
     document_service = DocumentService(db)
     doc = document_service.import_document("test_name", "test contents", analyzer)
-    doc_dialog = DocumentDialog(doc, db, MockedAnkiService(app))
+    doc_dialog = DocumentDialog(None, doc, db, MockedAnkiService(app))
     doc_dialog.exec()
     app.exec_()
     os.remove(db.db_path)
