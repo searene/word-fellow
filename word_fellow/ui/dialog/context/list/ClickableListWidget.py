@@ -11,6 +11,7 @@ class ClickableListWidget(QListWidget):
         self.setStyleSheet("QListWidget::item:hover { border-bottom: 1px solid black; }")
         self.setMouseTracking(True)
 
+    # TODO it's not invoked when the cursor is inside the widget at first
     def mouseMoveEvent(self, e: QMouseEvent) -> None:
         """Set the cursor to hand when the mouse hovers over an item in it."""
         super().mouseMoveEvent(e)
