@@ -42,6 +42,6 @@ if __name__ == "__main__":
     settings_service = SettingsService(db)
     backup_service = BackupService(settings_service, get_prod_db_path())
     dialog = BackupDialog(backup_service, db.db_path)
-    dialog.show()
+    dialog.exec()
     app.exec_()
     os.remove(db.db_path)

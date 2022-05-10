@@ -12,7 +12,7 @@ from word_fellow.domain.document.Document import Document
 from word_fellow.domain.document.DocumentService import DocumentService
 from word_fellow.infrastructure import WordFellowDB
 from word_fellow.ui.util.DatabaseUtils import get_test_word_fellow_db
-from word_fellow.ui.dialog.document.DocumentWindow import DocumentWindow
+from word_fellow.ui.dialog.document.DocumentDialog import DocumentDialog
 
 
 class DocumentDetailDialog(QDialog):
@@ -60,8 +60,9 @@ class DocumentDetailDialog(QDialog):
         hbox.addWidget(self._studyBtn)
 
     def __on_study_button_clicked(self, doc: Document, anki_service: IAnkiService, db: WordFellowDB) -> None:
-        doc_window = DocumentWindow(doc, db, anki_service)
-        doc_window.show()
+        self.close()
+        doc_dialog = DocumentDialog(doc, db, anki_service)
+        doc_dialog.exec()
 
     def __add_delete_button(self, hbox: QHBoxLayout, doc: Document, document_service: DocumentService,
                             on_document_removed: Callable[[], None], show_dialog: bool) -> None:
@@ -78,7 +79,7 @@ class DocumentDetailDialog(QDialog):
         self._delete_warning_msg_box.setStandardButtons(QMessageBox.Ok | QMessageBox.Cancel)
         self._delete_warning_msg_box.buttonClicked.connect(lambda btn: self.__delete_dialog_btn_handler(btn, doc, document_service, self._delete_warning_msg_box))
         if show_dialog:
-            self._delete_warning_msg_box.show()
+            self._delete_warning_msg_box.exec()
         on_document_removed()
 
     def __delete_dialog_btn_handler(self, button: QMessageBox.StandardButton, doc: Document, document_service: DocumentService, msg_box: QMessageBox) -> None:
@@ -95,7 +96,7 @@ if __name__ == "__main__":
     document_service = DocumentService(db)
     dialog = DocumentDetailDialog(None, doc, db, document_service, MockedAnkiService(app),
                                   on_document_removed=lambda: None, show_dialog=True)
-    dialog.show()
+    dialog.exec()
     code = app.exec_()
     os.remove(db.db_path)
     sys.exit(code)

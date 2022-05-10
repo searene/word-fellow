@@ -118,7 +118,7 @@ class BackupTab(QWidget):
     def __on_backup_list_item_clicked(self, item: QListWidgetItem) -> None:
         backup = Backup(item.data(Qt.UserRole))
         self._backup_detail_dialog = BackupDetailDialog(self, backup, self.__backup_service)
-        self._backup_detail_dialog.show()
+        self._backup_detail_dialog.exec()
 
     def __add_tooltip(self, vbox):
         label = QLabel("After enabling backup, your files will be backed up to the selected folder once a day.")

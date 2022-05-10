@@ -8,7 +8,7 @@ def show_warning_with_ok_btn(parent: QWidget, title: str, msg: str, show_ui: boo
     msg_box.setWindowTitle(title)
     msg_box.setStandardButtons(QMessageBox.Ok)
     if show_ui:
-        msg_box.show()
+        msg_box.exec()
 
 
 def show_info_with_ok_btn(title: str, msg: str, show_ui: bool):

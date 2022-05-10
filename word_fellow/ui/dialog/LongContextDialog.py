@@ -15,8 +15,7 @@ class LongContextDialog(QDialog):
         self.__init_ui(self.__long_context)
 
     def show_dialog(self):
-        self.show()
-        self.exec_()
+        self.exec()
 
     def close_dialog(self):
         self.close()
@@ -46,5 +45,5 @@ class LongContextDialog(QDialog):
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     dialog = LongContextDialog(WordContext("test", "this is a test.", 0))
-    dialog.show()
+    dialog.exec()
     sys.exit(app.exec_())

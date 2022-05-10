@@ -36,6 +36,6 @@ if __name__ == '__main__':
     app = QApplication(sys.argv)
     db = get_test_word_fellow_db()
     w = SettingsDialog(db)
-    w.show()
+    w.exec()
     app.exec_()
     os.remove(db.db_path)

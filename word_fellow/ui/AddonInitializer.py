@@ -10,7 +10,7 @@ from word_fellow.ui.dialog.MainDialog import MainDialog
 import word_fellow.domain.word.WordService as WordService
 import word_fellow.domain.word.WordValueObject as WordValueObject
 
-from word_fellow.ui.dialog.document.DocumentWindow import DocumentWindow
+from word_fellow.ui.dialog.document.DocumentDialog import DocumentDialog
 from word_fellow.ui.util.DatabaseUtils import get_prod_word_fellow_db
 
 
@@ -39,12 +39,12 @@ def show_main_dialog() -> None:
     __init_database()
     db = get_prod_word_fellow_db()
     main_dialog = MainDialog(aqt.mw, db, DefaultAnkiService(), DefaultDocumentAnalyzer(db))
-    main_dialog.show()
+    main_dialog.exec()
 
 
 def new_undo(old_undo: Callable[[], None]) -> None:
     active_win = aqt.mw.app.activeWindow()
-    if type(active_win) is DocumentWindow:
+    if type(active_win) is DocumentDialog:
         active_win.undo()
     else:
         old_undo()

@@ -62,7 +62,7 @@ class MainDialog(QDialog):
         btn = QPushButton(self)
         btn.setText("Add")
 
-        menu = QMenu()
+        menu = QMenu(self)
         self._import_by_file_action = menu.addAction("Import File (txt)")
         self._import_by_file_action.triggered.connect(lambda action: self.__open_import_file_dialog(show_ui))
         self._import_by_text_action = menu.addAction("Input documents contents manually")
@@ -122,7 +122,7 @@ class MainDialog(QDialog):
                                                        lambda: self.__delete_doc_from_list(doc_id, self._list_widget),
                                                        show_dialog)
         if show_dialog:
-            self._doc_detail_dialog.show()
+            self._doc_detail_dialog.exec()
 
     def __add_doc_to_list(self, doc: Document) -> None:
         self._list_widget.addItem(self.__to_list_item((doc.document_id, doc.name)))
@@ -157,6 +157,6 @@ if __name__ == '__main__':
     # db.execute("delete from global_word_status")
 
     ex = MainDialog(None, db, MockedAnkiService(app), DefaultDocumentAnalyzer(db))
-    ex.show()
+    ex.exec()
     app.exec_()
     os.remove(db.db_path)

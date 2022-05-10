@@ -77,6 +77,6 @@ if __name__ == "__main__":
 
     app = QApplication([])
     dialog = BackupDetailDialog(None, backup, backup_service)
-    dialog.show()
+    dialog.exec()
     app.exec_()
     os.remove(db.db_path)
