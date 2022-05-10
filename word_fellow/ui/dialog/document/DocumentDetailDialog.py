@@ -60,7 +60,6 @@ class DocumentDetailDialog(QDialog):
         hbox.addWidget(self._studyBtn)
 
     def __on_study_button_clicked(self, doc: Document, anki_service: IAnkiService, db: WordFellowDB) -> None:
-        self.close()
         doc_dialog = DocumentDialog(self, doc, db, anki_service)
         doc_dialog.exec()
 
