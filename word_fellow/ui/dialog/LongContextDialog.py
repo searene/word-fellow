@@ -1,6 +1,7 @@
 import sys
 from typing import Optional
 
+from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QDialog, QVBoxLayout, QHBoxLayout, QPushButton, QTextEdit, QApplication, QWidget
 
 from word_fellow.domain.word.WordValueObject import WordContext
@@ -12,6 +13,7 @@ class LongContextDialog(QDialog):
         super(LongContextDialog, self).__init__(parent)
         self.setMinimumWidth(600)
         self.setMinimumHeight(400)
+        self.setWindowFlags(self.windowFlags() | Qt.Popup)
         self.__long_context = long_context
         self.__init_ui(self.__long_context)
 

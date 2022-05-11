@@ -1,6 +1,7 @@
 import os
 from typing import Optional
 
+from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QDialog, QWidget, QVBoxLayout, QLabel, QHBoxLayout, QPushButton, QApplication, QMessageBox
 
 from word_fellow.ui.util.DatabaseUtils import get_test_word_fellow_db
@@ -16,6 +17,7 @@ class BackupDetailDialog(QDialog):
         self.__show_restore_finished_dialog = show_restore_finished_dialog
         super(BackupDetailDialog, self).__init__(parent)
         self.__setup_ui(backup, backup_service)
+        self.setWindowFlags(self.windowFlags() | Qt.Popup)
 
     def __setup_ui(self, backup: Backup, backup_service: BackupService):
         vbox = QVBoxLayout()

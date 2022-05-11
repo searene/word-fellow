@@ -2,6 +2,7 @@ import os
 import sys
 from typing import Callable
 
+from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QDialog, QVBoxLayout, QFormLayout, QLineEdit, QTextEdit, QHBoxLayout, QPushButton, \
     QApplication
 
@@ -22,6 +23,7 @@ class InputDocumentContentsDialog(QDialog):
         self.__document_service = document_service
         self.__document_analyzer = document_analyzer
         self.__add_doc_handler = add_doc_handler
+        self.setWindowFlags(self.windowFlags() | Qt.Popup)
         self.__setup_ui()
 
     def __setup_ui(self):

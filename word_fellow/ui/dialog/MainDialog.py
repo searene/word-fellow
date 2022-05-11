@@ -4,6 +4,7 @@ from pathlib import Path
 from typing import Optional
 
 from PyQt5 import QtCore
+from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import (QPushButton, QApplication, QHBoxLayout, QVBoxLayout, QLabel, QDialog, QFileDialog,
                              QListWidgetItem, QSizePolicy, QListWidget, QScrollBar, QMenu, QWidget)
 
@@ -33,6 +34,7 @@ class MainDialog(QDialog):
         self.__document_service = DocumentService(self.__db)
         self.__show_dialog = show_dialog
         self.__init_ui(self.__document_service, self.__db, self.__show_dialog, document_analyzer, show_dialog)
+        self.setWindowFlags(self.windowFlags() | Qt.Popup)
 
     def __init_ui(self, document_service: DocumentService, db: WordFellowDB, show_dialog: bool, document_analyzer: IDocumentAnalyzer, show_ui: bool):
         vbox = QVBoxLayout()
@@ -122,7 +124,7 @@ class MainDialog(QDialog):
                                                        lambda: self.__delete_doc_from_list(doc_id, self._list_widget),
                                                        show_dialog)
         if show_dialog:
-            self._doc_detail_dialog.exec()
+            self._doc_detail_dialog.show()
 
     def __add_doc_to_list(self, doc: Document) -> None:
         self._list_widget.addItem(self.__to_list_item((doc.document_id, doc.name)))
