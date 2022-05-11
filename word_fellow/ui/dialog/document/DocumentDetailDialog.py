@@ -63,6 +63,7 @@ class DocumentDetailDialog(QDialog):
     def __on_study_button_clicked(self, doc: Document, anki_service: IAnkiService, db: WordFellowDB) -> None:
         doc_dialog = DocumentDialog(self, doc, db, anki_service)
         doc_dialog.show()
+        self.close()
 
     def __add_delete_button(self, hbox: QHBoxLayout, doc: Document, document_service: DocumentService,
                             on_document_removed: Callable[[], None], show_dialog: bool) -> None:
