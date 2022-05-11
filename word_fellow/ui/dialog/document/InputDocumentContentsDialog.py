@@ -36,6 +36,7 @@ class InputDocumentContentsDialog(QDialog):
         form = QFormLayout()
         self._name_line_edit = QLineEdit()
         self._contents_text_edit = QTextEdit()
+        self._contents_text_edit.setAcceptRichText(False)
         form.addRow("Name", self._name_line_edit)
         form.addRow("Contents", self._contents_text_edit)
         vbox.addLayout(form)
