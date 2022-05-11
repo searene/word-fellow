@@ -48,7 +48,6 @@ class DocumentDialog(QDialog):
         self.__init_ui(self.__dialog_layout)
         self.__anki_service.add_to_did_add_note_hook(self.__raise)
         self.__operations: [Operation] = []
-        self.showMaximized()
 
     def closeEvent(self, event: QCloseEvent) -> None:
         self.__anki_service.remove_from_did_add_note_hook(self.__raise)
