@@ -1,7 +1,7 @@
 from typing import Dict, Optional
 
 from PyQt5 import QtWidgets, QtCore
-from PyQt5.QtWidgets import QVBoxLayout, QLabel, QListWidget, QListWidgetItem, QAbstractItemView
+from PyQt5.QtWidgets import QVBoxLayout, QLabel, QListWidget, QListWidgetItem, QAbstractItemView, QDialog
 
 from word_fellow.domain.document.Document import Document
 from word_fellow.domain.word.Word import Word
@@ -15,8 +15,9 @@ from word_fellow.ui.dialog.context.list.ClickableListWidget import ClickableList
 
 class ContextListWidget(QtWidgets.QWidget):
 
-    def __init__(self, word: Optional[Word], doc: Document, status: WordStatus, db: WordFellowDB, status_to_offset_dict: Dict[WordStatus, int]):
-        super(ContextListWidget, self).__init__()
+    def __init__(self, parent: Optional[QDialog], word: Optional[Word], doc: Document, status: WordStatus, db: WordFellowDB, status_to_offset_dict: Dict[WordStatus, int]):
+        super(ContextListWidget, self).__init__(parent)
+        self.__parent = parent
         self.__doc = doc
         self.__status = status
         self.__db = db
@@ -87,8 +88,8 @@ class ContextListWidget(QtWidgets.QWidget):
 
     def __on_item_clicked(self, item: QListWidgetItem) -> None:
         long_context: WordContext = item.data(QtCore.Qt.UserRole)
-        long_context_dialog = LongContextDialog(long_context)
-        long_context_dialog.show_dialog()
+        long_context_dialog = LongContextDialog(self, long_context)
+        long_context_dialog.exec()
 
     def __add_item_to_list_widget(self, list_widget: QListWidget, short_and_long_context: ShortAndLongContext) -> ContextItemWidget:
         context_item = ContextItemWidget(short_and_long_context)

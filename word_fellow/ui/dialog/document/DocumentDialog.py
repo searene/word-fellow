@@ -86,7 +86,7 @@ class DocumentDialog(QDialog):
         vbox.addWidget(word_label)
         vbox.addLayout(self.__get_top_bar())
         vbox.addWidget(context_list)
-        vbox.addLayout(self.__get_bottom_bar(context_list, doc, status, db))
+        vbox.addLayout(self.__get_bottom_bar(doc, status, db))
         return vbox
 
     def __init_ui(self, dialog_layout: QVBoxLayout):
@@ -128,7 +128,7 @@ class DocumentDialog(QDialog):
         self.__update_ui()
 
     def __get_context_list(self, word: Optional[Word], doc: Document, status: WordStatus, db: WordFellowDB, status_to_offset_dict: Dict[WordStatus, int]) -> ContextListWidget:
-        context_list = ContextListWidget(word, doc, status, db, status_to_offset_dict)
+        context_list = ContextListWidget(self, word, doc, status, db, status_to_offset_dict)
         return context_list
 
     def __get_middle_area(self, context_list: ContextListWidget) -> QHBoxLayout:
@@ -136,7 +136,7 @@ class DocumentDialog(QDialog):
         hbox.addWidget(context_list)
         return hbox
 
-    def __get_bottom_bar(self, context_list: ContextListWidget, doc: Document, status: WordStatus, db: WordFellowDB) -> QHBoxLayout:
+    def __get_bottom_bar(self, doc: Document, status: WordStatus, db: WordFellowDB) -> QHBoxLayout:
         res = QHBoxLayout()
 
         self._add_to_anki_btn = self.__get_add_to_anki_btn(self.__is_word_available())
