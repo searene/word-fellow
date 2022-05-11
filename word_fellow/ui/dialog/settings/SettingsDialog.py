@@ -20,7 +20,6 @@ class SettingsDialog(QDialog):
         self.__reset_service = ResetService(self.__db)
         self.__backup_service = BackupService(self.__settings_service)
         self.__setup_ui()
-        self.setWindowFlags(self.windowFlags() | Qt.Popup)
 
     def __setup_ui(self) -> None:
         self.setWindowTitle("Settings")

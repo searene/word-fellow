@@ -17,7 +17,6 @@ class BackupDetailDialog(QDialog):
         self.__show_restore_finished_dialog = show_restore_finished_dialog
         super(BackupDetailDialog, self).__init__(parent)
         self.__setup_ui(backup, backup_service)
-        self.setWindowFlags(self.windowFlags() | Qt.Popup)
 
     def __setup_ui(self, backup: Backup, backup_service: BackupService):
         vbox = QVBoxLayout()

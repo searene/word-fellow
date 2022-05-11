@@ -13,7 +13,6 @@ class LongContextDialog(QDialog):
         super(LongContextDialog, self).__init__(parent)
         self.setMinimumWidth(600)
         self.setMinimumHeight(400)
-        self.setWindowFlags(self.windowFlags() | Qt.Popup)
         self.__long_context = long_context
         self.__init_ui(self.__long_context)
 

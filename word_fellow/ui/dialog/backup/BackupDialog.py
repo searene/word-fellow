@@ -13,7 +13,6 @@ class BackupDialog(QDialog):
     def __init__(self, backup_service: BackupService, db_path: str):
         super().__init__()
         self.__init_ui()
-        self.setWindowFlags(self.windowFlags() | Qt.Popup)
         backup_service.run_backup()
 
     def __init_ui(self):

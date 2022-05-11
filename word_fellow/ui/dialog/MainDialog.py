@@ -34,7 +34,6 @@ class MainDialog(QDialog):
         self.__document_service = DocumentService(self.__db)
         self.__show_dialog = show_dialog
         self.__init_ui(self.__document_service, self.__db, self.__show_dialog, document_analyzer, show_dialog)
-        self.setWindowFlags(self.windowFlags() | Qt.Popup)
 
     def __init_ui(self, document_service: DocumentService, db: WordFellowDB, show_dialog: bool, document_analyzer: IDocumentAnalyzer, show_ui: bool):
         vbox = QVBoxLayout()

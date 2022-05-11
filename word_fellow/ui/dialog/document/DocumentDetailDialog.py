@@ -35,7 +35,6 @@ class DocumentDetailDialog(QDialog):
         self.setLayout(vbox)
         self.setMinimumWidth(300)
         self.setMinimumHeight(200)
-        self.setWindowFlags(self.windowFlags() |Qt.Popup)
 
     def __add_desc(self, vbox: QVBoxLayout, doc: Document) -> None:
         label = QLabel()
