@@ -9,7 +9,7 @@ from word_fellow.domain.word.WordStatus import WordStatus
 from word_fellow.domain.word.WordValueObject import ShortAndLongContext, WordContext
 from word_fellow.infrastructure import WordFellowDB
 from word_fellow.ui.dialog.context.ContextItemWidget import ContextItemWidget
-from word_fellow.ui.dialog.LongContextDialog import LongContextDialog
+from word_fellow.ui.dialog.LongContextWindow import LongContextWindow
 from word_fellow.ui.dialog.context.list.ClickableListWidget import ClickableListWidget
 
 
@@ -88,8 +88,8 @@ class ContextListWidget(QtWidgets.QWidget):
 
     def __on_item_clicked(self, item: QListWidgetItem) -> None:
         long_context: WordContext = item.data(QtCore.Qt.UserRole)
-        long_context_dialog = LongContextDialog(self, long_context)
-        long_context_dialog.show()
+        self._long_context_dialog = LongContextWindow(long_context)
+        self._long_context_dialog.show()
 
     def __add_item_to_list_widget(self, list_widget: QListWidget, short_and_long_context: ShortAndLongContext) -> ContextItemWidget:
         context_item = ContextItemWidget(short_and_long_context)

@@ -7,10 +7,10 @@ from PyQt5.QtWidgets import QDialog, QVBoxLayout, QHBoxLayout, QPushButton, QTex
 from word_fellow.domain.word.WordValueObject import WordContext
 
 
-class LongContextDialog(QDialog):
+class LongContextWindow(QWidget):
 
-    def __init__(self, parent: Optional[QWidget], long_context: WordContext):
-        super(LongContextDialog, self).__init__(parent)
+    def __init__(self, long_context: WordContext):
+        super(LongContextWindow, self).__init__()
         self.setMinimumWidth(600)
         self.setMinimumHeight(400)
         self.__long_context = long_context
@@ -43,6 +43,6 @@ class LongContextDialog(QDialog):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    dialog = LongContextDialog(None, WordContext("test", "this is a test.", 0))
-    dialog.exec()
+    win = LongContextWindow(WordContext("test", "this is a test.", 0))
+    win.show()
     sys.exit(app.exec_())
