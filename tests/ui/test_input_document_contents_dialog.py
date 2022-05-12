@@ -10,7 +10,7 @@ from word_fellow.anki.MockedAnkiService import MockedAnkiService
 from word_fellow.domain.document.DocumentService import DocumentService
 from word_fellow.domain.document.analyzer.DefaultDocumentAnalyzer import DefaultDocumentAnalyzer
 from word_fellow.ui.dialog.document.DocumentDetailWindow import DocumentDetailWindow
-from word_fellow.ui.dialog.document.InputDocumentContentsDialog import InputDocumentContentsDialog
+from word_fellow.ui.dialog.document.InputDocumentContentsWindow import InputDocumentContentsWindow
 
 
 class InputDocumentContentsDialogTestCase(BaseTestCase):
@@ -24,7 +24,7 @@ class InputDocumentContentsDialogTestCase(BaseTestCase):
         self.__document_service = DocumentService(self.db)
         analyzer = DefaultDocumentAnalyzer(self.db)
         self.__doc1 = self.__document_service.import_document("test name1", "test contents1", analyzer)
-        self.__form = InputDocumentContentsDialog(self.__document_service, DefaultDocumentAnalyzer(self.db),
+        self.__form = InputDocumentContentsWindow(self.__document_service, DefaultDocumentAnalyzer(self.db),
                                                   lambda _: None, show_ui=False)
 
     def test_should_import_document_when_clicking_on_ok(self):

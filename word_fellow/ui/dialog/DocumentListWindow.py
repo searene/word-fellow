@@ -18,7 +18,7 @@ from word_fellow.domain.utils import init_database
 from word_fellow.infrastructure import WordFellowDB
 from word_fellow.ui.dialog.context.list.ClickableListWidget import ClickableListWidget
 from word_fellow.ui.dialog.document.DocumentDetailWindow import DocumentDetailWindow
-from word_fellow.ui.dialog.document.InputDocumentContentsDialog import InputDocumentContentsDialog
+from word_fellow.ui.dialog.document.InputDocumentContentsWindow import InputDocumentContentsWindow
 from word_fellow.ui.dialog.settings.SettingsWindow import SettingsWindow
 from word_fellow.ui.util import MsgUtils
 from word_fellow.ui.util.DatabaseUtils import get_test_word_fellow_db
@@ -73,10 +73,10 @@ class DocumentListWindow(QWidget):
         return btn
 
     def __open_input_document_contents_dialog(self, document_service: DocumentService, document_analyzer: IDocumentAnalyzer, show_ui: bool):
-        self._input_documents_contents_dialog = InputDocumentContentsDialog(document_service, document_analyzer,
+        self._input_documents_contents_dialog = InputDocumentContentsWindow(document_service, document_analyzer,
                                                                             lambda doc: self.__add_doc_to_list(doc), show_ui)
         if show_ui:
-            self._input_documents_contents_dialog.exec_()
+            self._input_documents_contents_dialog.show()
 
     def __open_import_file_dialog(self, show_ui: bool):
         document_file_path, file_filters = QFileDialog.getOpenFileName(self, 'Select document', '', 'Text Files (*.txt)')

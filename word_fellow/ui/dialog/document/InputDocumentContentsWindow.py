@@ -4,7 +4,7 @@ from typing import Callable
 
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QDialog, QVBoxLayout, QFormLayout, QLineEdit, QTextEdit, QHBoxLayout, QPushButton, \
-    QApplication
+    QApplication, QWidget
 
 from word_fellow.domain.document.Document import Document
 from word_fellow.domain.document.DocumentService import DocumentService
@@ -14,11 +14,11 @@ from word_fellow.ui.util import MsgUtils
 from word_fellow.ui.util.DatabaseUtils import get_test_word_fellow_db
 
 
-class InputDocumentContentsDialog(QDialog):
+class InputDocumentContentsWindow(QWidget):
 
     def __init__(self, document_service: DocumentService, document_analyzer: IDocumentAnalyzer,
                  add_doc_handler: Callable[[Document], None], show_ui=True):
-        super(InputDocumentContentsDialog, self).__init__()
+        super(InputDocumentContentsWindow, self).__init__()
         self.__show_ui = show_ui
         self.__document_service = document_service
         self.__document_analyzer = document_analyzer
@@ -75,8 +75,8 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
     db = get_test_word_fellow_db()
     document_service = DocumentService(db)
-    dialog = InputDocumentContentsDialog(document_service, DefaultDocumentAnalyzer(db), lambda _: None)
-    dialog.exec()
+    win = InputDocumentContentsWindow(document_service, DefaultDocumentAnalyzer(db), lambda _: None)
+    win.show()
     code = app.exec_()
     os.remove(db.db_path)
     sys.exit(code)
