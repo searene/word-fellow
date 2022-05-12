@@ -1,7 +1,6 @@
 import os
 
-from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QDialog, QVBoxLayout, QLabel, QPushButton, QApplication
+from PyQt5.QtWidgets import QVBoxLayout, QLabel, QPushButton, QApplication, QWidget
 
 from word_fellow.domain.backup.BackupService import BackupService
 from word_fellow.domain.settings.SettingsService import SettingsService
@@ -9,8 +8,8 @@ from word_fellow.infrastructure import get_prod_db_path
 from word_fellow.ui.util.DatabaseUtils import get_test_word_fellow_db
 
 
-class BackupDialog(QDialog):
-    def __init__(self, backup_service: BackupService, db_path: str):
+class BackupWindow(QWidget):
+    def __init__(self, backup_service: BackupService):
         super().__init__()
         self.__init_ui()
         backup_service.run_backup()
@@ -42,7 +41,7 @@ if __name__ == "__main__":
     db = get_test_word_fellow_db()
     settings_service = SettingsService(db)
     backup_service = BackupService(settings_service, get_prod_db_path())
-    dialog = BackupDialog(backup_service, db.db_path)
-    dialog.exec()
+    win = BackupWindow(backup_service)
+    win.show()
     app.exec_()
     os.remove(db.db_path)

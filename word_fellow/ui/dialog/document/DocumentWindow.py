@@ -24,7 +24,7 @@ from word_fellow.domain.word.Word import Word
 from word_fellow.domain.word.WordStatus import WordStatus
 from word_fellow.infrastructure import WordFellowDB, get_prod_db_path
 from word_fellow.ui.util.DatabaseUtils import get_test_word_fellow_db
-from word_fellow.ui.dialog.backup.BackupDialog import BackupDialog
+from word_fellow.ui.dialog.backup.BackupWindow import BackupWindow
 from word_fellow.ui.dialog.backup.BackupWorker import BackupWorker
 from word_fellow.ui.dialog.context.list.ContextListWidget import ContextListWidget
 from word_fellow.ui.util.PyQtUtils import get_vertical_line
@@ -83,8 +83,8 @@ class DocumentWindow(QWidget):
         should_run_backup = backup_service.should_backup_today()
         if not should_run_backup:
             return
-        backup_dialog = BackupDialog(backup_service, get_prod_db_path())
-        backup_dialog.exec_()
+        self._backup_win = BackupWindow(backup_service)
+        self._backup_win.show()
 
     def __raise(self, note: 'Note'):
         self.raise_()
