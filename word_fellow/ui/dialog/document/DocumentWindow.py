@@ -63,6 +63,7 @@ class DocumentWindow(QWidget):
         self.__anki_service.remove_from_did_add_note_hook(self.__raise)
         self.__run_backup()
 
+    # TODO destroyed while thread is still running?
     def __run_backup(self):
 
         self.__thread = QThread()
