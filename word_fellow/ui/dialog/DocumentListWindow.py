@@ -19,7 +19,7 @@ from word_fellow.infrastructure import WordFellowDB
 from word_fellow.ui.dialog.context.list.ClickableListWidget import ClickableListWidget
 from word_fellow.ui.dialog.document.DocumentDetailWindow import DocumentDetailWindow
 from word_fellow.ui.dialog.document.InputDocumentContentsDialog import InputDocumentContentsDialog
-from word_fellow.ui.dialog.settings.SettingsDialog import SettingsDialog
+from word_fellow.ui.dialog.settings.SettingsWindow import SettingsWindow
 from word_fellow.ui.util import MsgUtils
 from word_fellow.ui.util.DatabaseUtils import get_test_word_fellow_db
 from word_fellow.ui.util.FileUtils import get_base_name_without_ext
@@ -56,8 +56,8 @@ class DocumentListWindow(QWidget):
         return btn
 
     def __open_settings_dialog(self):
-        settings_dialog = SettingsDialog(self.__db)
-        settings_dialog.exec_()
+        self._settings_win = SettingsWindow(self.__db)
+        self._settings_win.show()
 
     def __get_import_new_document_button(self, document_service: DocumentService, document_analyzer: IDocumentAnalyzer, show_ui: bool) -> QPushButton:
         btn = QPushButton(self)

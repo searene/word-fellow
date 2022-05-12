@@ -1,7 +1,7 @@
 import os
 
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QDialog, QVBoxLayout, QTabWidget
+from PyQt5.QtWidgets import QDialog, QVBoxLayout, QTabWidget, QWidget
 
 from word_fellow.domain.backup.BackupService import BackupService
 from word_fellow.domain.reset.ResetService import ResetService
@@ -12,9 +12,9 @@ from word_fellow.ui.dialog.settings.backup.BackupTab import BackupTab
 from word_fellow.ui.dialog.settings.ResetTab import ResetTab
 
 
-class SettingsDialog(QDialog):
+class SettingsWindow(QWidget):
     def __init__(self, db: WordFellowDB):
-        super(SettingsDialog, self).__init__()
+        super(SettingsWindow, self).__init__()
         self.__db = db
         self.__settings_service = SettingsService(self.__db)
         self.__reset_service = ResetService(self.__db)
@@ -36,7 +36,7 @@ if __name__ == '__main__':
     from PyQt5.QtWidgets import QApplication
     app = QApplication(sys.argv)
     db = get_test_word_fellow_db()
-    w = SettingsDialog(db)
-    w.exec()
+    w = SettingsWindow(db)
+    w.show()
     app.exec_()
     os.remove(db.db_path)
