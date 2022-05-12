@@ -10,7 +10,7 @@ from tests.base.BaseTestCase import BaseTestCase
 from word_fellow.ui.util.DatabaseUtils import get_test_word_fellow_db
 from word_fellow.domain.backup.BackupService import BackupService
 from word_fellow.domain.settings.SettingsService import SettingsService
-from word_fellow.ui.dialog.settings.backup.BackupDetailDialog import BackupDetailDialog
+from word_fellow.ui.dialog.settings.backup.BackupDetailWindow import BackupDetailWindow
 
 
 class BackupDetailDialogTestCase(BaseTestCase):
@@ -25,7 +25,7 @@ class BackupDetailDialogTestCase(BaseTestCase):
         self.__backup_service = BackupService(settings_service, db_path=self.db.db_path)
 
         self.__backup = self.__backup_service.run_backup(force_run=True)
-        self.__form = BackupDetailDialog(None, self.__backup, self.__backup_service, False)
+        self.__form = BackupDetailWindow(self.__backup, self.__backup_service, False)
 
     def test_restore(self) -> None:
 

@@ -10,12 +10,11 @@ from word_fellow.domain.backup.BackupService import BackupService
 from word_fellow.domain.settings.SettingsService import SettingsService
 
 
-class BackupDetailDialog(QDialog):
+class BackupDetailWindow(QWidget):
 
-    def __init__(self, parent: Optional[QWidget], backup: Backup, backup_service: BackupService, show_restore_finished_dialog=True):
-        self.__parent = parent
+    def __init__(self, backup: Backup, backup_service: BackupService, show_restore_finished_dialog=True):
         self.__show_restore_finished_dialog = show_restore_finished_dialog
-        super(BackupDetailDialog, self).__init__(parent)
+        super(BackupDetailWindow, self).__init__()
         self.__setup_ui(backup, backup_service)
 
     def __setup_ui(self, backup: Backup, backup_service: BackupService):
@@ -77,7 +76,7 @@ if __name__ == "__main__":
     backup_service = BackupService(settings_service)
 
     app = QApplication([])
-    dialog = BackupDetailDialog(None, backup, backup_service)
-    dialog.exec()
+    dialog = BackupDetailWindow(backup, backup_service)
+    dialog.show()
     app.exec_()
     os.remove(db.db_path)

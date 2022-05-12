@@ -11,7 +11,7 @@ from word_fellow.domain.backup.Backup import Backup
 from word_fellow.domain.backup.BackupService import BackupService
 from word_fellow.domain.settings.SettingsService import SettingsService
 from word_fellow.ui.dialog.context.list.ClickableListWidget import ClickableListWidget
-from word_fellow.ui.dialog.settings.backup.BackupDetailDialog import BackupDetailDialog
+from word_fellow.ui.dialog.settings.backup.BackupDetailWindow import BackupDetailWindow
 
 
 class BackupTab(QWidget):
@@ -117,8 +117,8 @@ class BackupTab(QWidget):
 
     def __on_backup_list_item_clicked(self, item: QListWidgetItem) -> None:
         backup = Backup(item.data(Qt.UserRole))
-        self._backup_detail_dialog = BackupDetailDialog(self, backup, self.__backup_service)
-        self._backup_detail_dialog.exec()
+        self._backup_detail_dialog = BackupDetailWindow(backup, self.__backup_service)
+        self._backup_detail_dialog.show()
 
     def __add_tooltip(self, vbox):
         label = QLabel("After enabling backup, your files will be backed up to the selected folder once a day.")
