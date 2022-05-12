@@ -18,5 +18,5 @@ def get_visible_items(list_widget: QListWidget) -> [QListWidgetItem]:
     return [list_widget.item(index) for index in get_visible_item_indices(list_widget)]
 
 
-def get_visible_item_widget(list_widget: QListWidget) -> [QWidget]:
+def get_visible_item_widgets(list_widget: QListWidget) -> [QWidget]:
     return [list_widget.itemWidget(item) for item in get_visible_items(list_widget)]

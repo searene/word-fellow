@@ -50,9 +50,14 @@ class DocumentDialog(QDialog):
         self.__operations: [Operation] = []
         self.showMaximized()
 
-    def reopen(self, parent: Optional[QDialog], doc: Document, db: WordFellowDB, anki_service: IAnkiService):
-        self.__doc = doc
-        self.__update_ui()
+    # def reopen(self, parent: Optional[QDialog], doc: Document, db: WordFellowDB, anki_service: IAnkiService):
+    #     self.__doc = doc
+    #     self.__status_to_offset_dict = {}
+    #     self.__operations = []
+    #     self.__status = WordStatus.UNREVIEWED
+    #     self._status_combo_box.setCurrentText(self.__status.value)
+    #     self._context_list.set_status(self.__status)
+    #     self.__update_ui()
 
     def closeEvent(self, event: QCloseEvent) -> None:
         self.__anki_service.remove_from_did_add_note_hook(self.__raise)

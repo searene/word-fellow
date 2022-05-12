@@ -6,7 +6,7 @@ from PyQt5.QtTest import QTest
 from PyQt5.QtWidgets import QApplication
 
 from tests.base.BaseTestCase import BaseTestCase
-from tests.utils.UiUtils import get_visible_item_widget
+from tests.utils.UiUtils import get_visible_item_widgets
 from word_fellow.anki.MockedAnkiService import MockedAnkiService
 from word_fellow.domain.document.DocumentService import DocumentService
 from word_fellow.domain.document.analyzer.DefaultDocumentAnalyzer import DefaultDocumentAnalyzer
@@ -24,8 +24,8 @@ class DocumentWindowTestCase(BaseTestCase):
 
     def setUp(self):
         super(DocumentWindowTestCase, self).setUp()
-        document_service = DocumentService(self.db)
-        self.doc = document_service.import_document("test doc", "this is this", DefaultDocumentAnalyzer(self.db))
+        self.__document_service = DocumentService(self.db)
+        self.doc = self.__document_service.import_document("test doc", "this is this", DefaultDocumentAnalyzer(self.db))
         self.form = DocumentDialog(None, self.doc, self.db, MockedAnkiService(self.__app))
 
     def test_should_give_the_same_contexts_when_switching_status_back(self):
@@ -251,8 +251,37 @@ class DocumentWindowTestCase(BaseTestCase):
         self.__change_status(WordStatus.KNOWN)
         self.assertEqual(self.form._word_label.text(), "--")
 
+    # def test_should_update_everything_when_reopening(self):
+    #
+    #     # Make some changes
+    #     QTest.mouseClick(self.form._ignore_btn, Qt.LeftButton)
+    #     QTest.mouseClick(self.form._ignore_btn, Qt.LeftButton)
+    #     self.__change_status(WordStatus.IGNORED)
+    #
+    #     # Reopen
+    #     doc = self.__document_service.import_document("test doc2", "another test doc", DefaultDocumentAnalyzer(self.db))
+    #     self.form.reopen(None, doc, self.db, MockedAnkiService(self.__app))
+    #
+    #     # Verify
+    #     self.assertEqual(self.form._word_label.text(), "another")
+    #
+    #     self.assertEqual(self.form._status_combo_box.currentText(), WordStatus.UNREVIEWED.value)
+    #
+    #     self.assertTrue(self.form._ignore_btn.isEnabled())
+    #     self.assertTrue(self.form._know_btn.isEnabled())
+    #     self.assertTrue(self.form._study_later_btn.isEnabled())
+    #     self.assertTrue(self.form._add_to_anki_btn.isEnabled())
+    #
+    #     self.assertFalse(self.form._prev_page_btn.isEnabled())
+    #     self.assertTrue(self.form._next_page_btn.isEnabled())
+    #     self.assertEqual(self.form._page_info_label.text(), "1 / 3")
+    #
+    #     self.assertEqual(self.form._context_list.get_item_htmls(), [
+    #         "<b><u>another</u></b> test doc"
+    #     ])
+
     def __get_widget_list_htmls(self):
-        return [item.short_html for item in get_visible_item_widget(self.form._context_list._list_widget)]
+        return [item.short_html for item in get_visible_item_widgets(self.form._context_list._list_widget)]
 
     def __change_status(self, status: WordStatus) -> None:
         self.form._status_combo_box.currentTextChanged.emit(status.value)
