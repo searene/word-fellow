@@ -8,7 +8,7 @@ from tests.base.BaseTestCase import BaseTestCase
 from word_fellow.anki.MockedAnkiService import MockedAnkiService
 from word_fellow.domain.document.DocumentService import DocumentService
 from word_fellow.domain.document.analyzer.DefaultDocumentAnalyzer import DefaultDocumentAnalyzer
-from word_fellow.ui.dialog.document.DocumentDetailDialog import DocumentDetailDialog
+from word_fellow.ui.dialog.document.DocumentDetailWindow import DocumentDetailWindow
 
 
 class DocumentDetailDialogTestCase(BaseTestCase):
@@ -23,7 +23,7 @@ class DocumentDetailDialogTestCase(BaseTestCase):
         analyzer = DefaultDocumentAnalyzer(self.db)
         self.__doc1 = self.__document_service.import_document("test name1", "test contents1", analyzer)
         self.__doc2 = self.__document_service.import_document("test name2", "test contents2", analyzer)
-        self.__form = DocumentDetailDialog(None, self.__doc1, self.db, self.__document_service,
+        self.__form = DocumentDetailWindow(self.__doc1, self.db, self.__document_service,
                                            MockedAnkiService(self.__app), lambda: None, show_dialog=False)
 
     def test_should_delete_document_when_clicking_on_delete(self):

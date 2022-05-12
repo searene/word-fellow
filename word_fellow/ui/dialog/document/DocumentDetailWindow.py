@@ -1,6 +1,6 @@
 import os
 import sys
-from typing import Optional, Callable
+from typing import Callable
 
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QDialog, QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QApplication, QLabel, \
@@ -15,12 +15,11 @@ from word_fellow.ui.util.DatabaseUtils import get_test_word_fellow_db
 from word_fellow.ui.dialog.document.DocumentWindow import DocumentWindow
 
 
-class DocumentDetailDialog(QDialog):
+class DocumentDetailWindow(QWidget):
 
-    def __init__(self, parent: Optional[QDialog], doc: Document, db: WordFellowDB, document_service: DocumentService,
+    def __init__(self, doc: Document, db: WordFellowDB, document_service: DocumentService,
                  anki_service: IAnkiService, on_document_removed: Callable[[], None], show_dialog: bool = True):
-        super(DocumentDetailDialog, self).__init__(parent)
-        self.__parent = parent
+        super(DocumentDetailWindow, self).__init__()
         self.__doc = doc
         self.__db = db
         self.__document_service = document_service
@@ -94,9 +93,9 @@ if __name__ == "__main__":
     doc = Document(1, "test", "test contents")
     db = get_test_word_fellow_db()
     document_service = DocumentService(db)
-    dialog = DocumentDetailDialog(None, doc, db, document_service, MockedAnkiService(app),
-                                  on_document_removed=lambda: None, show_dialog=True)
-    dialog.exec()
+    detail_window = DocumentDetailWindow(doc, db, document_service, MockedAnkiService(app),
+                                         on_document_removed=lambda: None, show_dialog=True)
+    detail_window.show()
     code = app.exec_()
     os.remove(db.db_path)
     sys.exit(code)

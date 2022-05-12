@@ -9,7 +9,7 @@ from tests.base.BaseTestCase import BaseTestCase
 from word_fellow.anki.MockedAnkiService import MockedAnkiService
 from word_fellow.domain.document.DocumentService import DocumentService
 from word_fellow.domain.document.analyzer.DefaultDocumentAnalyzer import DefaultDocumentAnalyzer
-from word_fellow.ui.dialog.document.DocumentDetailDialog import DocumentDetailDialog
+from word_fellow.ui.dialog.document.DocumentDetailWindow import DocumentDetailWindow
 from word_fellow.ui.dialog.document.InputDocumentContentsDialog import InputDocumentContentsDialog
 
 

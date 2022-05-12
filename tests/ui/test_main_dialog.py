@@ -32,8 +32,8 @@ class MainDialogTestCase(BaseTestCase):
     def test_should_remove_deleted_document_from_list(self):
         item1 = list(filter(lambda item: item.text() == self.__doc1.name, get_visible_items(self.__form._list_widget)))[0]
         self.__form._list_widget.itemClicked.emit(item1)
-        QTest.mouseClick(self.__form._doc_detail_dialog._delete_btn, Qt.LeftButton)
-        QTest.mouseClick(self.__form._doc_detail_dialog._delete_warning_msg_box.button(QMessageBox.Ok), Qt.LeftButton)
+        QTest.mouseClick(self.__form._doc_detail_window._delete_btn, Qt.LeftButton)
+        QTest.mouseClick(self.__form._doc_detail_window._delete_warning_msg_box.button(QMessageBox.Ok), Qt.LeftButton)
 
         items = get_visible_items(self.__form._list_widget)
         self.assertEqual(len(items), 1)

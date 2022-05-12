@@ -17,7 +17,7 @@ from word_fellow.domain.document.analyzer.DefaultDocumentAnalyzer import Default
 from word_fellow.domain.utils import init_database
 from word_fellow.infrastructure import WordFellowDB
 from word_fellow.ui.dialog.context.list.ClickableListWidget import ClickableListWidget
-from word_fellow.ui.dialog.document.DocumentDetailDialog import DocumentDetailDialog
+from word_fellow.ui.dialog.document.DocumentDetailWindow import DocumentDetailWindow
 from word_fellow.ui.dialog.document.InputDocumentContentsDialog import InputDocumentContentsDialog
 from word_fellow.ui.dialog.settings.SettingsDialog import SettingsDialog
 from word_fellow.ui.util import MsgUtils
@@ -117,11 +117,11 @@ class MainDialog(QDialog):
 
     def __open_document_window(self, doc_id: int, document_service: DocumentService, db: WordFellowDB, show_dialog: bool) -> None:
         doc = self.__document_service.get_doc_by_id(doc_id)
-        self._doc_detail_dialog = DocumentDetailDialog(self, doc, db, document_service, self.__anki_service,
+        self._doc_detail_window = DocumentDetailWindow(doc, db, document_service, self.__anki_service,
                                                        lambda: self.__delete_doc_from_list(doc_id, self._list_widget),
                                                        show_dialog)
         if show_dialog:
-            self._doc_detail_dialog.show()
+            self._doc_detail_window.show()
 
     def __add_doc_to_list(self, doc: Document) -> None:
         self._list_widget.addItem(self.__to_list_item((doc.document_id, doc.name)))
