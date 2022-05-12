@@ -6,12 +6,14 @@ from word_fellow.anki.DefaultAnkiService import DefaultAnkiService
 from word_fellow.domain import utils
 from word_fellow.domain.document.DocumentService import DocumentService
 from word_fellow.domain.document.analyzer.DefaultDocumentAnalyzer import DefaultDocumentAnalyzer
-from word_fellow.ui.dialog.MainDialog import MainDialog
+from word_fellow.ui.dialog.DocumentListWindow import DocumentListWindow
 import word_fellow.domain.word.WordService as WordService
 import word_fellow.domain.word.WordValueObject as WordValueObject
 
 from word_fellow.ui.dialog.document.DocumentWindow import DocumentWindow
 from word_fellow.ui.util.DatabaseUtils import get_prod_word_fellow_db
+
+document_list_window: [DocumentListWindow] = None
 
 
 def __init_database():
@@ -35,11 +37,11 @@ def insert_test_data():
     WordService.batch_insert(word_value_objects, get_prod_word_fellow_db())
 
 
-def show_main_dialog() -> None:
+def show_doc_list_window() -> None:
     __init_database()
     db = get_prod_word_fellow_db()
-    main_dialog = MainDialog(aqt.mw, db, DefaultAnkiService(), DefaultDocumentAnalyzer(db))
-    main_dialog.show()
+    document_list_window = DocumentListWindow(db, DefaultAnkiService(), DefaultDocumentAnalyzer(db))
+    document_list_window.show()
 
 
 def new_undo(old_undo: Callable[[], None]) -> None:
@@ -52,7 +54,7 @@ def new_undo(old_undo: Callable[[], None]) -> None:
 
 def init_addon() -> None:
     action = aqt.qt.QAction("WordFellow", aqt.mw)
-    aqt.qt.qconnect(action.triggered, show_main_dialog)
+    aqt.qt.qconnect(action.triggered, show_doc_list_window)
     aqt.mw.form.menuTools.addAction(action)
 
     old_undo_func = aqt.mw.undo

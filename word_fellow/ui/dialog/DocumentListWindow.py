@@ -25,10 +25,10 @@ from word_fellow.ui.util.DatabaseUtils import get_test_word_fellow_db
 from word_fellow.ui.util.FileUtils import get_base_name_without_ext
 
 
-class MainDialog(QDialog):
+class DocumentListWindow(QWidget):
 
-    def __init__(self, parent: Optional[QWidget], db: WordFellowDB, anki_service: IAnkiService, document_analyzer: IDocumentAnalyzer, show_dialog=True):
-        super().__init__(parent)
+    def __init__(self, db: WordFellowDB, anki_service: IAnkiService, document_analyzer: IDocumentAnalyzer, show_dialog=True):
+        super().__init__()
         self.__db = db
         self.__anki_service = anki_service
         self.__document_service = DocumentService(self.__db)
@@ -155,7 +155,7 @@ if __name__ == '__main__':
     # db.execute("delete from words")
     # db.execute("delete from global_word_status")
 
-    ex = MainDialog(None, db, MockedAnkiService(app), DefaultDocumentAnalyzer(db))
-    ex.exec()
+    ex = DocumentListWindow(db, MockedAnkiService(app), DefaultDocumentAnalyzer(db))
+    ex.show()
     app.exec_()
     os.remove(db.db_path)

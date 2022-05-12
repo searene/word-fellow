@@ -10,7 +10,7 @@ from tests.utils.UiUtils import get_visible_items
 from word_fellow.anki.MockedAnkiService import MockedAnkiService
 from word_fellow.domain.document.DocumentService import DocumentService
 from word_fellow.domain.document.analyzer.DefaultDocumentAnalyzer import DefaultDocumentAnalyzer
-from word_fellow.ui.dialog.MainDialog import MainDialog
+from word_fellow.ui.dialog.DocumentListWindow import DocumentListWindow
 
 
 class MainDialogTestCase(BaseTestCase):
@@ -27,7 +27,7 @@ class MainDialogTestCase(BaseTestCase):
         self.__doc1 = self.__document_service.import_document("test name1", "this is this this", analyzer)
         self.__doc2 = self.__document_service.import_document("test name2", "skip\nto skip\nthis", analyzer)
 
-        self.__form = MainDialog(None, self.db, MockedAnkiService(self.__app), DefaultDocumentAnalyzer(self.db), show_dialog=False)
+        self.__form = DocumentListWindow(self.db, MockedAnkiService(self.__app), DefaultDocumentAnalyzer(self.db), show_dialog=False)
 
     def test_should_remove_deleted_document_from_list(self):
         item1 = list(filter(lambda item: item.text() == self.__doc1.name, get_visible_items(self.__form._list_widget)))[0]
