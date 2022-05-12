@@ -98,7 +98,7 @@ class MainDialog(QDialog):
         self._list_widget = ClickableListWidget()
         self._list_widget.setVerticalScrollBar(scroll_bar)
         self._list_widget.itemClicked.connect(lambda item: self.on_list_item_clicked(item, document_service, db,
-                                                                                     self._list_widget, show_dialog))
+                                                                                     show_dialog))
         parent.addWidget(self._list_widget)
 
         doc_id_and_name_list = self.__document_service.get_document_id_and_name_list()
@@ -111,13 +111,11 @@ class MainDialog(QDialog):
         res.setData(QtCore.Qt.UserRole, doc_id_and_name[0])
         return res
 
-    def on_list_item_clicked(self, item: QListWidgetItem, document_service: DocumentService, db: WordFellowDB,
-                             doc_list: QListWidget, show_dialog: bool) -> None:
+    def on_list_item_clicked(self, item: QListWidgetItem, document_service: DocumentService, db: WordFellowDB, show_dialog: bool) -> None:
         doc_id = item.data(QtCore.Qt.UserRole)
-        self.__open_document_dialog(doc_id, document_service, db, doc_list, show_dialog)
+        self.__open_document_window(doc_id, document_service, db, show_dialog)
 
-    def __open_document_dialog(self, doc_id: int, document_service: DocumentService, db: WordFellowDB,
-                               doc_list: QListWidget, show_dialog: bool) -> None:
+    def __open_document_window(self, doc_id: int, document_service: DocumentService, db: WordFellowDB, show_dialog: bool) -> None:
         doc = self.__document_service.get_doc_by_id(doc_id)
         self._doc_detail_dialog = DocumentDetailDialog(self, doc, db, document_service, self.__anki_service,
                                                        lambda: self.__delete_doc_from_list(doc_id, self._list_widget),

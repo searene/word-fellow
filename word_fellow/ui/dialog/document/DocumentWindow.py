@@ -5,7 +5,7 @@ from typing import Dict, Optional, TYPE_CHECKING
 from PyQt5.QtCore import Qt, QThread
 from PyQt5.QtGui import QCloseEvent, QFont, QKeySequence
 from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QComboBox, QLabel, QPushButton, QApplication, QSizePolicy, \
-    QSpacerItem, QMenu, QDialog
+    QSpacerItem, QMenu, QWidget
 
 from word_fellow.domain.operation.Operation import Operation
 
@@ -30,10 +30,10 @@ from word_fellow.ui.dialog.context.list.ContextListWidget import ContextListWidg
 from word_fellow.ui.util.PyQtUtils import get_vertical_line
 
 
-class DocumentDialog(QDialog):
+class DocumentWindow(QWidget):
 
-    def __init__(self, parent: Optional[QDialog], doc: Document, db: WordFellowDB, anki_service: IAnkiService):
-        super(DocumentDialog, self).__init__(parent)
+    def __init__(self, doc: Document, db: WordFellowDB, anki_service: IAnkiService):
+        super(DocumentWindow, self).__init__()
         self.__status_to_offset_dict: Dict[WordStatus, int] = {}
         self.__anki_service = anki_service
         self.__db = db
@@ -346,7 +346,7 @@ if __name__ == "__main__":
     analyzer = DefaultDocumentAnalyzer(db)
     document_service = DocumentService(db)
     doc = document_service.import_document("test_name", "test contents", analyzer)
-    doc_dialog = DocumentDialog(None, doc, db, MockedAnkiService(app))
-    doc_dialog.exec()
+    doc_window = DocumentWindow(doc, db, MockedAnkiService(app))
+    doc_window.show()
     app.exec_()
     os.remove(db.db_path)

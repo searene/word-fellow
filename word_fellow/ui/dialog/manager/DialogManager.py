@@ -2,14 +2,14 @@ from typing import Dict, Optional
 
 from PyQt5.QtWidgets import QWidget
 
-from word_fellow.ui.dialog.document.DocumentDialog import DocumentDialog
+from word_fellow.ui.dialog.document.DocumentWindow import DocumentWindow
 from word_fellow.ui.dialog.manager.DialogType import DialogType
 
 
 class DialogManager:
 
     _dialogs: Dict[DialogType, (QWidget, Optional[QWidget])] = {
-        DialogType.DOCUMENT_DIALOG: (DocumentDialog, None),
+        DialogType.DOCUMENT_DIALOG: (DocumentWindow, None),
     }
 
     @staticmethod

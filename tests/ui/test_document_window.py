@@ -13,7 +13,7 @@ from word_fellow.domain.document.analyzer.DefaultDocumentAnalyzer import Default
 from word_fellow.domain.status import GlobalWordStatus
 from word_fellow.domain.status.GlobalWordStatus import Status
 from word_fellow.domain.word.WordStatus import WordStatus
-from word_fellow.ui.dialog.document.DocumentDialog import DocumentDialog
+from word_fellow.ui.dialog.document.DocumentWindow import DocumentWindow
 
 
 class DocumentWindowTestCase(BaseTestCase):
@@ -26,7 +26,7 @@ class DocumentWindowTestCase(BaseTestCase):
         super(DocumentWindowTestCase, self).setUp()
         self.__document_service = DocumentService(self.db)
         self.doc = self.__document_service.import_document("test doc", "this is this", DefaultDocumentAnalyzer(self.db))
-        self.form = DocumentDialog(None, self.doc, self.db, MockedAnkiService(self.__app))
+        self.form = DocumentWindow(self.doc, self.db, MockedAnkiService(self.__app))
 
     def test_should_give_the_same_contexts_when_switching_status_back(self):
         """Situation: Change the status from unreviewed to ignored, then to unreviewed again.
@@ -292,4 +292,4 @@ class DocumentWindowTestCase(BaseTestCase):
         self.doc = document_service.import_document("test doc", "this is this", DefaultDocumentAnalyzer(self.db))
         GlobalWordStatus.upsert_word_status("this", Status.STUDYING, self.db)
         GlobalWordStatus.upsert_word_status("is", Status.STUDYING, self.db)
-        self.form = DocumentDialog(None, self.doc, self.db, MockedAnkiService(self.__app))
+        self.form = DocumentWindow(self.doc, self.db, MockedAnkiService(self.__app))

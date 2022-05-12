@@ -12,7 +12,7 @@ from word_fellow.domain.document.Document import Document
 from word_fellow.domain.document.DocumentService import DocumentService
 from word_fellow.infrastructure import WordFellowDB
 from word_fellow.ui.util.DatabaseUtils import get_test_word_fellow_db
-from word_fellow.ui.dialog.document.DocumentDialog import DocumentDialog
+from word_fellow.ui.dialog.document.DocumentWindow import DocumentWindow
 
 
 class DocumentDetailDialog(QDialog):
@@ -60,8 +60,8 @@ class DocumentDetailDialog(QDialog):
         hbox.addWidget(self._studyBtn)
 
     def __on_study_button_clicked(self, doc: Document, anki_service: IAnkiService, db: WordFellowDB) -> None:
-        doc_dialog = DocumentDialog(self, doc, db, anki_service)
-        doc_dialog.show()
+        self._doc_window = DocumentWindow(doc, db, anki_service)
+        self._doc_window.show()
         self.close()
 
     def __add_delete_button(self, hbox: QHBoxLayout, doc: Document, document_service: DocumentService,
