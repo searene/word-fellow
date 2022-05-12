@@ -8,15 +8,13 @@ from word_fellow.infrastructure import WordFellowDB
 class BackupWorker(QObject):
     """This class is used as a QThread worker for asynchronous backup."""
 
-    finished = pyqtSignal()
-
     def __init__(self, db_path: str):
         super().__init__()
         self.__db_path = db_path
 
     def run(self):
         backup_service = self.__get_backup_service(self.__db_path)
-        backup_service.run_backup(force_run=True)
+        backup_service.run_backup()
 
     def __get_backup_service(self, db_path: str) -> BackupService:
         db = WordFellowDB(db_path)

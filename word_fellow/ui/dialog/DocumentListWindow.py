@@ -4,7 +4,7 @@ from pathlib import Path
 from typing import Optional
 
 from PyQt5 import QtCore
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QThread
 from PyQt5.QtWidgets import (QPushButton, QApplication, QHBoxLayout, QVBoxLayout, QLabel, QDialog, QFileDialog,
                              QListWidgetItem, QSizePolicy, QListWidget, QScrollBar, QMenu, QWidget)
 
@@ -16,6 +16,7 @@ from word_fellow.domain.document.analyzer import IDocumentAnalyzer
 from word_fellow.domain.document.analyzer.DefaultDocumentAnalyzer import DefaultDocumentAnalyzer
 from word_fellow.domain.utils import init_database
 from word_fellow.infrastructure import WordFellowDB
+from word_fellow.ui.dialog.backup.BackupWorker import BackupWorker
 from word_fellow.ui.dialog.context.list.ClickableListWidget import ClickableListWidget
 from word_fellow.ui.dialog.document.DocumentDetailWindow import DocumentDetailWindow
 from word_fellow.ui.dialog.document.InputDocumentContentsWindow import InputDocumentContentsWindow
@@ -34,6 +35,23 @@ class DocumentListWindow(QWidget):
         self.__document_service = DocumentService(self.__db)
         self.__show_dialog = show_dialog
         self.__init_ui(self.__document_service, self.__db, self.__show_dialog, document_analyzer, show_dialog)
+        self.__run_backup()
+
+    def __run_backup(self):
+
+        self.__thread = QThread()
+
+        self.__backup_worker = BackupWorker(self.__db.db_path)
+        self.__backup_worker.moveToThread(self.__thread)
+
+        self.__thread.started.connect(self.__backup_worker.run)
+        self.__thread.finished.connect(self.__finish)
+
+        self.__thread.start()
+
+    def __finish(self):
+        self.__backup_worker.deleteLater()
+        self.__thread.deleteLater()
 
     def __init_ui(self, document_service: DocumentService, db: WordFellowDB, show_dialog: bool, document_analyzer: IDocumentAnalyzer, show_ui: bool):
         vbox = QVBoxLayout()

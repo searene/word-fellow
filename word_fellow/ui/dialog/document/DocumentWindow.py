@@ -61,22 +61,6 @@ class DocumentWindow(QWidget):
 
     def closeEvent(self, event: QCloseEvent) -> None:
         self.__anki_service.remove_from_did_add_note_hook(self.__raise)
-        self.__run_backup()
-
-    # TODO destroyed while thread is still running?
-    def __run_backup(self):
-
-        self.__thread = QThread()
-
-        self.__backup_worker = BackupWorker(self.__db.db_path)
-        self.__backup_worker.moveToThread(self.__thread)
-        self.__backup_worker.finished.connect(self.__thread.quit)
-        self.__backup_worker.finished.connect(self.__backup_worker.deleteLater)
-
-        self.__thread.started.connect(self.__backup_worker.run)
-        self.__thread.finished.connect(self.__thread.deleteLater)
-
-        self.__thread.start()
 
     def __show_backup_dialog(self, db: WordFellowDB) -> None:
         settings_service = SettingsService(db)
