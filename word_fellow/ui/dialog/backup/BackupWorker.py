@@ -1,4 +1,4 @@
-from PyQt5.QtCore import QObject, pyqtSignal
+from PyQt5.QtCore import QObject, pyqtSignal, QThread
 
 from word_fellow.domain.backup.BackupService import BackupService
 from word_fellow.domain.settings.SettingsService import SettingsService
@@ -15,6 +15,7 @@ class BackupWorker(QObject):
     def run(self):
         backup_service = self.__get_backup_service(self.__db_path)
         backup_service.run_backup()
+        QThread.currentThread().quit()
 
     def __get_backup_service(self, db_path: str) -> BackupService:
         db = WordFellowDB(db_path)

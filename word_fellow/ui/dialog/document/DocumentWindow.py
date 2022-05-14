@@ -2,7 +2,7 @@ import os
 import sys
 from typing import Dict, Optional, TYPE_CHECKING
 
-from PyQt5.QtCore import Qt, QThread
+from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QCloseEvent, QFont, QKeySequence
 from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QComboBox, QLabel, QPushButton, QApplication, QSizePolicy, \
     QSpacerItem, QMenu, QWidget
@@ -61,6 +61,7 @@ class DocumentWindow(QWidget):
 
     def closeEvent(self, event: QCloseEvent) -> None:
         self.__anki_service.remove_from_did_add_note_hook(self.__raise)
+        event.accept()
 
     def __show_backup_dialog(self, db: WordFellowDB) -> None:
         settings_service = SettingsService(db)

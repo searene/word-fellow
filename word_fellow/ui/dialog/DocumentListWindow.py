@@ -1,11 +1,10 @@
 import os
 import sys
 from pathlib import Path
-from typing import Optional
 
-from PyQt5 import QtCore
-from PyQt5.QtCore import Qt, QThread
-from PyQt5.QtWidgets import (QPushButton, QApplication, QHBoxLayout, QVBoxLayout, QLabel, QDialog, QFileDialog,
+from PyQt5 import QtCore, QtGui
+from PyQt5.QtCore import QThread
+from PyQt5.QtWidgets import (QPushButton, QApplication, QHBoxLayout, QVBoxLayout, QLabel, QFileDialog,
                              QListWidgetItem, QSizePolicy, QListWidget, QScrollBar, QMenu, QWidget)
 
 from word_fellow.anki.IAnkiService import IAnkiService
@@ -16,6 +15,7 @@ from word_fellow.domain.document.analyzer import IDocumentAnalyzer
 from word_fellow.domain.document.analyzer.DefaultDocumentAnalyzer import DefaultDocumentAnalyzer
 from word_fellow.domain.utils import init_database
 from word_fellow.infrastructure import WordFellowDB
+from word_fellow.ui.dialog.backup.BackingUpDialog import BackingUpDialog
 from word_fellow.ui.dialog.backup.BackupWorker import BackupWorker
 from word_fellow.ui.dialog.context.list.ClickableListWidget import ClickableListWidget
 from word_fellow.ui.dialog.document.DocumentDetailWindow import DocumentDetailWindow
@@ -28,30 +28,34 @@ from word_fellow.ui.util.FileUtils import get_base_name_without_ext
 
 class DocumentListWindow(QWidget):
 
-    def __init__(self, db: WordFellowDB, anki_service: IAnkiService, document_analyzer: IDocumentAnalyzer, show_dialog=True):
+    def __init__(self, db: WordFellowDB, anki_service: IAnkiService, document_analyzer: IDocumentAnalyzer,
+                 show_window=True, back_up_on_exit=True):
         super().__init__()
         self.__db = db
+        self.__back_up_on_exit = back_up_on_exit
         self.__anki_service = anki_service
         self.__document_service = DocumentService(self.__db)
-        self.__show_dialog = show_dialog
-        self.__init_ui(self.__document_service, self.__db, self.__show_dialog, document_analyzer, show_dialog)
+        self.__show_window = show_window
+        self.__init_ui(self.__document_service, self.__db, self.__show_window, document_analyzer, show_window)
         self.__run_backup()
 
-    def __run_backup(self):
+    def closeEvent(self, event: QtGui.QCloseEvent) -> None:
+        event.ignore()
+        if self.__back_up_on_exit:
+            backing_up_dialog = BackingUpDialog(self, self.__db.db_path)
+            if self.__show_window:
+                backing_up_dialog.exec()
 
+        event.accept()
+
+    def __run_backup(self):
         self.__thread = QThread()
 
         self.__backup_worker = BackupWorker(self.__db.db_path)
         self.__backup_worker.moveToThread(self.__thread)
 
         self.__thread.started.connect(self.__backup_worker.run)
-        self.__thread.finished.connect(self.__finish)
-
         self.__thread.start()
-
-    def __finish(self):
-        self.__backup_worker.deleteLater()
-        self.__thread.deleteLater()
 
     def __init_ui(self, document_service: DocumentService, db: WordFellowDB, show_dialog: bool, document_analyzer: IDocumentAnalyzer, show_ui: bool):
         vbox = QVBoxLayout()
