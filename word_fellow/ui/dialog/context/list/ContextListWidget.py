@@ -1,7 +1,7 @@
 from typing import Dict, Optional
 
 from PyQt5 import QtWidgets, QtCore
-from PyQt5.QtWidgets import QVBoxLayout, QLabel, QListWidget, QListWidgetItem, QAbstractItemView, QDialog
+from PyQt5.QtWidgets import QVBoxLayout, QLabel, QListWidget, QListWidgetItem, QAbstractItemView, QDialog, QWidget
 
 from word_fellow.domain.document.Document import Document
 from word_fellow.domain.word.Word import Word
@@ -15,7 +15,7 @@ from word_fellow.ui.dialog.context.list.ClickableListWidget import ClickableList
 
 class ContextListWidget(QtWidgets.QWidget):
 
-    def __init__(self, parent: Optional[QDialog], word: Optional[Word], doc: Document, status: WordStatus, db: WordFellowDB, status_to_offset_dict: Dict[WordStatus, int]):
+    def __init__(self, parent: Optional[QWidget], word: Optional[Word], doc: Document, status: WordStatus, db: WordFellowDB, status_to_offset_dict: Dict[WordStatus, int]):
         super(ContextListWidget, self).__init__(parent)
         self.__parent = parent
         self.__doc = doc

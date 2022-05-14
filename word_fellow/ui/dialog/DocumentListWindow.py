@@ -29,10 +29,9 @@ from word_fellow.ui.util.FileUtils import get_base_name_without_ext
 class DocumentListWindow(QWidget):
 
     def __init__(self, db: WordFellowDB, anki_service: IAnkiService, document_analyzer: IDocumentAnalyzer,
-                 show_window=True, back_up_on_exit=True):
+                 show_window=True):
         super().__init__()
         self.__db = db
-        self.__back_up_on_exit = back_up_on_exit
         self.__anki_service = anki_service
         self.__document_service = DocumentService(self.__db)
         self.__show_window = show_window
@@ -41,21 +40,20 @@ class DocumentListWindow(QWidget):
 
     def closeEvent(self, event: QtGui.QCloseEvent) -> None:
         event.ignore()
-        if self.__back_up_on_exit:
-            backing_up_dialog = BackingUpDialog(self, self.__db.db_path)
-            if self.__show_window:
-                backing_up_dialog.exec()
+        backing_up_dialog = BackingUpDialog(self, self.__db.db_path, self.__backup_thread)
+        if self.__show_window:
+            backing_up_dialog.exec()
 
         event.accept()
 
     def __run_backup(self):
-        self.__thread = QThread()
+        self.__backup_thread = QThread()
 
         self.__backup_worker = BackupWorker(self.__db.db_path)
-        self.__backup_worker.moveToThread(self.__thread)
+        self.__backup_worker.moveToThread(self.__backup_thread)
 
-        self.__thread.started.connect(self.__backup_worker.run)
-        self.__thread.start()
+        self.__backup_thread.started.connect(self.__backup_worker.run)
+        self.__backup_thread.start()
 
     def __init_ui(self, document_service: DocumentService, db: WordFellowDB, show_dialog: bool, document_analyzer: IDocumentAnalyzer, show_ui: bool):
         vbox = QVBoxLayout()

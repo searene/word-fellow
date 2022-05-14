@@ -1,3 +1,5 @@
+import time
+
 from PyQt5.QtCore import QObject, pyqtSignal, QThread
 
 from word_fellow.domain.backup.BackupService import BackupService

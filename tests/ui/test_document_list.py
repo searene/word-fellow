@@ -28,7 +28,10 @@ class DocumentListTestCase(BaseTestCase):
         self.__doc2 = self.__document_service.import_document("test name2", "skip\nto skip\nthis", analyzer)
 
         self.__form = DocumentListWindow(self.db, MockedAnkiService(self.__app), DefaultDocumentAnalyzer(self.db),
-                                         show_window=False, back_up_on_exit=False)
+                                         show_window=False)
+
+    def tearDown(self) -> None:
+        self.__form.close()
 
     def test_should_remove_deleted_document_from_list(self):
         item1 = list(filter(lambda item: item.text() == self.__doc1.name, get_visible_items(self.__form._list_widget)))[0]
