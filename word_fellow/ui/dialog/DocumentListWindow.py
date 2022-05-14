@@ -40,7 +40,7 @@ class DocumentListWindow(QWidget):
 
     def closeEvent(self, event: QtGui.QCloseEvent) -> None:
         event.ignore()
-        backing_up_dialog = BackingUpDialog(self, self.__db.db_path, self.__backup_thread)
+        backing_up_dialog = BackingUpDialog(self, self.__backup_thread)
         if self.__show_window:
             backing_up_dialog.exec()
 

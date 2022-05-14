@@ -6,7 +6,7 @@ from PyQt5.QtWidgets import QDialog, QVBoxLayout, QLabel, QWidget
 
 class BackingUpDialog(QDialog):
 
-    def __init__(self, parent: Optional[QWidget], db_path: str, backup_thread: QThread):
+    def __init__(self, parent: Optional[QWidget], backup_thread: QThread):
         super(BackingUpDialog, self).__init__(parent)
         self.__backup_thread = backup_thread
         self.setWindowTitle("Backing Up...")
