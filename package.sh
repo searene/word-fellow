@@ -1,4 +1,10 @@
-TARGET_DIR=/tmp/word_fellow
+
+if [ -z "$1" ]; then
+  TARGET_DIR="/tmp/word_fellow"
+else
+  TARGET_DIR="$1"
+fi
+
 rm -rf ${TARGET_DIR}
 mkdir ${TARGET_DIR}
 cp -r word_fellow/* ${TARGET_DIR}
