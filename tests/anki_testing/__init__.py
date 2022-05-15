@@ -75,7 +75,7 @@ def anki_running():
 
             # Anki sets its own error handler, which will prevent us from
             # obtaining error messages, unload it to use the original one
-            aqt.mw.errorHandler.unload()
+            # aqt.mw.errorHandler.unload()
 
             yield app
 

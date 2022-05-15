@@ -1,11 +1,12 @@
+import aqt
 from aqt import _run
+
+from tests.anki_testing import anki_running
 from word_fellow.ui import init_addon
 
-# Initialize Anki
-app = _run(exec=False)
+with anki_running() as app:
+    # Initialize our addon
+    init_addon()
 
-# Initialize our addon
-init_addon()
-
-# Run anki
-app.exec()
+    # Run anki
+    app.exec()
