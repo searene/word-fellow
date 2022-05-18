@@ -29,8 +29,8 @@ class BackupTabTestCase(BaseTestCase):
         self.form = BackupTab(self.backup_service)
 
     def tearDown(self) -> None:
-        super(BackupTabTestCase, self).tearDown()
         FileUtils.remove_dir_if_exists(self.backup_service.get_backup_config().backup_folder_path)
+        super(BackupTabTestCase, self).tearDown()
 
     def test_show_backup_config(self):
         backup_config = self.backup_service.get_backup_config()
