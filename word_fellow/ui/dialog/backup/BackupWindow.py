@@ -40,7 +40,7 @@ if __name__ == "__main__":
     app = QApplication([])
     db = get_test_word_fellow_db()
     settings_service = SettingsService(db)
-    backup_service = BackupService(settings_service, get_prod_db_path())
+    backup_service = BackupService(settings_service, db)
     win = BackupWindow(backup_service)
     win.show()
     app.exec_()

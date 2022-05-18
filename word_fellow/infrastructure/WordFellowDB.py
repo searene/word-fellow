@@ -40,6 +40,9 @@ class WordFellowDB:
             with closing(self.__conn.cursor()) as cursor:  # auto-closes
                 return cursor.execute(sql, *params).fetchall()
 
+    def close_connection(self):
+        self.__conn.close()
+
     def destroy(self):
         self.__conn.close()
         os.remove(self.db_path)

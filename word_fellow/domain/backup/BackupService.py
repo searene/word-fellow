@@ -8,15 +8,14 @@ from word_fellow.domain.backup.Backup import Backup
 from word_fellow.domain.backup.BackupConfig import BackupConfig
 from word_fellow.domain.settings.SettingsService import SettingsService
 from word_fellow.domain.utils import FileUtils
-from word_fellow.infrastructure import get_prod_db_path
+from word_fellow.infrastructure import WordFellowDB
 
 
 class BackupService:
 
-    # TODO pass db instead of db_path
-    def __init__(self, settings_service: SettingsService, db_path = get_prod_db_path()):
+    def __init__(self, settings_service: SettingsService, db: WordFellowDB):
         self.__settings_service = settings_service
-        self.__db_path = db_path
+        self.__db = db
 
     def update_backup_enabled(self, backup_enabled: bool) -> None:
         settings = self.__settings_service.get_settings()
@@ -62,7 +61,7 @@ class BackupService:
         backup_file_path = os.path.join(backup_config.backup_folder_path, backup_file_name)
         if not os.path.exists(Path(backup_file_path).parent):
             os.makedirs(Path(backup_file_path).parent)
-        shutil.copyfile(self.__db_path, backup_file_path + ".tmp")
+        shutil.copyfile(self.__db.db_path, backup_file_path + ".tmp")
         os.rename(backup_file_path + ".tmp", backup_file_path)
         self.__remove_extra_backups()
         return Backup(backup_file_path)
@@ -82,11 +81,11 @@ class BackupService:
         return last_backup_date.day != today.day or last_backup_date.month != today.month or last_backup_date.year != today.year
 
     def restore(self, backup: Backup) -> None:
-        db_dir = os.path.dirname(self.__db_path)
+        db_dir = os.path.dirname(self.__db.db_path)
         target_backup_path = os.path.join(db_dir, backup.get_backup_file_name())
         shutil.copyfile(backup.backup_path, target_backup_path)
-        os.remove(self.__db_path)
-        os.rename(target_backup_path, self.__db_path)
+        self.__db.destroy()
+        os.rename(target_backup_path, self.__db.db_path)
 
     def __remove_extra_backups(self) -> None:
         backups = self.__sort_by_backup_time_desc(self.get_backups())

@@ -22,7 +22,7 @@ class BackupTabTestCase(BaseTestCase):
     def setUp(self) -> None:
         super(BackupTabTestCase, self).setUp()
         settings_service = SettingsService(self.db)
-        self.backup_service = BackupService(settings_service, db_path=self.db.db_path)
+        self.backup_service = BackupService(settings_service, self.db)
         self.__update_backup_folder_path_to_temp_folder(self.backup_service)
         self.__create_fake_backups(self.backup_service)
 

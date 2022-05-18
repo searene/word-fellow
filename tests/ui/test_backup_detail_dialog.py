@@ -1,4 +1,3 @@
-import os
 import sys
 import unittest
 
@@ -22,7 +21,7 @@ class BackupDetailDialogTestCase(BaseTestCase):
     def setUp(self):
         super(BackupDetailDialogTestCase, self).setUp()
         settings_service = SettingsService(self.db)
-        self.__backup_service = BackupService(settings_service, db_path=self.db.db_path)
+        self.__backup_service = BackupService(settings_service, self.db)
 
         self.__backup = self.__backup_service.run_backup(force_run=True)
         self.__form = BackupDetailWindow(self.__backup, self.__backup_service, False)
@@ -39,7 +38,7 @@ class BackupDetailDialogTestCase(BaseTestCase):
         # verify
         new_db = get_test_word_fellow_db()
         new_settings_service = SettingsService(new_db)
-        new_backup_service = BackupService(new_settings_service, db_path=self.db.db_path)
+        new_backup_service = BackupService(new_settings_service, self.db)
         new_backup_config = new_backup_service.get_backup_config()
         self.assertEqual(new_backup_config, backup_config)
 

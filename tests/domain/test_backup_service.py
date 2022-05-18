@@ -6,9 +6,12 @@ from datetime import datetime
 from tests.base.BaseTestCase import BaseTestCase
 from word_fellow.domain.backup.Backup import Backup
 from word_fellow.domain.backup.BackupService import BackupService
+from word_fellow.domain.document.DocumentService import DocumentService
 from word_fellow.domain.settings.Settings import Settings
 from word_fellow.domain.settings.SettingsService import SettingsService
 from word_fellow.domain.utils import FileUtils
+from word_fellow.domain.word import WordService
+from word_fellow.infrastructure import WordFellowDB
 
 
 class BackupTestCase(BaseTestCase):
@@ -23,8 +26,7 @@ class BackupTestCase(BaseTestCase):
         self.__backup_file_name1 = "word_fellow_backup_20220501214903.db"
         self.__backup_file_name2 = "word_fellow_backup_20220502214950.db"
         self.__add_backup_files(self.__settings.backup_folder_path, [self.__backup_file_name1, self.__backup_file_name2])
-        db_path = self.__create_test_db_file("contents1")
-        self.__backup_service = BackupService(self.__settings_service, db_path)
+        self.__backup_service = BackupService(self.__settings_service, self.db)
 
     def tearDown(self) -> None:
         super().setUp()
@@ -43,12 +45,15 @@ class BackupTestCase(BaseTestCase):
         self.assertTrue(expected_backup2 in backups)
 
     def test_restore(self):
+        doc_service = DocumentService(self.db)
+        doc1 = doc_service.create_new_document("test name 1", "test contents 1")
         backup = self.__backup_service.run_backup()
-        db_path = self.__create_test_db_file("contents2")
+
+        doc2 = doc_service.create_new_document("test name 2", "test contents 2")
         self.__backup_service.restore(backup)
-        self.assertTrue(os.path.exists(db_path))
-        with open(db_path, 'r') as f:
-            self.assertEqual(f.read(), "contents1")
+
+        doc_list = DocumentService(WordFellowDB(self.db.db_path)).get_document_list()
+        self.assertEqual(doc_list, [doc1])
 
     def test_should_create_new_backup_file_when_the_number_of_backups_is_less_than_backup_count(self):
         backup = self.__backup_service.run_backup()
@@ -85,12 +90,9 @@ class BackupTestCase(BaseTestCase):
     def __get_backup_file_path(self, backup_file_name: str) -> str:
         return os.path.join(self.__settings.backup_folder_path, backup_file_name)
 
-    def __create_test_db_file(self, test_file_contents: str) -> str:
+    def __create_test_db_file(self) -> str:
         """Create an empty db file and return its absolute path."""
-        db_file_path = os.path.join(tempfile.gettempdir(), "word-fellow.db")
-        with open(db_file_path, 'w') as f:
-            f.write(test_file_contents)
-        return db_file_path
+        return os.path.join(tempfile.gettempdir(), "word-fellow.db")
 
 
 if __name__ == '__main__':
