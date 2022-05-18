@@ -1,3 +1,4 @@
+import os
 from sqlite3 import connect
 from typing import Any, List, Tuple, Optional
 from contextlib import closing
@@ -38,3 +39,7 @@ class WordFellowDB:
         with self.__conn:  # auto-commits
             with closing(self.__conn.cursor()) as cursor:  # auto-closes
                 return cursor.execute(sql, *params).fetchall()
+
+    def destroy(self):
+        self.__conn.close()
+        os.remove(self.db_path)

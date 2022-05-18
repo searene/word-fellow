@@ -9,4 +9,4 @@ class ResetService:
         self.__db = db
 
     def reset(self) -> None:
-        os.remove(self.__db.db_path)
+        self.__db.destroy()

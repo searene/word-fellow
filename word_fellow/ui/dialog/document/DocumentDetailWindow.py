@@ -97,5 +97,5 @@ if __name__ == "__main__":
                                          on_document_removed=lambda: None, show_dialog=True)
     detail_window.show()
     code = app.exec_()
-    os.remove(db.db_path)
+    db.destroy()
     sys.exit(code)

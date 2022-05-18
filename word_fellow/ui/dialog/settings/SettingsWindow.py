@@ -39,4 +39,4 @@ if __name__ == '__main__':
     w = SettingsWindow(db)
     w.show()
     app.exec_()
-    os.remove(db.db_path)
+    db.destroy()

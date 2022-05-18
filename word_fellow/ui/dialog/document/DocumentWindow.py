@@ -334,4 +334,4 @@ if __name__ == "__main__":
     doc_window = DocumentWindow(doc, db, MockedAnkiService(app))
     doc_window.show()
     app.exec_()
-    os.remove(db.db_path)
+    db.destroy()

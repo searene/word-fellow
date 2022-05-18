@@ -178,4 +178,4 @@ if __name__ == '__main__':
     ex = DocumentListWindow(db, MockedAnkiService(app), DefaultDocumentAnalyzer(db))
     ex.show()
     app.exec_()
-    os.remove(db.db_path)
+    db.destroy()

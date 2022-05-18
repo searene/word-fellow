@@ -10,4 +10,4 @@ class BaseTestCase(unittest.TestCase):
         self.db = get_test_word_fellow_db()
 
     def tearDown(self) -> None:
-        os.remove(self.db.db_path)
+        self.db.destroy()

@@ -133,4 +133,4 @@ if __name__ == "__main__":
     backup_tab = BackupTab(backup_service)
     backup_tab.show()
     app.exec_()
-    os.remove(db.db_path)
+    db.destroy()

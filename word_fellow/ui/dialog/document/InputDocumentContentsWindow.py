@@ -78,5 +78,5 @@ if __name__ == "__main__":
     win = InputDocumentContentsWindow(document_service, DefaultDocumentAnalyzer(db), lambda _: None)
     win.show()
     code = app.exec_()
-    os.remove(db.db_path)
+    db.destroy()
     sys.exit(code)

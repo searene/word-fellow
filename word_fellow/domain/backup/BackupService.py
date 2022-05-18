@@ -13,6 +13,7 @@ from word_fellow.infrastructure import get_prod_db_path
 
 class BackupService:
 
+    # TODO pass db instead of db_path
     def __init__(self, settings_service: SettingsService, db_path = get_prod_db_path()):
         self.__settings_service = settings_service
         self.__db_path = db_path

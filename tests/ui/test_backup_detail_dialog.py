@@ -43,7 +43,7 @@ class BackupDetailDialogTestCase(BaseTestCase):
         new_backup_config = new_backup_service.get_backup_config()
         self.assertEqual(new_backup_config, backup_config)
 
-        os.remove(new_db.db_path)
+        new_db.destroy()
 
 
 if __name__ == '__main__':

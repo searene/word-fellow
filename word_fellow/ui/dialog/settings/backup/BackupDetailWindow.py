@@ -79,4 +79,4 @@ if __name__ == "__main__":
     dialog = BackupDetailWindow(backup, backup_service)
     dialog.show()
     app.exec_()
-    os.remove(db.db_path)
+    db.destroy()
