@@ -26,6 +26,5 @@ class ContextItemWidget(QtWidgets.QWidget):
     def __get_item(self, short_and_long_context: ShortAndLongContext) -> QListWidgetItem:
         item = QListWidgetItem()
         item.setData(QtCore.Qt.UserRole, short_and_long_context.long)
-        item.setSizeHint(self.sizeHint())
         item.setHidden(False)
         return item
