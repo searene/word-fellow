@@ -18,7 +18,7 @@ class SettingsWindow(QWidget):
         self.__db = db
         self.__settings_service = SettingsService(self.__db)
         self.__reset_service = ResetService(self.__db)
-        self.__backup_service = BackupService(self.__settings_service)
+        self.__backup_service = BackupService(self.__settings_service, self.__db)
         self.__setup_ui()
 
     def __setup_ui(self) -> None:

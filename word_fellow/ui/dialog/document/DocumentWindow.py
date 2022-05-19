@@ -64,7 +64,7 @@ class DocumentWindow(QWidget):
 
     def __show_backup_dialog(self, db: WordFellowDB) -> None:
         settings_service = SettingsService(db)
-        backup_service = BackupService(settings_service)
+        backup_service = BackupService(settings_service, db)
         should_run_backup = backup_service.should_backup_today()
         if not should_run_backup:
             return

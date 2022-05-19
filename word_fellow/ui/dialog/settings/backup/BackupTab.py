@@ -129,7 +129,7 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
     db = get_test_word_fellow_db()
     settings_service = SettingsService(db)
-    backup_service = BackupService(settings_service)
+    backup_service = BackupService(settings_service, db)
     backup_tab = BackupTab(backup_service)
     backup_tab.show()
     app.exec_()

@@ -73,7 +73,7 @@ if __name__ == "__main__":
     backup = Backup(f"/tmp/{Backup.name_prefix}20220501110000.db")
     db = get_test_word_fellow_db()
     settings_service = SettingsService(db)
-    backup_service = BackupService(settings_service)
+    backup_service = BackupService(settings_service, db)
 
     app = QApplication([])
     dialog = BackupDetailWindow(backup, backup_service)
