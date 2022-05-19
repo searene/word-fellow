@@ -8,6 +8,7 @@ fi
 rm -rf ${TARGET_DIR}
 mkdir ${TARGET_DIR}
 cp -r word_fellow/* ${TARGET_DIR}
+rm ${TARGET_DIR}/**/*.pyc
 pushd ${TARGET_DIR} || exit
 zip -r ../word_fellow.ankiaddon *
 rm -rf ${TARGET_DIR:?}/*
