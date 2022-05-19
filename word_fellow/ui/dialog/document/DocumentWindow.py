@@ -177,8 +177,8 @@ class DocumentWindow(QWidget):
         res = QPushButton("Add to anki (a)")
         res.setEnabled(is_word_available)
         res.setShortcut("a")
-        res.clicked.connect(lambda: self.__on_add_to_anki())
         res.setToolTip("Add the word to your anki deck")
+        res.clicked.connect(lambda: self.__on_add_to_anki())
         return res
 
     def __get_ignore_btn(self, is_word_available: bool) -> QPushButton:
@@ -225,7 +225,6 @@ class DocumentWindow(QWidget):
 
     def __on_add_to_anki(self) -> None:
         self.__operations.append(Operation(self.__word.text, self.__status, WordStatus.STUDYING))
-        self.__anki_service.show_add_card_dialog()
         QApplication.clipboard().setText(self.__word.text)
         self.__anki_service.show_tooltip("The word has been copied into the clipboard")
 
@@ -234,6 +233,7 @@ class DocumentWindow(QWidget):
 
         self.__adjust_page_no(self.__status_to_offset_dict, self.__status, self.__total_page)
         self.__update_ui()
+        self.__anki_service.show_add_card_dialog()
 
     def __at_last_page(self, current_page: int, total_page: int) -> bool:
         return current_page == total_page
