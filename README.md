@@ -12,7 +12,7 @@ I'll illustrate each step with a GIF:
 
 1. Import the texts in your target language into the addon.
 
-![import](description/img/import.gif)
+![import](https://i.postimg.cc/9fH4grNb/import.gif)
 
 2. The addon splits your texts into words, which are shown to you one by one. Each word is accompanied by the sentences that contain the word. You can then check the word one by one telling WordFellow how you want to deal with the word. Here are 4 ways in total:
 
@@ -21,11 +21,11 @@ I'll illustrate each step with a GIF:
 - **I Know It**: You know the word.
 - **Study Later**: You don't know the word, but you are not in the mood for adding it to Anki immediately, you want to add it later.
 
-![review](description/img/review.gif)
+![review](https://i.postimg.cc/pXMgTv77/review.gif)
 
 3. You can switch between different statuses at any time.
 
-![status](description/img/status.gif)
+![status](https://i.postimg.cc/jdVr7PWM/status.gif)
 
 Note that word status applies to all the documents at the same time, no matter which document you are currently reviewing. For example, suppose you have two documents, both contain the same word `the`. Suppose you mark the word as `Study Later` in one of the documents, the status of the word `the` in the other document will be changed to `Study Later` too. So you don't need to repetitively check the same word in different documents.
 Build your vocabulary in Anki.
