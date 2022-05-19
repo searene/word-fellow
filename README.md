@@ -2,7 +2,7 @@
 
 ## Introduction
 
-WordFellow is a simple Anki add-on that helps you to build your vocabulary word by word. The idea is very simple:
+WordFellow is a simple Anki add-on that helps you to **build your vocabulary word by word**. The idea is very simple:
 
 1. Import a document in your target language.
 2. WordFellow splits the document into words and lets you check them one by one. You can add any of the words to anki in the process, or only mark them and study later.
