@@ -8,4 +8,4 @@ ANKI_ADDON_DIR=$HOME/AppData/Roaming/Anki2/addons21
 ./package.sh "${PACKAGE_DIR}"
 
 rm -rf "${ANKI_ADDON_DIR}/word_fellow"
-unzip "${PACKAGE_DIR}/word_fellow.ankiaddon" -d "${ANKI_ADDON_DIR}/word_fellow"
+unzip "${PACKAGE_DIR}/word_fellow.ankiaddon" -d "${ANKI_ADDON_DIR}/1249872340"
