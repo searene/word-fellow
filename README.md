@@ -18,7 +18,6 @@ I'll illustrate each step with a GIF:
 - **Study Later**: You don't know the word, but you are not in the mood for adding it to Anki immediately, you want to add it later.
 
 ![review](description/img/review.gif)
-<img src="img/operate buttons.gif" />
 
 3. You can switch between different statuses at any time.
 
