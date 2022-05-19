@@ -22,4 +22,4 @@ class BackupWorker(QObject):
     def __get_backup_service(self, db_path: str) -> BackupService:
         db = WordFellowDB(db_path)
         settings_service = SettingsService(db)
-        return BackupService(settings_service)
+        return BackupService(settings_service, db)
