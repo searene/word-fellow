@@ -1,4 +1,4 @@
-from typing import Callable
+from typing import Callable, List
 
 import aqt
 
@@ -13,7 +13,7 @@ import word_fellow.domain.word.WordValueObject as WordValueObject
 from word_fellow.ui.dialog.document.DocumentWindow import DocumentWindow
 from word_fellow.ui.util.DatabaseUtils import get_prod_word_fellow_db
 
-document_list_window: [DocumentListWindow] = None
+document_list_window: List[DocumentListWindow] = None
 
 
 def __init_database():
