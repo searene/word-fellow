@@ -2,7 +2,7 @@ from typing import TYPE_CHECKING, Callable, Optional
 
 from PyQt5.QtWidgets import QApplication
 
-from word_fellow.anki.IAnkiService import IAnkiService
+from .IAnkiService import IAnkiService
 
 if TYPE_CHECKING:
     from anki.notes import Note

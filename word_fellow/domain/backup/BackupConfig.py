@@ -1,4 +1,4 @@
-from word_fellow.domain.settings.Settings import Settings
+from ..settings.Settings import Settings
 
 
 class BackupConfig:

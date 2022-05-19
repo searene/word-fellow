@@ -3,7 +3,7 @@ from typing import Callable, Optional
 from PyQt5.QtWidgets import QApplication
 from aqt.utils import showInfo
 
-from word_fellow.anki.IAnkiService import IAnkiService
+from .IAnkiService import IAnkiService
 import aqt
 from anki.notes import Note
 

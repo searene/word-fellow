@@ -1,9 +1,9 @@
 from typing import Optional
 
-from word_fellow.domain.word import WordFactory
-from word_fellow.domain.word.Word import Word, get_words_by_document_id
-from word_fellow.domain.word.WordStatus import WordStatus
-from word_fellow.infrastructure.WordFellowDB import WordFellowDB
+from ..word import WordFactory
+from ..word.Word import Word, get_words_by_document_id
+from ..word.WordStatus import WordStatus
+from ...infrastructure.WordFellowDB import WordFellowDB
 
 
 class Document:

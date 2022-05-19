@@ -1,14 +1,14 @@
 import datetime
 import os.path
 import shutil
+from .Backup import Backup
+from .BackupConfig import BackupConfig
 from pathlib import Path
 from typing import Optional
 
-from word_fellow.domain.backup.Backup import Backup
-from word_fellow.domain.backup.BackupConfig import BackupConfig
-from word_fellow.domain.settings.SettingsService import SettingsService
-from word_fellow.domain.utils import FileUtils
-from word_fellow.infrastructure import WordFellowDB
+from ..settings.SettingsService import SettingsService
+from ..utils import FileUtils
+from ...infrastructure import WordFellowDB
 
 
 class BackupService:
