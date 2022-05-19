@@ -135,3 +135,5 @@ anki_root
 .idea
 
 .DS_Store
+
+.vscode
