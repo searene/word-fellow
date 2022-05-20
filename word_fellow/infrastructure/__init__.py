@@ -1,9 +1,7 @@
 import os
 import os.path
 
-from word_fellow.infrastructure import WordFellowDB
-
-from word_fellow.infrastructure.WordFellowDB import WordFellowDB
+from ..infrastructure.WordFellowDB import WordFellowDB
 
 
 def get_prod_db_path() -> str:

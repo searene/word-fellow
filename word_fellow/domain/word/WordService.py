@@ -1,10 +1,10 @@
 import json
 from typing import List, Tuple
 
-from word_fellow.domain.word.Word import Word
-from word_fellow.domain.word.WordValueObject import WordValueObject
-from word_fellow.infrastructure import WordFellowDB
-from word_fellow.infrastructure.utils import DBUtils
+from ...domain.word.Word import Word
+from ...domain.word.WordValueObject import WordValueObject
+from ...infrastructure import WordFellowDB
+from ...infrastructure.utils import DBUtils
 
 
 def batch_insert(words: List[WordValueObject], db: WordFellowDB, max_insert_allowed_in_one_batch=500) -> None:

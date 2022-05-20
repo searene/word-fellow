@@ -1,19 +1,19 @@
-from typing import Callable, List
+from typing import Callable, Optional
 
 import aqt
 
-from word_fellow.anki.DefaultAnkiService import DefaultAnkiService
-from word_fellow.domain import utils
-from word_fellow.domain.document.DocumentService import DocumentService
-from word_fellow.domain.document.analyzer.DefaultDocumentAnalyzer import DefaultDocumentAnalyzer
-from word_fellow.ui.dialog.DocumentListWindow import DocumentListWindow
-import word_fellow.domain.word.WordService as WordService
-import word_fellow.domain.word.WordValueObject as WordValueObject
+from ..anki.DefaultAnkiService import DefaultAnkiService
+from ..domain import utils
+from ..domain.document.DocumentService import DocumentService
+from ..domain.document.analyzer.DefaultDocumentAnalyzer import DefaultDocumentAnalyzer
+from ..ui.dialog.DocumentListWindow import DocumentListWindow
+from ..ui.dialog.document.DocumentWindow import DocumentWindow
+from ..ui.util.DatabaseUtils import get_prod_word_fellow_db
+from ..domain.word import WordService
+from ..domain.word import WordValueObject
 
-from word_fellow.ui.dialog.document.DocumentWindow import DocumentWindow
-from word_fellow.ui.util.DatabaseUtils import get_prod_word_fellow_db
 
-document_list_window: List[DocumentListWindow] = None
+document_list_window: Optional[DocumentListWindow] = None
 
 
 def __init_database():

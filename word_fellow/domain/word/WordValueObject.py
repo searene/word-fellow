@@ -2,7 +2,7 @@ from typing import Dict, List, TYPE_CHECKING
 from html import escape
 
 if TYPE_CHECKING:
-    from word_fellow.domain.document.Document import Document
+    from ...domain.document.Document import Document
 
 
 class WordContext:
