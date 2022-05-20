@@ -6,13 +6,13 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QDialog, QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QApplication, QLabel, \
     QMessageBox
 
-from word_fellow.anki.IAnkiService import IAnkiService
-from word_fellow.anki.MockedAnkiService import MockedAnkiService
-from word_fellow.domain.document.Document import Document
-from word_fellow.domain.document.DocumentService import DocumentService
-from word_fellow.infrastructure import WordFellowDB
-from word_fellow.ui.util.DatabaseUtils import get_test_word_fellow_db
-from word_fellow.ui.dialog.document.DocumentWindow import DocumentWindow
+from ....anki.IAnkiService import IAnkiService
+from ....anki.MockedAnkiService import MockedAnkiService
+from ....domain.document.Document import Document
+from ....domain.document.DocumentService import DocumentService
+from ....infrastructure import WordFellowDB
+from ....ui.util.DatabaseUtils import get_test_word_fellow_db
+from ....ui.dialog.document.DocumentWindow import DocumentWindow
 
 
 class DocumentDetailWindow(QWidget):

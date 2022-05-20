@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QPushButton, QLabel, QMessageBox, QApplication
 
-from word_fellow.ui.util.DatabaseUtils import get_test_word_fellow_db
-from word_fellow.domain.reset.ResetService import ResetService
+from ....ui.util.DatabaseUtils import get_test_word_fellow_db
+from ....domain.reset.ResetService import ResetService
 
 
 class ResetTab(QWidget):

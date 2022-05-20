@@ -2,9 +2,9 @@ import time
 
 from PyQt5.QtCore import QObject, pyqtSignal, QThread
 
-from word_fellow.domain.backup.BackupService import BackupService
-from word_fellow.domain.settings.SettingsService import SettingsService
-from word_fellow.infrastructure import WordFellowDB
+from ....domain.backup.BackupService import BackupService
+from ....domain.settings.SettingsService import SettingsService
+from ....infrastructure import WordFellowDB
 
 
 class BackupWorker(QObject):

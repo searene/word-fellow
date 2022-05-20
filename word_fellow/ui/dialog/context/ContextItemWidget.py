@@ -1,7 +1,7 @@
 from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtWidgets import QHBoxLayout, QLabel, QLayout, QListWidgetItem
 
-from word_fellow.domain.word.WordValueObject import ShortAndLongContext
+from ....domain.word.WordValueObject import ShortAndLongContext
 
 
 class ContextItemWidget(QtWidgets.QWidget):

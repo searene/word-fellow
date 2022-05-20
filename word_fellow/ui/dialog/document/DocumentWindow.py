@@ -7,26 +7,26 @@ from PyQt5.QtGui import QCloseEvent, QFont, QKeySequence
 from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QComboBox, QLabel, QPushButton, QApplication, QSizePolicy, \
     QSpacerItem, QMenu, QWidget
 
-from word_fellow.domain.operation.Operation import Operation
+from ....domain.operation.Operation import Operation
 
 if TYPE_CHECKING:
     from anki.notes import Note
 
-from word_fellow.anki.IAnkiService import IAnkiService
-from word_fellow.anki.MockedAnkiService import MockedAnkiService
-from word_fellow.domain.backup.BackupService import BackupService
-from word_fellow.domain.document.Document import Document
-from word_fellow.domain.document.DocumentService import DocumentService
-from word_fellow.domain.document.analyzer.DefaultDocumentAnalyzer import DefaultDocumentAnalyzer
-from word_fellow.domain.settings.SettingsService import SettingsService
-from word_fellow.domain.status.GlobalWordStatus import upsert_word_status, Status, delete_word_status, to_status
-from word_fellow.domain.word.Word import Word
-from word_fellow.domain.word.WordStatus import WordStatus
-from word_fellow.infrastructure import WordFellowDB, get_prod_db_path
-from word_fellow.ui.util.DatabaseUtils import get_test_word_fellow_db
-from word_fellow.ui.dialog.backup.BackupWindow import BackupWindow
-from word_fellow.ui.dialog.context.list.ContextListWidget import ContextListWidget
-from word_fellow.ui.util.PyQtUtils import get_vertical_line
+from ....anki.IAnkiService import IAnkiService
+from ....anki.MockedAnkiService import MockedAnkiService
+from ....domain.backup.BackupService import BackupService
+from ....domain.document.Document import Document
+from ....domain.document.DocumentService import DocumentService
+from ....domain.document.analyzer.DefaultDocumentAnalyzer import DefaultDocumentAnalyzer
+from ....domain.settings.SettingsService import SettingsService
+from ....domain.status.GlobalWordStatus import upsert_word_status, Status, delete_word_status, to_status
+from ....domain.word.Word import Word
+from ....domain.word.WordStatus import WordStatus
+from ....infrastructure import WordFellowDB, get_prod_db_path
+from ....ui.util.DatabaseUtils import get_test_word_fellow_db
+from ....ui.dialog.backup.BackupWindow import BackupWindow
+from ....ui.dialog.context.list.ContextListWidget import ContextListWidget
+from ....ui.util.PyQtUtils import get_vertical_line
 
 
 class DocumentWindow(QWidget):

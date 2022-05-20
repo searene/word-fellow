@@ -2,10 +2,9 @@ import os
 
 from PyQt5.QtWidgets import QVBoxLayout, QLabel, QPushButton, QApplication, QWidget
 
-from word_fellow.domain.backup.BackupService import BackupService
-from word_fellow.domain.settings.SettingsService import SettingsService
-from word_fellow.infrastructure import get_prod_db_path
-from word_fellow.ui.util.DatabaseUtils import get_test_word_fellow_db
+from ....domain.backup.BackupService import BackupService
+from ....domain.settings.SettingsService import SettingsService
+from ....ui.util.DatabaseUtils import get_test_word_fellow_db
 
 
 class BackupWindow(QWidget):

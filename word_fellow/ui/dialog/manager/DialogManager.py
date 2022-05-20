@@ -2,8 +2,8 @@ from typing import Dict, Optional
 
 from PyQt5.QtWidgets import QWidget
 
-from word_fellow.ui.dialog.document.DocumentWindow import DocumentWindow
-from word_fellow.ui.dialog.manager.DialogType import DialogType
+from ....ui.dialog.document.DocumentWindow import DocumentWindow
+from ....ui.dialog.manager.DialogType import DialogType
 
 
 class DialogManager:

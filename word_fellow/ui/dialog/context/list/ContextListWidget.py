@@ -3,14 +3,14 @@ from typing import Dict, Optional
 from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtWidgets import QVBoxLayout, QLabel, QListWidget, QListWidgetItem, QAbstractItemView, QDialog, QWidget
 
-from word_fellow.domain.document.Document import Document
-from word_fellow.domain.word.Word import Word
-from word_fellow.domain.word.WordStatus import WordStatus
-from word_fellow.domain.word.WordValueObject import ShortAndLongContext, WordContext
-from word_fellow.infrastructure import WordFellowDB
-from word_fellow.ui.dialog.context.ContextItemWidget import ContextItemWidget
-from word_fellow.ui.dialog.LongContextWindow import LongContextWindow
-from word_fellow.ui.dialog.context.list.ClickableListWidget import ClickableListWidget
+from .....domain.document.Document import Document
+from .....domain.word.Word import Word
+from .....domain.word.WordStatus import WordStatus
+from .....domain.word.WordValueObject import ShortAndLongContext, WordContext
+from .....infrastructure import WordFellowDB
+from .....ui.dialog.context.ContextItemWidget import ContextItemWidget
+from .....ui.dialog.LongContextWindow import LongContextWindow
+from .....ui.dialog.context.list.ClickableListWidget import ClickableListWidget
 
 
 class ContextListWidget(QtWidgets.QWidget):

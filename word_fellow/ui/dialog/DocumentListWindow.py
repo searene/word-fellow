@@ -7,23 +7,23 @@ from PyQt5.QtCore import QThread
 from PyQt5.QtWidgets import (QPushButton, QApplication, QHBoxLayout, QVBoxLayout, QLabel, QFileDialog,
                              QListWidgetItem, QSizePolicy, QListWidget, QScrollBar, QMenu, QWidget)
 
-from word_fellow.anki.IAnkiService import IAnkiService
-from word_fellow.anki.MockedAnkiService import MockedAnkiService
-from word_fellow.domain.document.Document import Document
-from word_fellow.domain.document.DocumentService import DocumentService
-from word_fellow.domain.document.analyzer import IDocumentAnalyzer
-from word_fellow.domain.document.analyzer.DefaultDocumentAnalyzer import DefaultDocumentAnalyzer
-from word_fellow.domain.utils import init_database
-from word_fellow.infrastructure import WordFellowDB
-from word_fellow.ui.dialog.backup.BackingUpDialog import BackingUpDialog
-from word_fellow.ui.dialog.backup.BackupWorker import BackupWorker
-from word_fellow.ui.dialog.context.list.ClickableListWidget import ClickableListWidget
-from word_fellow.ui.dialog.document.DocumentDetailWindow import DocumentDetailWindow
-from word_fellow.ui.dialog.document.InputDocumentContentsWindow import InputDocumentContentsWindow
-from word_fellow.ui.dialog.settings.SettingsWindow import SettingsWindow
-from word_fellow.ui.util import MsgUtils
-from word_fellow.ui.util.DatabaseUtils import get_test_word_fellow_db
-from word_fellow.ui.util.FileUtils import get_base_name_without_ext
+from ...anki.IAnkiService import IAnkiService
+from ...anki.MockedAnkiService import MockedAnkiService
+from ...domain.document.Document import Document
+from ...domain.document.DocumentService import DocumentService
+from ...domain.document.analyzer import IDocumentAnalyzer
+from ...domain.document.analyzer.DefaultDocumentAnalyzer import DefaultDocumentAnalyzer
+from ...domain.utils import init_database
+from ...infrastructure import WordFellowDB
+from ...ui.dialog.backup.BackingUpDialog import BackingUpDialog
+from ...ui.dialog.backup.BackupWorker import BackupWorker
+from ...ui.dialog.context.list.ClickableListWidget import ClickableListWidget
+from ...ui.dialog.document.DocumentDetailWindow import DocumentDetailWindow
+from ...ui.dialog.document.InputDocumentContentsWindow import InputDocumentContentsWindow
+from ...ui.dialog.settings.SettingsWindow import SettingsWindow
+from ...ui.util import MsgUtils
+from ...ui.util.DatabaseUtils import get_test_word_fellow_db
+from ...ui.util.FileUtils import get_base_name_without_ext
 
 
 class DocumentListWindow(QWidget):

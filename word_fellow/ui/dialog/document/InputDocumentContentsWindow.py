@@ -6,12 +6,12 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QDialog, QVBoxLayout, QFormLayout, QLineEdit, QTextEdit, QHBoxLayout, QPushButton, \
     QApplication, QWidget
 
-from word_fellow.domain.document.Document import Document
-from word_fellow.domain.document.DocumentService import DocumentService
-from word_fellow.domain.document.analyzer import IDocumentAnalyzer
-from word_fellow.domain.document.analyzer.DefaultDocumentAnalyzer import DefaultDocumentAnalyzer
-from word_fellow.ui.util import MsgUtils
-from word_fellow.ui.util.DatabaseUtils import get_test_word_fellow_db
+from ....domain.document.Document import Document
+from ....domain.document.DocumentService import DocumentService
+from ....domain.document.analyzer import IDocumentAnalyzer
+from ....domain.document.analyzer.DefaultDocumentAnalyzer import DefaultDocumentAnalyzer
+from ....ui.util import MsgUtils
+from ....ui.util.DatabaseUtils import get_test_word_fellow_db
 
 
 class InputDocumentContentsWindow(QWidget):

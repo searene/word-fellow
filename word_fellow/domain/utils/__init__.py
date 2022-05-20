@@ -1,8 +1,8 @@
-from word_fellow.domain.document.DocumentService import DocumentService
-from word_fellow.domain.settings.SettingsService import SettingsService
-from word_fellow.domain.status.GlobalWordStatusService import GlobalWordStatusService
-from word_fellow.domain.word import WordService
-from word_fellow.infrastructure import WordFellowDB
+from ...domain.document.DocumentService import DocumentService
+from ...domain.settings.SettingsService import SettingsService
+from ...domain.status.GlobalWordStatusService import GlobalWordStatusService
+from ...domain.word import WordService
+from ...infrastructure import WordFellowDB
 
 
 def init_database(db: WordFellowDB):
