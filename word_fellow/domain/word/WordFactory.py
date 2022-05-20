@@ -1,6 +1,7 @@
 from typing import Optional
 
 import word_fellow.domain.word.Word
+import word_fellow.domain.word.WordService
 from word_fellow.domain.word.Word import Word
 from word_fellow.domain.word.WordStatus import WordStatus
 from word_fellow.infrastructure import WordFellowDB
@@ -16,7 +17,7 @@ def __get_next_unreviewed_word(doc_id: int, offset: int, db: WordFellowDB) -> Op
     """)
     if word_query_res is None:
         return None
-    return word_fellow.domain.word.Word.convert_word_data_object_to_word(word_query_res)
+    return word_fellow.domain.word.WordService.convert_word_data_object_to_word(word_query_res)
 
 
 def __get_next_global_word(doc_id: int, offset: int, word_status: WordStatus, db: WordFellowDB) -> Optional[Word]:
@@ -29,7 +30,7 @@ def __get_next_global_word(doc_id: int, offset: int, word_status: WordStatus, db
     """, (word_status.name, ))
     if word_query_res is None:
         return None
-    return word_fellow.domain.word.Word.convert_word_data_object_to_word(word_query_res)
+    return word_fellow.domain.word.WordService.convert_word_data_object_to_word(word_query_res)
 
 
 def __get_next_ignored_word(doc_id: int, offset: int, db: WordFellowDB) -> Optional[Word]:
@@ -42,7 +43,7 @@ def __get_next_ignored_word(doc_id: int, offset: int, db: WordFellowDB) -> Optio
     """)
     if word_query_res is None:
         return None
-    return word_fellow.domain.word.Word.convert_word_data_object_to_word(word_query_res)
+    return word_fellow.domain.word.WordService.convert_word_data_object_to_word(word_query_res)
 
 
 def get_next_word(doc_id: int, offset: int, word_status: WordStatus, db: WordFellowDB) -> Optional[Word]:

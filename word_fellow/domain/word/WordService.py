@@ -1,6 +1,7 @@
 import json
-from typing import List
+from typing import List, Tuple
 
+from word_fellow.domain.word.Word import Word
 from word_fellow.domain.word.WordValueObject import WordValueObject
 from word_fellow.infrastructure import WordFellowDB
 from word_fellow.infrastructure.utils import DBUtils
@@ -48,3 +49,21 @@ def init_database(db: WordFellowDB):
         positions TEXT NOT NULL
     )
     """)
+
+
+def get_words_by_document_id(document_id, db: WordFellowDB) -> [Word]:
+    words_data_objects = db.fetch_all("""SELECT * from words WHERE document_id = ?""", (document_id,))
+    return convert_word_data_objects_to_words(words_data_objects)
+
+
+def convert_word_data_objects_to_words(word_data_objects: List[Tuple]) -> List[Word]:
+    return [convert_word_data_object_to_word(word_data_object)
+            for word_data_object in word_data_objects]
+
+
+def convert_word_data_object_to_word(word_data_object: Tuple) -> Word:
+    word_id = word_data_object[0]
+    text = word_data_object[1]
+    document_id = word_data_object[2]
+    word_to_start_pos_dict = json.loads(word_data_object[3])
+    return Word(word_id, text, document_id, word_to_start_pos_dict)

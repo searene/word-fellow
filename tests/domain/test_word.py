@@ -5,8 +5,8 @@ from word_fellow.domain.document.Document import Document
 from word_fellow.domain.status import GlobalWordStatus
 from word_fellow.domain.status.GlobalWordStatus import Status
 from word_fellow.domain.word import WordService, WordFactory
-from word_fellow.domain.word.Word import get_words_by_document_id, Word
-from word_fellow.domain.word.WordService import batch_insert
+from word_fellow.domain.word.Word import Word
+from word_fellow.domain.word.WordService import batch_insert, get_words_by_document_id
 from word_fellow.domain.word.WordStatus import WordStatus
 from word_fellow.domain.word.WordValueObject import WordValueObject, WordContext, ShortAndLongContext
 

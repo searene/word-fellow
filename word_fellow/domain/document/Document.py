@@ -1,7 +1,8 @@
 from typing import Optional
 
 from ..word import WordFactory
-from ..word.Word import Word, get_words_by_document_id
+from ..word.Word import Word
+from ..word.WordService import get_words_by_document_id
 from ..word.WordStatus import WordStatus
 from ...infrastructure.WordFellowDB import WordFellowDB
 
