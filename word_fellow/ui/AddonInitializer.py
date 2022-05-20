@@ -18,23 +18,6 @@ document_list_window: Optional[DocumentListWindow] = None
 
 def __init_database():
     utils.init_database(get_prod_word_fellow_db())
-    # insert_test_data()
-
-
-def insert_test_data():
-    db = get_prod_word_fellow_db()
-    db.execute("delete from documents")
-    db.execute("delete from words")
-    db.execute("delete from global_word_status")
-    document_service = DocumentService(get_prod_word_fellow_db())
-    doc1 = document_service.create_new_document("test name1", "this is this this")
-    doc2 = document_service.create_new_document("test name2", "skip\nto skip\nthis")
-
-    word_value_objects = [
-        WordValueObject.WordValueObject("this", doc1.document_id, {"this": [0, 8, 13]}),
-        WordValueObject.WordValueObject("is", doc1.document_id, {"is": [5]})
-    ]
-    WordService.batch_insert(word_value_objects, get_prod_word_fellow_db())
 
 
 def show_doc_list_window() -> None:
