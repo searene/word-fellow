@@ -1,10 +1,10 @@
-from word_fellow.domain.document.Document import Document
-from word_fellow.domain.document.analyzer import IDocumentAnalyzer
-from word_fellow.domain.utils.StringUtils import split_with_positions
-from word_fellow.domain.word.Word import Word
-from word_fellow.domain.word.WordService import batch_insert
-from word_fellow.domain.word.WordValueObject import WordValueObject
-from word_fellow.infrastructure import WordFellowDB
+from ....domain.document.Document import Document
+from ....domain.document.analyzer import IDocumentAnalyzer
+from ....domain.utils.StringUtils import split_with_positions
+from ....domain.word.Word import Word
+from ....domain.word.WordService import batch_insert
+from ....domain.word.WordValueObject import WordValueObject
+from ....infrastructure import WordFellowDB
 
 
 class DefaultDocumentAnalyzer(IDocumentAnalyzer):

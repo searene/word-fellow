@@ -1,8 +1,5 @@
 from typing import Any, Dict
 
-from word_fellow.infrastructure import WordFellowDB
-import json
-
 
 class Settings:
 

@@ -1,8 +1,8 @@
 import json
 from typing import List, Dict, Tuple
 
-from word_fellow.domain.word.WordValueObject import WordValueObject
-from word_fellow.infrastructure import WordFellowDB
+from ...domain.word.WordValueObject import WordValueObject
+from ...infrastructure import WordFellowDB
 
 
 class Word(WordValueObject):

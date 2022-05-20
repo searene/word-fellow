@@ -1,4 +1,4 @@
-from word_fellow.infrastructure import WordFellowDB
+from ...infrastructure import WordFellowDB
 
 
 class GlobalWordStatusService:

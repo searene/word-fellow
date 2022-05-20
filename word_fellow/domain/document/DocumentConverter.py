@@ -1,6 +1,6 @@
 from typing import List, Tuple
 
-from word_fellow.domain.document.Document import Document
+from ...domain.document.Document import Document
 
 
 def convert_sql_res_to_document_object(sql_res: List[Tuple]) -> List[Document]:

@@ -2,8 +2,8 @@ import json
 import os
 from typing import Dict, Any
 
-from word_fellow.domain.settings.Settings import Settings
-from word_fellow.infrastructure import WordFellowDB
+from ...domain.settings.Settings import Settings
+from ...infrastructure import WordFellowDB
 
 
 class SettingsService:

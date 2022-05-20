@@ -1,7 +1,7 @@
 import enum
 
-from word_fellow.domain.word.WordStatus import WordStatus
-from word_fellow.infrastructure import WordFellowDB
+from ...domain.word.WordStatus import WordStatus
+from ...infrastructure import WordFellowDB
 
 
 class Status(enum.Enum):

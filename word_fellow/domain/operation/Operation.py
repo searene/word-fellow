@@ -1,4 +1,4 @@
-from word_fellow.domain.word.WordStatus import WordStatus
+from ...domain.word.WordStatus import WordStatus
 
 
 class Operation:

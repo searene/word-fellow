@@ -1,7 +1,7 @@
-from word_fellow.domain.document.Document import Document
-from word_fellow.domain.document.DocumentConverter import convert_sql_res_to_document_object
-from word_fellow.domain.document.analyzer import IDocumentAnalyzer
-from word_fellow.infrastructure.WordFellowDB import WordFellowDB
+from ...domain.document.Document import Document
+from ...domain.document.DocumentConverter import convert_sql_res_to_document_object
+from ...domain.document.analyzer import IDocumentAnalyzer
+from ...infrastructure.WordFellowDB import WordFellowDB
 
 
 class DocumentService:
