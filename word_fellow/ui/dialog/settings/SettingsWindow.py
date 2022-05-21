@@ -1,5 +1,6 @@
 from PyQt5.QtWidgets import QVBoxLayout, QTabWidget, QWidget
 
+from word_fellow.ui.dialog.settings.backup.ExportImportTab import ExportImportTab
 from ....domain.backup.BackupService import BackupService
 from ....domain.reset.ResetService import ResetService
 from ....domain.settings.SettingsService import SettingsService
@@ -24,6 +25,7 @@ class SettingsWindow(QWidget):
         tab_widget = QTabWidget()
         tab_widget.addTab(BackupTab(self.__backup_service), "Backup")
         tab_widget.addTab(ResetTab(self, self.__reset_service), "Reset")
+        tab_widget.addTab(ExportImportTab(self, self.__db), "Export/Import")
         vbox.addWidget(tab_widget)
         self.setLayout(vbox)
 
