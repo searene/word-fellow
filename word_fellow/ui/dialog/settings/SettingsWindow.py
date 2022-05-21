@@ -1,15 +1,12 @@
-import os
-
-from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QDialog, QVBoxLayout, QTabWidget, QWidget
+from PyQt5.QtWidgets import QVBoxLayout, QTabWidget, QWidget
 
 from ....domain.backup.BackupService import BackupService
 from ....domain.reset.ResetService import ResetService
 from ....domain.settings.SettingsService import SettingsService
 from ....infrastructure import WordFellowDB
-from ....ui.util.DatabaseUtils import get_test_word_fellow_db
-from ....ui.dialog.settings.backup.BackupTab import BackupTab
 from ....ui.dialog.settings.ResetTab import ResetTab
+from ....ui.dialog.settings.backup.BackupTab import BackupTab
+from ....ui.util.DatabaseUtils import get_test_word_fellow_db
 
 
 class SettingsWindow(QWidget):
