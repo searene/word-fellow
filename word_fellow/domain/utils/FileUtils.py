@@ -1,6 +1,7 @@
 import os
 import shutil
 import tempfile
+import uuid
 from typing import Optional
 
 
@@ -25,3 +26,7 @@ def create_temp_dir(suffix: Optional[str] = None) -> str:
     remove_dir_if_exists(temp_dir)
     mkdirs(temp_dir)
     return temp_dir
+
+
+def generate_non_existent_temp_file_path() -> str:
+    return os.path.join(tempfile.mkdtemp(), str(uuid.uuid4()))
