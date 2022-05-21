@@ -11,7 +11,6 @@ from word_fellow.ui.util import MsgUtils
 from word_fellow.ui.util.DatabaseUtils import get_test_word_fellow_db
 
 
-# TODO test it
 class ExportImportTab(QWidget):
 
     def __init__(self, parent: Optional[QWidget], db: WordFellowDB, show_ui=True):
