@@ -1,4 +1,5 @@
-from PyQt5.QtWidgets import QWidget, QGroupBox, QLineEdit, QPushButton, QHBoxLayout, QVBoxLayout, QFileDialog
+from PyQt5.QtWidgets import QWidget, QGroupBox, QLineEdit, QPushButton, QHBoxLayout, QVBoxLayout, QFileDialog, \
+    QMessageBox
 
 from word_fellow.domain.export.ExportService import ExportService
 from word_fellow.domain.export.ImportService import ImportService
@@ -38,11 +39,33 @@ class ExportImportTab(QWidget):
         self._import_line_edit.clicked.connect(self.__on_import_line_edit_clicked)
 
         self._import_btn = QPushButton(import_group)
+        self._import_btn.clicked.connect(self.__on_import_btn_clicked)
         self._import_btn.setText("Import")
         hbox.addWidget(self._import_line_edit)
         hbox.addWidget(self._import_btn)
 
         return import_group
+
+    def __on_import_btn_clicked(self):
+        import_file_path = self._import_line_edit.text()
+        is_valid, invalid_reason = self.__import_service.is_import_file_valid(import_file_path)
+        if is_valid:
+            msg_box = QMessageBox(self)
+            msg_box.setIcon(QMessageBox.Warning)
+            msg_box.setText("Importing will overwrite the current Word Fellow data. Are you sure?")
+            msg_box.setWindowTitle("Warning")
+            msg_box.setStandardButtons(QMessageBox.Ok | QMessageBox.Cancel)
+            msg_box.buttonClicked.connect(lambda btn: self.__on_import_msg_box_btn_clicked(btn, msg_box))
+            if self.__show_ui:
+                msg_box.exec()
+        else:
+            MsgUtils.show_warning_with_ok_btn(self, "Import failed", invalid_reason, show_ui=self.__show_ui)
+
+    def __on_import_msg_box_btn_clicked(self, btn: QPushButton, msg_box: QMessageBox):
+        btn_code = msg_box.standardButton(btn)
+        if btn_code == QMessageBox.Ok:
+            self.__import_service.do_import(self._import_line_edit.text())
+            msg_box.close()
 
     def __on_import_line_edit_clicked(self):
         import_file_path = QFileDialog.getOpenFileName(self, "Select Import File", self._import_line_edit.text(),
