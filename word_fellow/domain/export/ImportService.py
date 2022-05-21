@@ -13,7 +13,7 @@ class ImportService:
         if not os.path.exists(exported_file_path):
             raise FileExistsError(f"File does not exist: {exported_file_path}")
         os.remove(self.__db.db_path)
-        shutil.move(exported_file_path, self.__db.db_path)
+        shutil.copyfile(exported_file_path, self.__db.db_path)
 
     def is_import_file_valid(self, import_file_path: str) -> (bool, str):
         if not import_file_path:

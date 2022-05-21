@@ -1,3 +1,5 @@
+from typing import Optional
+
 from PyQt5.QtWidgets import QWidget, QGroupBox, QLineEdit, QPushButton, QHBoxLayout, QVBoxLayout, QFileDialog, \
     QMessageBox
 
@@ -9,9 +11,10 @@ from word_fellow.ui.util import MsgUtils
 from word_fellow.ui.util.DatabaseUtils import get_test_word_fellow_db
 
 
+# TODO test it
 class ExportImportTab(QWidget):
 
-    def __init__(self, parent: QWidget, db: WordFellowDB, show_ui=True):
+    def __init__(self, parent: Optional[QWidget], db: WordFellowDB, show_ui=True):
         super().__init__(parent)
         self.__show_ui = show_ui
         self.__export_service = ExportService(db)
@@ -50,14 +53,14 @@ class ExportImportTab(QWidget):
         import_file_path = self._import_line_edit.text()
         is_valid, invalid_reason = self.__import_service.is_import_file_valid(import_file_path)
         if is_valid:
-            msg_box = QMessageBox(self)
-            msg_box.setIcon(QMessageBox.Warning)
-            msg_box.setText("Importing will overwrite the current Word Fellow data. Are you sure?")
-            msg_box.setWindowTitle("Warning")
-            msg_box.setStandardButtons(QMessageBox.Ok | QMessageBox.Cancel)
-            msg_box.buttonClicked.connect(lambda btn: self.__on_import_msg_box_btn_clicked(btn, msg_box))
+            self._import_warning_msg_box = QMessageBox(self)
+            self._import_warning_msg_box.setIcon(QMessageBox.Warning)
+            self._import_warning_msg_box.setText("Importing will overwrite the current Word Fellow data. Are you sure?")
+            self._import_warning_msg_box.setWindowTitle("Warning")
+            self._import_warning_msg_box.setStandardButtons(QMessageBox.Ok | QMessageBox.Cancel)
+            self._import_warning_msg_box.buttonClicked.connect(lambda btn: self.__on_import_msg_box_btn_clicked(btn, self._import_warning_msg_box))
             if self.__show_ui:
-                msg_box.exec()
+                self._import_warning_msg_box.exec()
         else:
             MsgUtils.show_warning_with_ok_btn(self, "Import failed", invalid_reason, show_ui=self.__show_ui)
 
@@ -66,6 +69,7 @@ class ExportImportTab(QWidget):
         if btn_code == QMessageBox.Ok:
             self.__import_service.do_import(self._import_line_edit.text())
             msg_box.close()
+            self._import_success_msg_box = MsgUtils.show_info_with_ok_btn(self, "Import Successful", "Import Successful, please restart Anki to take effect.", show_ui=self.__show_ui)
 
     def __on_import_line_edit_clicked(self):
         import_file_path = QFileDialog.getOpenFileName(self, "Select Import File", self._import_line_edit.text(),
@@ -97,9 +101,9 @@ class ExportImportTab(QWidget):
         is_valid, invalid_reason = self.__export_service.is_export_file_valid(export_file_path)
         if is_valid:
             self.__export_service.export(export_file_path)
-            MsgUtils.show_info_with_ok_btn(self, "Successful", "Export Successful", show_ui=self.__show_ui)
+            self._export_success_msg_box = MsgUtils.show_info_with_ok_btn(self, "Successful", "Export Successful.", show_ui=self.__show_ui)
         else:
-            MsgUtils.show_warning_with_ok_btn(self, "Export failed", invalid_reason, show_ui=self.__show_ui)
+            self._export_failed_msg_box = MsgUtils.show_warning_with_ok_btn(self, "Export failed", invalid_reason, show_ui=self.__show_ui)
 
     def __on_export_line_edit_clicked(self):
         export_file_path = QFileDialog.getSaveFileName(self, "Select Export Folder", self._export_line_edit.text(),
@@ -113,7 +117,7 @@ if __name__ == '__main__':
     from PyQt5.QtWidgets import QApplication
     app = QApplication(sys.argv)
     db = get_test_word_fellow_db()
-    w = ExportImportTab(db)
+    w = ExportImportTab(None, db)
     w.show()
     app.exec_()
     db.destroy()

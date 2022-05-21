@@ -31,4 +31,3 @@ class SettingsServiceTestCase(BaseTestCase):
     def test_should_insert_default_data_when_init_database(self):
         settings = self.__settings_service.get_settings()
         self.assertEqual(settings, self.__settings_service._get_default_settings())
-
