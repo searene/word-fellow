@@ -1,4 +1,3 @@
-
 if [ -z "$1" ]; then
   TARGET_DIR="/tmp/word_fellow"
 else
@@ -8,7 +7,8 @@ fi
 rm -rf ${TARGET_DIR}
 mkdir ${TARGET_DIR}
 cp -r word_fellow/* ${TARGET_DIR}
-rm ${TARGET_DIR}/**/*.pyc
+find ${TARGET_DIR} -type f -name '*.pyc' -delete
+find ${TARGET_DIR} -type d -name '__pycache__' -delete
 pushd ${TARGET_DIR} || exit
 zip -r ../word_fellow.ankiaddon *
 rm -rf ${TARGET_DIR:?}/*
