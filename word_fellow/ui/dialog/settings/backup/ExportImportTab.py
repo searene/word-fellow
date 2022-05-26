@@ -3,12 +3,12 @@ from typing import Optional
 from PyQt5.QtWidgets import QWidget, QGroupBox, QLineEdit, QPushButton, QHBoxLayout, QVBoxLayout, QFileDialog, \
     QMessageBox
 
-from word_fellow.domain.export.ExportService import ExportService
-from word_fellow.domain.export.ImportService import ImportService
-from word_fellow.infrastructure import WordFellowDB
-from word_fellow.ui.common.ClickableLineEdit import ClickableLineEdit
-from word_fellow.ui.util import MsgUtils
-from word_fellow.ui.util.DatabaseUtils import get_test_word_fellow_db
+from .....domain.export.ExportService import ExportService
+from .....domain.export.ImportService import ImportService
+from .....infrastructure import WordFellowDB
+from .....ui.common.ClickableLineEdit import ClickableLineEdit
+from .....ui.util import MsgUtils
+from .....ui.util.DatabaseUtils import get_test_word_fellow_db
 
 
 class ExportImportTab(QWidget):

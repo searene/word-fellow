@@ -1,8 +1,7 @@
 import os
 import shutil
 
-from word_fellow.domain.utils import FileUtils
-from word_fellow.infrastructure import WordFellowDB
+from ...infrastructure import WordFellowDB
 
 
 class ImportService:
